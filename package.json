@@ -1,0 +1,7 @@
+{
+  "name": "calculadora-frior",
+  "version": "1.0.0",
+  "dependencies": {
+    "stripe": "^8.0.0"
+  }
+}
