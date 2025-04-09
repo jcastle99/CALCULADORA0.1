@@ -5,56 +5,186 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora FRIOR Cambio de Pezoneras</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
-    <script src="https://js.stripe.com/v3/"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #005566; color: #333; }
-        .container { max-width: 700px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
-        .logo { display: block; margin: 0 auto 20px; width: 100px; }
-        h1 { text-align: center; color: #005566; font-size: 24px; margin-bottom: 20px; }
-        label { display: block; margin: 10px 0 5px; font-weight: bold; color: #005566; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
-        input:focus, select:focus { border-color: #005566; outline: none; }
-        button { width: 100%; padding: 10px; background: #005566; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-top: 15px; font-size: 14px; }
-        button:hover { background: #003d4a; }
-        #resultado { margin-top: 20px; padding: 15px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; }
-        .modificacion-campos { display: none; background: #f0f0f0; padding: 15px; border-radius: 5px; margin-top: 10px; }
-        #whatsapp-section, #donaciones-section, #premium-section { display: none; margin-top: 20px; }
-        .signature { text-align: center; margin-top: 20px; font-family: 'Dancing Script', cursive; font-size: 28px; color: #005566; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
-        #premiumButton { background: #ff9800; }
-        #premiumButton:hover { background: #e68900; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #005566;
+            color: #333;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: 100px;
+        }
+        h1 {
+            text-align: center;
+            color: #005566;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #005566;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        input:focus, select:focus {
+            border-color: #005566;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #005566;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #003d4a;
+        }
+        #resultado {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .modificacion-campos {
+            display: none;
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        #whatsapp-section, #donaciones-section {
+            display: none;
+            margin-top: 20px;
+        }
+        .signature {
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 28px;
+            color: #005566;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        /* Estilos para el pop-up */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .popup-content h2 {
+            color: #005566;
+            margin-top: 0;
+        }
+        .popup-content p {
+            margin: 10px 0;
+        }
+        .popup-content a {
+            color: #005566;
+            text-decoration: underline;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
     </style>
 </head>
 <body>
+    <!-- Pop-up -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="cerrarPopup()">&times;</span>
+            <h2>¡Promociona tu negocio aquí!</h2>
+            <p>¿Quieres que tu producto o servicio aparezca en esta calculadora? ¡Contáctame para publicidad!</p>
+            <p>📧 Escribe a: <a href="mailto:alfstiven@gmail.com">alfstiven@gmail.com</a></p>
+        </div>
+    </div>
+
     <div class="container">
         <img src="data:image/png;base64,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" alt="Logo FRIOR" class="logo">
         <h1>Calculadora FRIOR Cambio de Pezoneras</h1>
         <form id="formulario">
             <label for="ordenosDia">Ordeños por Día:</label>
             <input type="number" id="ordenosDia" required>
+
             <label for="puntosOrdeno">Puntos de Ordeño (Inicial):</label>
             <input type="number" id="puntosOrdeno" required>
+
             <label for="vacas">Vacas Ordeñadas (Inicial):</label>
             <input type="number" id="vacas" required>
+
             <label for="durabilidad">Durabilidad de Pezoneras por Ordeño por Punto:</label>
             <input type="number" id="durabilidad" value="2500" required>
+
             <label for="fechaInicio">Fecha de Inicio (opcional):</label>
             <input type="date" id="fechaInicio" placeholder="YYYY-MM-DD">
+
             <label for="diasEspecificos">Calcular para Días Específicos (opcional):</label>
             <input type="number" id="diasEspecificos" placeholder="Número de días">
+
             <label for="realizarModificacion">¿Modificar Vacas o Puntos?</label>
             <select id="realizarModificacion" onchange="mostrarCamposModificacion()">
                 <option value="no">No</option>
                 <option value="si">Sí</option>
             </select>
+
             <div id="modificacion-campos" class="modificacion-campos">
                 <label for="fechaCambio">Fecha de Cambio:</label>
                 <input type="date" id="fechaCambio" placeholder="YYYY-MM-DD">
+
                 <label for="nuevoNumeroVacas">Nuevo Número de Vacas:</label>
                 <input type="number" id="nuevoNumeroVacas" placeholder="Nuevo número de vacas">
+
                 <label for="nuevoPuntosOrdeno">Nuevo Número de Puntos:</label>
                 <input type="number" id="nuevoPuntosOrdeno" placeholder="Nuevo número de puntos">
             </div>
+
             <button type="button" onclick="calcular()">Calcular</button>
             <button type="button" onclick="limpiarPantalla()">Limpiar</button>
         </form>
@@ -80,14 +210,6 @@
             <button type="button" onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
         </div>
 
-        <!-- Premium Section -->
-        <div id="premium-section">
-            <button id="premiumButton" onclick="comprarPremium()">Desbloquear Exportación a PDF (5€)</button>
-            <div id="premiumContent" style="display: none;">
-                <button onclick="exportarPDF()">Exportar a PDF</button>
-            </div>
-        </div>
-
         <!-- Donaciones con Ko-fi y Netlify Forms -->
         <div id="donaciones-section" style="text-align: center;">
             <p>¿Te ayudó esta calculadora? ¡Apóyame con un café!</p>
@@ -104,7 +226,7 @@
 
         <!-- Marketing de Afiliados -->
         <div style="margin-top: 20px; text-align: center;">
-            <p>¿Necesitas pezoneras nuevas? <a href="/comprar-pezoneras" target="_blank">Compra aquí</a> </p>
+            <p>¿Necesitas pezoneras nuevas? <a href="/comprar-pezoneras" target="_blank">Compra aquí</a> y apoya esta herramienta.</p>
         </div>
 
         <div class="signature">J.Castle</div>
@@ -115,7 +237,15 @@
         let costoManoObra = 0;
         let vacasIniciales = 0;
         let puntosOrdenoIniciales = 0;
-        const stripe = Stripe('pk_test_tu-clave-publica-de-stripe'); // Reemplaza con tu clave pública de Stripe
+
+        // Mostrar el pop-up al cargar la página
+        window.onload = function() {
+            document.getElementById('popup').style.display = 'flex';
+        };
+
+        function cerrarPopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
 
         function mostrarCamposModificacion() {
             const seleccion = document.getElementById('realizarModificacion').value;
@@ -126,7 +256,7 @@
             const ordenosDia = parseInt(document.getElementById('ordenosDia').value) || 0;
             let puntosOrdeno = parseInt(document.getElementById('puntosOrdeno').value) || 0;
             const vacas = parseInt(document.getElementById('vacas').value) || 0;
-            const durabilidad = parseInt(document.get forEachElementById('durabilidad').value) || 0;
+            const durabilidad = parseInt(document.getElementById('durabilidad').value) || 0;
             const fechaInicioInput = document.getElementById('fechaInicio').value;
             const diasEspecificos = parseInt(document.getElementById('diasEspecificos').value) || 0;
             const realizarModificacion = document.getElementById('realizarModificacion').value;
@@ -239,7 +369,6 @@
         function mostrarResultados() {
             document.getElementById('resultado').innerHTML = resultadoTexto.replace(/\n/g, '<br>');
             document.getElementById('whatsapp-section').style.display = 'block';
-            document.getElementById('premium-section').style.display = 'block';
             document.getElementById('donaciones-section').style.display = 'block';
         }
 
@@ -254,33 +383,6 @@
             window.open(urlWhatsApp, '_blank');
         }
 
-        async function comprarPremium() {
-            try {
-                const response = await fetch('/.netlify/functions/premium', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token: 'tok_visa' }), // Para pruebas; usa Stripe Elements en producción
-                });
-                const data = await response.json();
-                if (data.success) {
-                    document.getElementById('premiumContent').style.display = 'block';
-                    alert('¡Acceso Premium desbloqueado!');
-                } else {
-                    alert('Error al procesar el pago: ' + data.error);
-                }
-            } catch (error) {
-                console.error('Error en comprarPremium:', error);
-                alert('Error: No se pudo conectar con el servidor.');
-            }
-        }
-
-        function exportarPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text(document.getElementById('resultado').innerText, 10, 10);
-            doc.save('resultado_calculadora.pdf');
-        }
-
         function limpiarPantalla() {
             const durabilidad = document.getElementById('durabilidad').value;
             document.getElementById('formulario').reset();
@@ -288,7 +390,6 @@
             document.getElementById('modificacion-campos').style.display = 'none';
             document.getElementById('resultado').innerHTML = '';
             document.getElementById('whatsapp-section').style.display = 'none';
-            document.getElementById('premium-section').style.display = 'none';
             document.getElementById('donaciones-section').style.display = 'none';
             document.getElementById('codigoCliente').value = '';
             resultadoTexto = '';
