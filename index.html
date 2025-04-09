@@ -133,13 +133,43 @@
             cursor: pointer;
             color: #333;
         }
+        /* Estilos para el enlace de admin */
+        .admin-link {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #005566;
+            text-decoration: none;
+            opacity: 0.5;
+        }
+        .admin-link:hover {
+            opacity: 1;
+        }
+        /* Estilos para las secciones de publicidad */
+        #publicidad-section, #donaciones-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        #publicidad-section img, #donaciones-section img {
+            max-width: 100%;
+            height: auto;
+        }
+        /* Estilos para el formulario de admin */
+        #admin-form {
+            display: none;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <!-- Pop-up -->
     <div id="popup" class="popup">
         <div class="popup-content">
-            <span class="close-btn" onclick="cerrarPopup()">&times;</span>
+            <span class="close-btn" onclick="cerrarPopup()">×</span>
             <h2>¡Promociona tu negocio aquí!</h2>
             <p>¿Quieres que tu producto o servicio aparezca en esta calculadora? ¡Contáctame para publicidad!</p>
             <p>📧 Escribe a: <a href="mailto:alfstiven@gmail.com">alfstiven@gmail.com</a></p>
@@ -147,6 +177,9 @@
     </div>
 
     <div class="container">
+        <!-- Enlace discreto para admin -->
+        <a href="#" class="admin-link" onclick="mostrarLoginAdmin()">Admin</a>
+
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAzFBMVEX///8jL3cAHW25vc+AhagUJXPoGhwRIXKVm7ofMHfa3OcKJnMAFmwAH219hKkAEm11fqXnAACnrMKxtcoWJ3EAG2/97u7CxdUhLXbe4OhPV4/qJSWepL7nDA9tc51XYpM4Q37rUFHu7/MqN35IT4sAAGeMkK/1ubTmKiru7PVgaJX4+f1XX5ZKV4r0m5zc3+X1zMvrREZncZgAGHLzwLv3084gMnT24N/rU1fxgX/53dyho8EvP4HoKSn2r61kbprO0d3tPD87Q4V6gKscEqAUAAAFzklEQVR4nO2aC3eiOBiG8YKIqCiGIXa8bSpulTrTndl2Zlt360z//3+aJBBARerUetvzPqfnGBMueUjIl8RqGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADnCKvl8/nUFdybnm3l4Y5PXcG9cRpmHnR+6gruDTcs5GD9zw3NxXBwd3d36jruRyfP0HrWPrTbf526jvuRbWhSk/K/Jjes9P84dR33I9PQNObF+bXZYCxl+OG0FX0zWYam+0WrVmv2V6Ylhvftv09c1TeSZei2eAHTlnbK8L7dv1DFDEO9HJX1JtzwozS861cqlfZFjqqbhuZIlTm+FxneC8ELVdw0fOAxIsTxJ6HhfVsK9vvfTlrXt5HRS+c1VTh5EobfleDHixxOMwwbpbh0yg0rNx9DwZtLbMHM99BseEn5h1BPCF5kC2YY0oKlk1a5E5Urw4sV3DAktqcFQcv3nbA8Muxf7uR0zZAMe1KtU101rPzzKeJRnbl0qgn8ey31tRcOViWRnjCRrCVHP4UvwaSaygmOZWha1bXyuJe2I/6LClpfXUPRqIsr2fF3o1hvymNEll+ThY2k1B6IQj/JMNwFO5JhYauhQhkufTP9YOSV0heyRUM1dZEShubKc6xPeVY9fbg+ODtDx11p+thQNwwiP8tpw2lR3oXoOhWfRU8ZUsOQWXRxsH7aKb5i+O8Ww6KsoK4TyyJ6XRmSQe9pJq5IZmnDrivyrOfmQBq6ypCOetWJNDQP1k1XDU29t254E5mtvYfSkAwnEcrQ5bMFxiNOliEZqqzYUGY9i0an3eMYFuhVS7QiG9nlFcP+pz8jviWGq88jNORxlD1sMfzCs3rGhuHgqIYF6jq1ZUn3h9qq4Y+1gC8NGzmGcYOdmyEfI+r+zKupF1/10vU5TV4bXm9pw8GZGBYazVS5MlxXDA2rbCpgsaHhBEFJjI7keTfDIJiOqJgrTo9nSJLQxLrcsH9z0w8XT+m1RTiWWrbAH8eGfNZny5K6s4thgdZtW8RKcrhfDzYNTSOasGndRYlHi/73b5XN9WFoWAjD3DAxVI9pHOxkqO7pRsuZgBOnDmWoT1TZxO+Ea/xHtQSOJ6XKMNS5TQwpR8Q52XF3aEN5eEGPljKtxWixWMi3e7x4eJ8QmdFL1TCqtXgYDvdpHqNdjGSfJjKk4ucbMk8MeZejwkZG8B3a8IEr8lN8ueruGoSOKLkWrTci7vu8mpuGD8Ys7B/BeBnvtT1W+nzyndqIkob0+ueIs5jFhobD2FK0SrG6iyG5ZYzNxcA0EpeoWeSKmUROw0e0eChDPpjywOWxYC6eZWSoPfbTLRgZGtWACYLYMIkWO46lPNHi0YLKLtkVhiNzGBza0DQGnt8ZyWepDPm7uLKVKKOFkRMPMyJ+jmEYD7s6/anGl4Ma8js3qPjllE0TwzXeMeKnDPkisl4kvSMYmnLIuB628g23zNq2tKG+ZdaWGGpOeTIj0UhzWEP1Qk7E74c/3mSY0Ybi1azmGnIYpdcHH2liKLVmW877PcPP8i605zhiirbVkF2NJ3ztdUTDqKL7GzK5AjZ1I9xR2Gb4uUjGU5OqXvo+Eb+Ua2huN3R/x1AjK3ex1T5NEi2kIY+HY8+kC2/occPGkgWd4d7/0PNmwzohxE3veXRsnmMLQ8oThhxpijwl99qqvk4Uui0v6vNkQxq64ng5lhYtYpHG/Atfno4MnjmY++vbKkcz9AYtTimVsxQ5gyU3fBFFomaOSAxkZ/MmLUU5PGugjuqJxEu4AuOHv5S77KWm1cSpzvJl7676VsPLoVQnOWwfSy8Hb3x7e3u1yjhF69QVBK+ybJbPm6b3ukQuHVs/b+ynfQ3z5zQnZ3MXHoYwPDdguIOhXzxv9p56d0vnTu11CQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHCG/ALEebfyBqnm8gAAAABJRU5ErkJggg==" alt="Logo FRIOR" class="logo">
         <h1>Calculadora FRIOR Cambio de Pezoneras</h1>
         <form id="formulario">
@@ -203,6 +236,48 @@
             </script>
         </div>
 
+        <!-- Sección de publicidad dinámica -->
+        <div id="publicidad-section"></div>
+
+        <!-- Formulario de login para admin -->
+        <div id="admin-login" style="display: none; margin-top: 20px;">
+            <h3>Iniciar Sesión (Admin)</h3>
+            <label for="admin-username">Usuario:</label>
+            <input type="text" id="admin-username" placeholder="Usuario">
+            <label for="admin-password">Contraseña:</label>
+            <input type="password" id="admin-password" placeholder="Contraseña">
+            <button type="button" onclick="loginAdmin()">Iniciar Sesión</button>
+        </div>
+
+        <!-- Formulario para agregar publicidad -->
+        <div id="admin-form" style="display: none;">
+            <h3>Administrar Publicidad</h3>
+            <h4>Publicidad Principal (Texto o Imagen)</h4>
+            <label for="ad-type">Tipo de Publicidad:</label>
+            <select id="ad-type" onchange="mostrarCamposPublicidad()">
+                <option value="texto">Texto</option>
+                <option value="imagen">Imagen</option>
+            </select>
+            <div id="ad-texto" style="display: block;">
+                <label for="ad-texto-content">Texto de la Publicidad:</label>
+                <textarea id="ad-texto-content" placeholder="Escribe el texto de la publicidad"></textarea>
+            </div>
+            <div id="ad-imagen" style="display: none;">
+                <label for="ad-imagen-url">URL de la Imagen:</label>
+                <input type="text" id="ad-imagen-url" placeholder="Ingresa la URL de la imagen">
+            </div>
+            <button type="button" onclick="guardarPublicidad()">Guardar Publicidad Principal</button>
+
+            <h4>Publicidad Secundaria (Imagen con Enlace)</h4>
+            <label for="ad-secundaria-imagen-url">URL de la Imagen:</label>
+            <input type="text" id="ad-secundaria-imagen-url" placeholder="Ingresa la URL de la imagen">
+            <label for="ad-secundaria-link">Enlace de la Publicidad:</label>
+            <input type="text" id="ad-secundaria-link" placeholder="Ingresa el enlace (ej. https://ejemplo.com)">
+            <button type="button" onclick="guardarPublicidadSecundaria()">Guardar Publicidad Secundaria</button>
+
+            <button type="button" onclick="cerrarSesionAdmin()">Cerrar Sesión</button>
+        </div>
+
         <!-- WhatsApp Section -->
         <div id="whatsapp-section">
             <label for="codigoCliente">Código del Cliente:</label>
@@ -210,19 +285,8 @@
             <button type="button" onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
         </div>
 
-        <!-- Donaciones con Ko-fi y Netlify Forms -->
-        <div id="donaciones-section" style="text-align: center;">
-            <p>¿Te ayudó esta calculadora? ¡Apóyame con un café!</p>
-            <a href="https://ko-fi.com/tu-usuario" target="_blank">
-                <img src="https://ko-fi.com/img/donate-button.png" alt="Dona en Ko-fi" style="width: 150px;">
-            </a>
-            <form name="donaciones" method="POST" data-netlify="true" style="margin-top: 20px;">
-                <input type="hidden" name="form-name" value="donaciones">
-                <label>Deja un mensaje (opcional):</label>
-                <textarea name="mensaje"></textarea>
-                <button type="submit">Enviar</button>
-            </form>
-        </div>
+        <!-- Sección de publicidad secundaria (antes donaciones) -->
+        <div id="donaciones-section" style="text-align: center;"></div>
 
         <!-- Marketing de Afiliados -->
         <div style="margin-top: 20px; text-align: center;">
@@ -237,10 +301,13 @@
         let costoManoObra = 0;
         let vacasIniciales = 0;
         let puntosOrdenoIniciales = 0;
+        let isAdminLoggedIn = false;
 
         // Mostrar el pop-up al cargar la página
         window.onload = function() {
             document.getElementById('popup').style.display = 'flex';
+            cargarPublicidad();
+            cargarPublicidadSecundaria();
         };
 
         function cerrarPopup() {
@@ -253,23 +320,52 @@
         }
 
         function calcular() {
-            const ordenosDia = parseInt(document.getElementById('ordenosDia').value) || 0;
-            let puntosOrdeno = parseInt(document.getElementById('puntosOrdeno').value) || 0;
-            const vacas = parseInt(document.getElementById('vacas').value) || 0;
-            const durabilidad = parseInt(document.getElementById('durabilidad').value) || 0;
+            const ordenosDiaInput = document.getElementById('ordenosDia').value;
+            const puntosOrdenoInput = document.getElementById('puntosOrdeno').value;
+            const vacasInput = document.getElementById('vacas').value;
+            const durabilidadInput = document.getElementById('durabilidad').value;
             const fechaInicioInput = document.getElementById('fechaInicio').value;
-            const diasEspecificos = parseInt(document.getElementById('diasEspecificos').value) || 0;
+            const diasEspecificosInput = document.getElementById('diasEspecificos').value;
             const realizarModificacion = document.getElementById('realizarModificacion').value;
             const fechaCambioInput = document.getElementById('fechaCambio').value;
-            const nuevoNumeroVacas = parseInt(document.getElementById('nuevoNumeroVacas').value) || 0;
-            const nuevoPuntosOrdeno = parseInt(document.getElementById('nuevoPuntosOrdeno').value) || 0;
+            const nuevoNumeroVacasInput = document.getElementById('nuevoNumeroVacas').value;
+            const nuevoPuntosOrdenoInput = document.getElementById('nuevoPuntosOrdeno').value;
+
+            const ordenosDia = parseInt(ordenosDiaInput) || 0;
+            let puntosOrdeno = parseInt(puntosOrdenoInput) || 0;
+            const vacas = parseInt(vacasInput) || 0;
+            const durabilidad = parseInt(durabilidadInput) || 0;
+            const diasEspecificos = parseInt(diasEspecificosInput) || 0;
+            const nuevoNumeroVacas = parseInt(nuevoNumeroVacasInput) || 0;
+            const nuevoPuntosOrdeno = parseInt(nuevoPuntosOrdenoInput) || 0;
 
             vacasIniciales = vacas;
             puntosOrdenoIniciales = puntosOrdeno;
 
-            let fechaInicio = fechaInicioInput ? new Date(fechaInicioInput) : new Date();
+            if (ordenosDia <= 0) {
+                alert("Por favor, ingresa un número válido de ordeños por día (mayor que 0).");
+                return;
+            }
+            if (puntosOrdeno <= 0) {
+                alert("Por favor, ingresa un número válido de puntos de ordeño (mayor que 0).");
+                return;
+            }
+            if (vacas <= 0) {
+                alert("Por favor, ingresa un número válido de vacas ordeñadas (mayor que 0).");
+                return;
+            }
+            if (durabilidad <= 0) {
+                alert("Por favor, ingresa una durabilidad válida para las pezoneras (mayor que 0).");
+                return;
+            }
 
-            if (diasEspecificos > 0 && !ordenosDia && !puntosOrdeno && !vacas) {
+            let fechaInicio = fechaInicioInput ? new Date(fechaInicioInput) : new Date();
+            if (isNaN(fechaInicio.getTime())) {
+                alert("Por favor, selecciona una fecha de inicio válida.");
+                return;
+            }
+
+            if (diasEspecificos > 0 && ordenosDia === 0 && puntosOrdeno === 0 && vacas === 0) {
                 const fechaDiasEspecificos = new Date(fechaInicio.getTime() + diasEspecificos * 86400000);
                 resultadoTexto = `
                     Calculadora FRIOR Cambio de Pezoneras
@@ -277,11 +373,6 @@
                     Fecha para ${diasEspecificos} Días: ${fechaDiasEspecificos.toLocaleDateString('es-ES')}
                 `;
                 mostrarResultados();
-                return;
-            }
-
-            if (!ordenosDia || !puntosOrdeno || !vacas || !durabilidad) {
-                alert("Completa todos los campos requeridos para el cálculo completo.");
                 return;
             }
 
@@ -309,6 +400,11 @@
 
             if (realizarModificacion === 'si' && fechaCambioInput && (nuevoNumeroVacas > 0 || nuevoPuntosOrdeno > 0)) {
                 const fechaCambio = new Date(fechaCambioInput);
+                if (isNaN(fechaCambio.getTime())) {
+                    alert("Por favor, selecciona una fecha de cambio válida.");
+                    return;
+                }
+
                 const diasTranscurridos = Math.floor((fechaCambio - fechaInicio) / (1000 * 60 * 60 * 24));
 
                 if (diasTranscurridos < 0) {
@@ -396,6 +492,114 @@
             costoManoObra = 0;
             vacasIniciales = 0;
             puntosOrdenoIniciales = 0;
+        }
+
+        // Funciones de administración
+        function mostrarLoginAdmin() {
+            document.getElementById('admin-login').style.display = 'block';
+            document.getElementById('admin-form').style.display = 'none';
+            return false; // Evita que el enlace recargue la página
+        }
+
+        function loginAdmin() {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+
+            if (username === 'jcalculo' && password === 'Dylan-05') {
+                isAdminLoggedIn = true;
+                document.getElementById('admin-login').style.display = 'none';
+                document.getElementById('admin-form').style.display = 'block';
+                cargarPublicidad();
+                cargarPublicidadSecundaria();
+            } else {
+                alert('Usuario o contraseña incorrectos.');
+            }
+        }
+
+        function cerrarSesionAdmin() {
+            isAdminLoggedIn = false;
+            document.getElementById('admin-login').style.display = 'none';
+            document.getElementById('admin-form').style.display = 'none';
+            document.getElementById('admin-username').value = '';
+            document.getElementById('admin-password').value = '';
+        }
+
+        function mostrarCamposPublicidad() {
+            const adType = document.getElementById('ad-type').value;
+            document.getElementById('ad-texto').style.display = adType === 'texto' ? 'block' : 'none';
+            document.getElementById('ad-imagen').style.display = adType === 'imagen' ? 'block' : 'none';
+        }
+
+        function guardarPublicidad() {
+            const adType = document.getElementById('ad-type').value;
+            let adContent = {};
+
+            if (adType === 'texto') {
+                adContent = {
+                    type: 'texto',
+                    content: document.getElementById('ad-texto-content').value
+                };
+            } else {
+                adContent = {
+                    type: 'imagen',
+                    content: document.getElementById('ad-imagen-url').value
+                };
+            }
+
+            localStorage.setItem('publicidad', JSON.stringify(adContent));
+            cargarPublicidad();
+            alert('Publicidad principal guardada correctamente.');
+        }
+
+        function guardarPublicidadSecundaria() {
+            const imagenUrl = document.getElementById('ad-secundaria-imagen-url').value;
+            const enlace = document.getElementById('ad-secundaria-link').value;
+
+            if (!imagenUrl || !enlace) {
+                alert('Por favor, ingresa tanto la URL de la imagen como el enlace.');
+                return;
+            }
+
+            const adContent = {
+                imagenUrl: imagenUrl,
+                enlace: enlace
+            };
+
+            localStorage.setItem('publicidadSecundaria', JSON.stringify(adContent));
+            cargarPublicidadSecundaria();
+            alert('Publicidad secundaria guardada correctamente.');
+        }
+
+        function cargarPublicidad() {
+            const publicidadSection = document.getElementById('publicidad-section');
+            const adData = localStorage.getItem('publicidad');
+
+            if (adData) {
+                const ad = JSON.parse(adData);
+                if (ad.type === 'texto') {
+                    publicidadSection.innerHTML = `<p>${ad.content}</p>`;
+                } else if (ad.type === 'imagen') {
+                    publicidadSection.innerHTML = `<img src="${ad.content}" alt="Publicidad">`;
+                }
+            } else {
+                publicidadSection.innerHTML = '<p>No hay publicidad configurada.</p>';
+            }
+        }
+
+        function cargarPublicidadSecundaria() {
+            const donacionesSection = document.getElementById('donaciones-section');
+            const adData = localStorage.getItem('publicidadSecundaria');
+
+            if (adData) {
+                const ad = JSON.parse(adData);
+                donacionesSection.innerHTML = `
+                    <a href="${ad.enlace}" target="_blank">
+                        <img src="${ad.imagenUrl}" alt="Publicidad Secundaria">
+                    </a>
+                `;
+            } else {
+                donacionesSection.innerHTML = '<p>No hay publicidad secundaria configurada.</p>';
+            }
         }
 
         document.querySelectorAll('#formulario input').forEach(input => {
