@@ -403,22 +403,25 @@
 
         // Solicitar permiso para notificaciones
         function solicitarPermisoNotificaciones() {
-            messaging.requestPermission()
-                .then(() => {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
                     console.log('Permiso de notificaciones concedido.');
-                    return messaging.getToken();
-                })
-                .then(token => {
-                    console.log('Token FCM:', token);
-                    if (currentUser) {
-                        db.collection('users').doc(currentUser.uid).update({
-                            fcmToken: token
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al solicitar permiso de notificaciones:', error);
-                });
+                    messaging.getToken({ vapidKey: 'TU_VAPID_KEY' }).then(token => {
+                        console.log('Token FCM:', token);
+                        if (currentUser) {
+                            db.collection('users').doc(currentUser.uid).update({
+                                fcmToken: token
+                            });
+                        }
+                    }).catch(error => {
+                        console.error('Error al obtener el token FCM:', error);
+                    });
+                } else {
+                    console.log('Permiso de notificaciones denegado.');
+                }
+            }).catch(error => {
+                console.error('Error al solicitar permiso de notificaciones:', error);
+            });
         }
 
         // Mostrar el pop-up y cargar publicidades al cargar la página
@@ -440,6 +443,8 @@
                     document.getElementById('login-section').style.display = 'none';
                     document.getElementById('user-section').style.display = 'block';
                     solicitarPermisoNotificaciones();
+                    // Verificar si hay una notificación pendiente
+                    programarNotificacion(user.uid);
                 } else {
                     document.getElementById('registro-section').style.display = 'block';
                     document.getElementById('user-section').style.display = 'none';
@@ -947,20 +952,22 @@
             })
                 .then(() => {
                     console.log('Fecha del próximo cambio guardada.');
-                    programarNotificacion(uid, fecha);
+                    programarNotificacion(uid);
                 })
                 .catch(error => {
                     console.error('Error al guardar la fecha del próximo cambio:', error);
                 });
         }
 
-        function programarNotificacion(uid, fecha) {
+        function programarNotificacion(uid) {
             db.collection('users').doc(uid).get()
                 .then(doc => {
                     if (doc.exists) {
                         const data = doc.data();
                         const preferencia = data.notificacionPreferencia;
-                        const fechaCambio = new Date(fecha);
+                        const fechaCambio = data.fechaProximoCambio ? new Date(data.fechaProximoCambio) : null;
+                        if (!fechaCambio) return;
+
                         const hoy = new Date();
                         hoy.setHours(0, 0, 0, 0);
                         fechaCambio.setHours(0, 0, 0, 0);
@@ -982,15 +989,54 @@
 
         function enviarCorreoNotificacion(email, mensaje) {
             // Esto requiere una función de backend con Firebase Functions
-            console.log(`Enviando correo a ${email}: ${mensaje}`);
-            // Implementar con Firebase Functions (ver abajo)
+            fetch('https://us-central1-jcalculador-ac481.cloudfunctions.net/sendEmail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    message: mensaje
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Correo enviado:', data);
+            })
+            .catch(error => {
+                console.error('Error al enviar correo:', error);
+            });
         }
 
         function enviarNotificacionMovil(fcmToken, mensaje) {
             // Esto requiere una función de backend con Firebase Functions
-            console.log(`Enviando notificación móvil a ${fcmToken}: ${mensaje}`);
-            // Implementar con Firebase Functions (ver abajo)
+            fetch('https://us-central1-jcalculador-ac481.cloudfunctions.net/sendNotification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    token: fcmToken,
+                    message: mensaje
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Notificación enviada:', data);
+            })
+            .catch(error => {
+                console.error('Error al enviar notificación:', error);
+            });
         }
 
         document.querySelectorAll('#formulario input').forEach(input => {
             input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    calcular();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
