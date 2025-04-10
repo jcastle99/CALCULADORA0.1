@@ -9,6 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
     <style>
         body {
@@ -97,7 +98,6 @@
             font-weight: bold;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
-        /* Estilos para el pop-up */
         .popup {
             display: none;
             position: fixed;
@@ -138,7 +138,6 @@
             cursor: pointer;
             color: #333;
         }
-        /* Estilos para el enlace de admin */
         .admin-link {
             position: absolute;
             top: 10px;
@@ -151,7 +150,6 @@
         .admin-link:hover {
             opacity: 1;
         }
-        /* Estilos para las secciones de publicidad */
         #publicidad-section {
             margin-top: 20px;
             padding: 15px;
@@ -176,21 +174,34 @@
             display: block;
             margin: 0 auto;
         }
-        /* Estilos para el formulario de admin */
         #admin-form {
             display: none;
             margin-top: 20px;
         }
-        /* Estilos para el formulario de registro */
         #registro-section {
             margin-top: 20px;
             padding: 15px;
             background: #f0f0f0;
             border-radius: 5px;
         }
+        #login-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            display: none;
+        }
         #user-section {
             display: none;
             margin-top: 20px;
+        }
+        #formulario-section {
+            display: none;
+        }
+        .auth-message {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #005566;
         }
     </style>
 </head>
@@ -212,6 +223,11 @@
         <img src="data:image/png;base64,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" alt="Logo FRIOR" class="logo">
         <h1>Calculadora FRIOR Cambio de Pezoneras</h1>
 
+        <!-- Mensaje para usuarios no autenticados -->
+        <div id="auth-message" class="auth-message">
+            Por favor, regístrate o inicia sesión para usar la calculadora.
+        </div>
+
         <!-- Formulario de Registro -->
         <div id="registro-section">
             <h3>Regístrate</h3>
@@ -232,7 +248,7 @@
         </div>
 
         <!-- Formulario de Login de Usuario -->
-        <div id="login-section" style="display: none; margin-top: 20px;">
+        <div id="login-section">
             <h3>Iniciar Sesión</h3>
             <label for="login-email">Correo Electrónico:</label>
             <input type="email" id="login-email" placeholder="tu@correo.com" required>
@@ -256,46 +272,49 @@
             <button type="button" onclick="cerrarSesionUsuario()">Cerrar Sesión</button>
         </div>
 
-        <form id="formulario">
-            <label for="ordenosDia">Ordeños por Día:</label>
-            <input type="number" id="ordenosDia" required>
+        <!-- Formulario de la calculadora (visible solo para usuarios autenticados) -->
+        <div id="formulario-section">
+            <form id="formulario">
+                <label for="ordenosDia">Ordeños por Día:</label>
+                <input type="number" id="ordenosDia" required>
 
-            <label for="puntosOrdeno">Puntos de Ordeño (Inicial):</label>
-            <input type="number" id="puntosOrdeno" required>
+                <label for="puntosOrdeno">Puntos de Ordeño (Inicial):</label>
+                <input type="number" id="puntosOrdeno" required>
 
-            <label for="vacas">Vacas Ordeñadas (Inicial):</label>
-            <input type="number" id="vacas" required>
+                <label for="vacas">Vacas Ordeñadas (Inicial):</label>
+                <input type="number" id="vacas" required>
 
-            <label for="durabilidad">Durabilidad de Pezoneras por Ordeño por Punto:</label>
-            <input type="number" id="durabilidad" value="2500" required>
+                <label for="durabilidad">Durabilidad de Pezoneras por Ordeño por Punto:</label>
+                <input type="number" id="durabilidad" value="2500" required>
 
-            <label for="fechaInicio">Fecha de Inicio (opcional):</label>
-            <input type="date" id="fechaInicio" placeholder="YYYY-MM-DD">
+                <label for="fechaInicio">Fecha de Inicio (opcional):</label>
+                <input type="date" id="fechaInicio" placeholder="YYYY-MM-DD">
 
-            <label for="diasEspecificos">Calcular para Días Específicos (opcional):</label>
-            <input type="number" id="diasEspecificos" placeholder="Número de días">
+                <label for="diasEspecificos">Calcular para Días Específicos (opcional):</label>
+                <input type="number" id="diasEspecificos" placeholder="Número de días">
 
-            <label for="realizarModificacion">¿Modificar Vacas o Puntos?</label>
-            <select id="realizarModificacion" onchange="mostrarCamposModificacion()">
-                <option value="no">No</option>
-                <option value="si">Sí</option>
-            </select>
+                <label for="realizarModificacion">¿Modificar Vacas o Puntos?</label>
+                <select id="realizarModificacion" onchange="mostrarCamposModificacion()">
+                    <option value="no">No</option>
+                    <option value="si">Sí</option>
+                </select>
 
-            <div id="modificacion-campos" class="modificacion-campos">
-                <label for="fechaCambio">Fecha de Cambio:</label>
-                <input type="date" id="fechaCambio" placeholder="YYYY-MM-DD">
+                <div id="modificacion-campos" class="modificacion-campos">
+                    <label for="fechaCambio">Fecha de Cambio:</label>
+                    <input type="date" id="fechaCambio" placeholder="YYYY-MM-DD">
 
-                <label for="nuevoNumeroVacas">Nuevo Número de Vacas:</label>
-                <input type="number" id="nuevoNumeroVacas" placeholder="Nuevo número de vacas">
+                    <label for="nuevoNumeroVacas">Nuevo Número de Vacas:</label>
+                    <input type="number" id="nuevoNumeroVacas" placeholder="Nuevo número de vacas">
 
-                <label for="nuevoPuntosOrdeno">Nuevo Número de Puntos:</label>
-                <input type="number" id="nuevoPuntosOrdeno" placeholder="Nuevo número de puntos">
-            </div>
+                    <label for="nuevoPuntosOrdeno">Nuevo Número de Puntos:</label>
+                    <input type="number" id="nuevoPuntosOrdeno" placeholder="Nuevo número de puntos">
+                </div>
 
-            <button type="button" onclick="calcular()">Calcular</button>
-            <button type="button" onclick="limpiarPantalla()">Limpiar</button>
-        </form>
-        <div id="resultado"></div>
+                <button type="button" onclick="calcular()">Calcular</button>
+                <button type="button" onclick="limpiarPantalla()">Limpiar</button>
+            </form>
+            <div id="resultado"></div>
+        </div>
 
         <!-- Publicidad con Google AdSense -->
         <div style="margin-top: 20px; text-align: center;">
@@ -337,14 +356,36 @@
                 <textarea id="ad-texto-content" placeholder="Escribe el texto de la publicidad"></textarea>
             </div>
             <div id="ad-imagen" style="display: none;">
-                <label for="ad-imagen-url">URL de la Imagen:</label>
-                <input type="text" id="ad-imagen-url" placeholder="Ingresa la URL de la imagen">
+                <label for="ad-imagen-source">Fuente de la Imagen:</label>
+                <select id="ad-imagen-source" onchange="mostrarCamposImagen()">
+                    <option value="url">URL</option>
+                    <option value="upload">Subir desde el dispositivo</option>
+                </select>
+                <div id="ad-imagen-url-section" style="display: block;">
+                    <label for="ad-imagen-url">URL de la Imagen:</label>
+                    <input type="text" id="ad-imagen-url" placeholder="Ingresa la URL de la imagen">
+                </div>
+                <div id="ad-imagen-upload-section" style="display: none;">
+                    <label for="ad-imagen-upload">Subir Imagen:</label>
+                    <input type="file" id="ad-imagen-upload" accept="image/*">
+                </div>
             </div>
             <button type="button" onclick="guardarPublicidad()">Guardar Publicidad Principal</button>
 
             <h4>Publicidad Secundaria (Imagen con Enlace)</h4>
-            <label for="ad-secundaria-imagen-url">URL de la Imagen:</label>
-            <input type="text" id="ad-secundaria-imagen-url" placeholder="Ingresa la URL de la imagen">
+            <label for="ad-secundaria-source">Fuente de la Imagen:</label>
+            <select id="ad-secundaria-source" onchange="mostrarCamposImagenSecundaria()">
+                <option value="url">URL</option>
+                <option value="upload">Subir desde el dispositivo</option>
+            </select>
+            <div id="ad-secundaria-url-section" style="display: block;">
+                <label for="ad-secundaria-imagen-url">URL de la Imagen:</label>
+                <input type="text" id="ad-secundaria-imagen-url" placeholder="Ingresa la URL de la imagen">
+            </div>
+            <div id="ad-secundaria-upload-section" style="display: none;">
+                <label for="ad-secundaria-imagen-upload">Subir Imagen:</label>
+                <input type="file" id="ad-secundaria-imagen-upload" accept="image/*">
+            </div>
             <label for="ad-secundaria-link">Enlace de la Publicidad:</label>
             <input type="text" id="ad-secundaria-link" placeholder="Ingresa el enlace (ej. https://ejemplo.com)">
             <button type="button" onclick="guardarPublicidadSecundaria()">Guardar Publicidad Secundaria</button>
@@ -391,6 +432,7 @@
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const storage = firebase.storage();
         const messaging = firebase.messaging();
 
         let resultadoTexto = '';
@@ -449,11 +491,15 @@
                     document.getElementById('registro-section').style.display = 'none';
                     document.getElementById('login-section').style.display = 'none';
                     document.getElementById('user-section').style.display = 'block';
+                    document.getElementById('formulario-section').style.display = 'block';
+                    document.getElementById('auth-message').style.display = 'none';
                     solicitarPermisoNotificaciones();
                     programarNotificacion(user.uid);
                 } else {
                     document.getElementById('registro-section').style.display = 'block';
                     document.getElementById('user-section').style.display = 'none';
+                    document.getElementById('formulario-section').style.display = 'none';
+                    document.getElementById('auth-message').style.display = 'block';
                 }
             });
         };
@@ -691,6 +737,18 @@
             document.getElementById('ad-imagen').style.display = adType === 'imagen' ? 'block' : 'none';
         }
 
+        function mostrarCamposImagen() {
+            const source = document.getElementById('ad-imagen-source').value;
+            document.getElementById('ad-imagen-url-section').style.display = source === 'url' ? 'block' : 'none';
+            document.getElementById('ad-imagen-upload-section').style.display = source === 'upload' ? 'block' : 'none';
+        }
+
+        function mostrarCamposImagenSecundaria() {
+            const source = document.getElementById('ad-secundaria-source').value;
+            document.getElementById('ad-secundaria-url-section').style.display = source === 'url' ? 'block' : 'none';
+            document.getElementById('ad-secundaria-upload-section').style.display = source === 'upload' ? 'block' : 'none';
+        }
+
         function guardarPublicidad() {
             if (!isAdminLoggedIn) {
                 alert('Debes iniciar sesión como administrador para guardar la publicidad.');
@@ -710,18 +768,46 @@
                     type: 'texto',
                     content: textoContent
                 };
+                saveAdToFirestore(adContent);
             } else {
-                const imagenUrl = document.getElementById('ad-imagen-url').value.trim();
-                if (!imagenUrl) {
-                    alert('Por favor, ingresa una URL válida para la imagen.');
-                    return;
+                const source = document.getElementById('ad-imagen-source').value;
+                if (source === 'url') {
+                    const imagenUrl = document.getElementById('ad-imagen-url').value.trim();
+                    if (!imagenUrl) {
+                        alert('Por favor, ingresa una URL válida para la imagen.');
+                        return;
+                    }
+                    adContent = {
+                        type: 'imagen',
+                        content: imagenUrl
+                    };
+                    saveAdToFirestore(adContent);
+                } else {
+                    const fileInput = document.getElementById('ad-imagen-upload');
+                    const file = fileInput.files[0];
+                    if (!file) {
+                        alert('Por favor, selecciona una imagen para subir.');
+                        return;
+                    }
+                    const storageRef = storage.ref(`publicidad/principal/${file.name}`);
+                    storageRef.put(file)
+                        .then(snapshot => snapshot.ref.getDownloadURL())
+                        .then(downloadURL => {
+                            adContent = {
+                                type: 'imagen',
+                                content: downloadURL
+                            };
+                            saveAdToFirestore(adContent);
+                        })
+                        .catch(error => {
+                            console.error('Error al subir la imagen:', error);
+                            alert('Error al subir la imagen: ' + error.message);
+                        });
                 }
-                adContent = {
-                    type: 'imagen',
-                    content: imagenUrl
-                };
             }
+        }
 
+        function saveAdToFirestore(adContent) {
             db.collection('publicidad').doc('principal').set(adContent)
                 .then(() => {
                     cargarPublicidad();
@@ -739,19 +825,50 @@
                 return;
             }
 
-            const imagenUrl = document.getElementById('ad-secundaria-imagen-url').value.trim();
+            const source = document.getElementById('ad-secundaria-source').value;
             const enlace = document.getElementById('ad-secundaria-link').value.trim();
 
-            if (!imagenUrl || !enlace) {
-                alert('Por favor, ingresa tanto la URL de la imagen como el enlace.');
+            if (!enlace) {
+                alert('Por favor, ingresa el enlace para la publicidad secundaria.');
                 return;
             }
 
-            const adContent = {
-                imagenUrl: imagenUrl,
-                enlace: enlace
-            };
+            if (source === 'url') {
+                const imagenUrl = document.getElementById('ad-secundaria-imagen-url').value.trim();
+                if (!imagenUrl) {
+                    alert('Por favor, ingresa una URL válida para la imagen.');
+                    return;
+                }
+                const adContent = {
+                    imagenUrl: imagenUrl,
+                    enlace: enlace
+                };
+                saveSecondaryAdToFirestore(adContent);
+            } else {
+                const fileInput = document.getElementById('ad-secundaria-imagen-upload');
+                const file = fileInput.files[0];
+                if (!file) {
+                    alert('Por favor, selecciona una imagen para subir.');
+                    return;
+                }
+                const storageRef = storage.ref(`publicidad/secundaria/${file.name}`);
+                storageRef.put(file)
+                    .then(snapshot => snapshot.ref.getDownloadURL())
+                    .then(downloadURL => {
+                        const adContent = {
+                            imagenUrl: downloadURL,
+                            enlace: enlace
+                        };
+                        saveSecondaryAdToFirestore(adContent);
+                    })
+                    .catch(error => {
+                        console.error('Error al subir la imagen secundaria:', error);
+                        alert('Error al subir la imagen secundaria: ' + error.message);
+                    });
+            }
+        }
 
+        function saveSecondaryAdToFirestore(adContent) {
             db.collection('publicidad').doc('secundaria').set(adContent)
                 .then(() => {
                     cargarPublicidadSecundaria();
@@ -913,6 +1030,8 @@
                     alert('Inicio de sesión exitoso.');
                     document.getElementById('login-section').style.display = 'none';
                     document.getElementById('user-section').style.display = 'block';
+                    document.getElementById('formulario-section').style.display = 'block';
+                    document.getElementById('auth-message').style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error al iniciar sesión:', error);
@@ -925,7 +1044,9 @@
                 .then(() => {
                     currentUser = null;
                     document.getElementById('user-section').style.display = 'none';
+                    document.getElementById('formulario-section').style.display = 'none';
                     document.getElementById('registro-section').style.display = 'block';
+                    document.getElementById('auth-message').style.display = 'block';
                     document.getElementById('user-name').textContent = 'Usuario';
                     document.getElementById('user-profesion').textContent = 'N/A';
                 })
