@@ -449,7 +449,7 @@
             Notification.requestPermission().then(permission => {
                 if (permission === 'granted') {
                     console.log('Permiso de notificaciones concedido.');
-                    messaging.getToken({ vapidKey: 'TU_VAPID_KEY' }).then(token => {
+                    messaging.getToken({ vapidKey: 'BCaTUfW00kYdZyQ2BqdbR6HeTnAZtpxRWrF3jscJQXz4-3SaDNP2Z-y8EtWMtEu6DeUNekFhZQCQOYqRmEn-9Xg' }).then(token => {
                         console.log('Token FCM:', token);
                         if (currentUser) {
                             db.collection('users').doc(currentUser.uid).update({
