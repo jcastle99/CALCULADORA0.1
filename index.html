@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora FRIOR Cambio de Pezoneras</title>
+    <title>JCALCULO</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -11,6 +11,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
+    <!-- Include SheetJS for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -203,6 +205,26 @@
             margin-bottom: 20px;
             color: #005566;
         }
+        #history-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        #history-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        #history-section li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        #admin-history-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -220,8 +242,10 @@
         <!-- Enlace discreto para admin -->
         <a href="#" class="admin-link" onclick="mostrarLoginAdmin()">Admin</a>
 
-        <img src="data:image/png;base64,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" alt="Logo FRIOR" class="logo">
-        <h1>Calculadora FRIOR Cambio de Pezoneras</h1>
+        <!-- Updated Logo -->
+        <img src="data:image/png;base64,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" alt="Logo JCALCULO" class="logo">
+        <!-- Updated Title -->
+        <h1>JCALCULO</h1>
 
         <!-- Mensaje para usuarios no autenticados -->
         <div id="auth-message" class="auth-message">
@@ -310,10 +334,23 @@
                     <input type="number" id="nuevoPuntosOrdeno" placeholder="Nuevo número de puntos">
                 </div>
 
+                <label for="guardarCalculo">¿Guardar este cálculo en el historial?</label>
+                <select id="guardarCalculo">
+                    <option value="no">No</option>
+                    <option value="si">Sí</option>
+                </select>
+
                 <button type="button" onclick="calcular()">Calcular</button>
                 <button type="button" onclick="limpiarPantalla()">Limpiar</button>
             </form>
             <div id="resultado"></div>
+        </div>
+
+        <!-- Historial de cálculos -->
+        <div id="history-section" style="display: none;">
+            <h3>Historial de Cálculos</h3>
+            <button type="button" onclick="exportarHistorialExcel()">Exportar a Excel</button>
+            <ul id="history-list"></ul>
         </div>
 
         <!-- Publicidad con Google AdSense -->
@@ -386,7 +423,7 @@
                 <label for="ad-secundaria-imagen-upload">Subir Imagen:</label>
                 <input type="file" id="ad-secundaria-imagen-upload" accept="image/*">
             </div>
-            <label for="ad-secundaria-link">Enlace de la Publicidad:</label>
+            <label for="ad-secundaria-link">Enlace de la Publicidad (opcional si subes desde el dispositivo):</label>
             <input type="text" id="ad-secundaria-link" placeholder="Ingresa el enlace (ej. https://ejemplo.com)">
             <button type="button" onclick="guardarPublicidadSecundaria()">Guardar Publicidad Secundaria</button>
 
@@ -394,6 +431,13 @@
             <label for="popup-message-content">Mensaje del Pop-up:</label>
             <textarea id="popup-message-content" placeholder="Escribe el mensaje del pop-up"></textarea>
             <button type="button" onclick="guardarPopupMessage()">Guardar Mensaje del Pop-up</button>
+
+            <!-- Admin: Ver historial de todos los usuarios -->
+            <div id="admin-history-section">
+                <h3>Historial de Cálculos de Todos los Usuarios</h3>
+                <button type="button" onclick="exportarHistorialAdminExcel()">Exportar a Excel</button>
+                <ul id="admin-history-list"></ul>
+            </div>
 
             <button type="button" onclick="cerrarSesionAdmin()">Cerrar Sesión</button>
         </div>
@@ -408,9 +452,9 @@
         <!-- Sección de publicidad secundaria -->
         <div id="donaciones-section" style="text-align: center;"></div>
 
-        <!-- Marketing de Afiliados -->
+        <!-- Marketing de Afiliados (text updated) -->
         <div style="margin-top: 20px; text-align: center;">
-            <p>¿Necesitas pezoneras nuevas? <a href="/comprar-pezoneras" target="_blank">Compra aquí</a> y apoya esta herramienta.</p>
+            <p>¿Necesitas pezoneras nuevas? <a href="/comprar-pezoneras" target="_blank">Compra aquí</a>.</p>
         </div>
 
         <div class="signature">J.Castle</div>
@@ -442,7 +486,8 @@
         let isAdminLoggedIn = false;
         let fechaProximoCambio = null;
         let currentUser = null;
-        let adminUser = null; // Para manejar la sesión del administrador
+        let adminUser = null;
+        const ADMIN_EMAIL = "alfstiven@gmail.com"; // Define the admin email
 
         // Solicitar permiso para notificaciones
         function solicitarPermisoNotificaciones() {
@@ -496,6 +541,7 @@
                     document.getElementById('auth-message').style.display = 'none';
                     solicitarPermisoNotificaciones();
                     programarNotificacion(user.uid);
+                    cargarHistorialUsuario(user.uid);
                 } else {
                     currentUser = null;
                     document.getElementById('registro-section').style.display = 'block';
@@ -526,6 +572,7 @@
             const fechaCambioInput = document.getElementById('fechaCambio').value;
             const nuevoNumeroVacasInput = document.getElementById('nuevoNumeroVacas').value;
             const nuevoPuntosOrdenoInput = document.getElementById('nuevoPuntosOrdeno').value;
+            const guardarCalculo = document.getElementById('guardarCalculo').value;
 
             const ordenosDia = parseInt(ordenosDiaInput) || 0;
             let puntosOrdeno = parseInt(puntosOrdenoInput) || 0;
@@ -564,11 +611,14 @@
             if (diasEspecificos > 0 && ordenosDia === 0 && puntosOrdeno === 0 && vacas === 0) {
                 const fechaDiasEspecificos = new Date(fechaInicio.getTime() + diasEspecificos * 86400000);
                 resultadoTexto = `
-                    Calculadora FRIOR Cambio de Pezoneras
+                    JCALCULO
                     Fecha Inicio: ${fechaInicio.toLocaleDateString('es-ES')}
                     Fecha para ${diasEspecificos} Días: ${fechaDiasEspecificos.toLocaleDateString('es-ES')}
                 `;
                 mostrarResultados();
+                if (guardarCalculo === 'si' && currentUser) {
+                    guardarCalculoEnHistorial(currentUser.uid, resultadoTexto);
+                }
                 return;
             }
 
@@ -644,7 +694,7 @@
             fechaProximoCambio = realizarModificacion === 'si' ? fechaProximoCambioAjustada : fechaProximoCambioInicial;
 
             resultadoTexto = `
-                Calculadora FRIOR Cambio de Pezoneras
+                JCALCULO
                 Fecha Inicio: ${fechaInicio.toLocaleDateString('es-ES')}
                 Vacas Iniciales: ${vacasIniciales}
                 Puntos Iniciales: ${puntosOrdenoIniciales}
@@ -662,6 +712,9 @@
             // Guardar la fecha del próximo cambio para el usuario
             if (currentUser) {
                 guardarFechaProximoCambio(currentUser.uid, fechaProximoCambio);
+                if (guardarCalculo === 'si') {
+                    guardarCalculoEnHistorial(currentUser.uid, resultadoTexto);
+                }
             }
         }
 
@@ -714,6 +767,12 @@
                 return;
             }
 
+            // Verificar si el email es el del administrador
+            if (email !== ADMIN_EMAIL) {
+                alert('Acceso denegado: Solo el administrador puede iniciar sesión aquí.');
+                return;
+            }
+
             auth.signInWithEmailAndPassword(email, password)
                 .then(userCredential => {
                     adminUser = userCredential.user;
@@ -724,6 +783,7 @@
                         cargarPublicidad();
                         cargarPublicidadSecundaria();
                         cargarPopupMessage();
+                        cargarHistorialAdmin(); // Cargar historial de todos los usuarios
                     } catch (error) {
                         console.error('Error al cargar las publicidades después de login:', error);
                     }
@@ -743,6 +803,7 @@
                     document.getElementById('admin-form').style.display = 'none';
                     document.getElementById('admin-email').value = '';
                     document.getElementById('admin-password').value = '';
+                    document.getElementById('admin-history-list').innerHTML = '';
                 })
                 .catch(error => {
                     console.error('Error al cerrar sesión del administrador:', error);
@@ -829,8 +890,8 @@
         function saveAdToFirestore(adContent) {
             db.collection('publicidad').doc('principal').set(adContent)
                 .then(() => {
-                    cargarPublicidad();
                     alert('Publicidad principal guardada correctamente.');
+                    cargarPublicidad();
                 })
                 .catch(error => {
                     console.error('Error al guardar la publicidad principal:', error);
@@ -847,8 +908,11 @@
             const source = document.getElementById('ad-secundaria-source').value;
             const enlace = document.getElementById('ad-secundaria-link').value.trim();
 
-            if (!enlace) {
-                alert('Por favor, ingresa el enlace para la publicidad secundaria.');
+            // Hacer el enlace opcional si la fuente es 'upload'
+            if (source === 'upload' && !enlace) {
+                // Permitir guardar sin enlace
+            } else if (source === 'url' && !enlace) {
+                alert('Por favor, ingresa el enlace para la publicidad secundaria cuando usas una URL.');
                 return;
             }
 
@@ -876,7 +940,7 @@
                     .then(downloadURL => {
                         const adContent = {
                             imagenUrl: downloadURL,
-                            enlace: enlace
+                            enlace: enlace || '#' // Si no hay enlace, usar un valor por defecto
                         };
                         saveSecondaryAdToFirestore(adContent);
                     })
@@ -890,8 +954,8 @@
         function saveSecondaryAdToFirestore(adContent) {
             db.collection('publicidad').doc('secundaria').set(adContent)
                 .then(() => {
-                    cargarPublicidadSecundaria();
                     alert('Publicidad secundaria guardada correctamente.');
+                    cargarPublicidadSecundaria();
                 })
                 .catch(error => {
                     console.error('Error al guardar la publicidad secundaria:', error);
@@ -917,8 +981,8 @@
                 contact: "📧 Escribe a: alfstiven@gmail.com"
             })
                 .then(() => {
-                    cargarPopupMessage();
                     alert('Mensaje del pop-up guardado correctamente.');
+                    cargarPopupMessage();
                 })
                 .catch(error => {
                     console.error('Error al guardar el mensaje del pop-up:', error);
@@ -1068,6 +1132,7 @@
                     document.getElementById('auth-message').style.display = 'block';
                     document.getElementById('user-name').textContent = 'Usuario';
                     document.getElementById('user-profesion').textContent = 'N/A';
+                    document.getElementById('history-section').style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error al cerrar sesión:', error);
@@ -1084,7 +1149,6 @@
             document.getElementById('registro-section').style.display = 'none';
             document.getElementById('login-section').style.display = 'block';
         }
-
         function cargarDatosUsuario(uid) {
             db.collection('users').doc(uid).get()
                 .then(doc => {
