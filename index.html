@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JCALCULO</title>
+    <title>jCalculo</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -11,94 +11,89 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
-    <!-- Include SheetJS for Excel export -->
+    <!-- SheetJS para exportar a Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
-            background: #005566;
-            color: #333;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
         .container {
-            max-width: 700px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 30px;
+            background: white;
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-        .logo {
-            display: block;
-            margin: 0 auto 20px;
-            width: 100px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
         }
         h1 {
-            text-align: center;
-            color: #005566;
-            font-size: 24px;
+            font-family: 'Dancing Script', cursive;
+            color: #333;
+            font-size: 2.5em;
             margin-bottom: 20px;
         }
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-weight: bold;
-            color: #005566;
+        h2, h3 {
+            color: #333;
         }
-        input, select, textarea {
+        input, select, textarea, button {
             width: 100%;
             padding: 10px;
+            margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
-            font-size: 14px;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: #005566;
-            outline: none;
         }
         button {
-            width: 100%;
-            padding: 10px;
-            background: #005566;
-            color: #fff;
+            background-color: #5cb85c;
+            color: white;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-            margin-top: 15px;
-            font-size: 14px;
+            transition: background-color 0.3s;
         }
         button:hover {
-            background: #003d4a;
+            background-color: #4cae4c;
         }
         #resultado {
             margin-top: 20px;
-            padding: 15px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            font-size: 1.2em;
+            color: #333;
         }
-        .modificacion-campos {
-            display: none;
-            background: #f0f0f0;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 10px;
+        .auth-message {
+            color: #333;
+            margin-bottom: 20px;
         }
-        #whatsapp-section, #donaciones-section {
-            display: none;
+        .admin-link {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .admin-link:hover {
+            text-decoration: underline;
+        }
+        #publicidad-section, #donaciones-section {
             margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        #publicidad-section img, #donaciones-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
         }
         .signature {
-            text-align: center;
             margin-top: 20px;
-            font-family: 'Dancing Script', cursive;
-            font-size: 28px;
-            color: #005566;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            font-size: 0.9em;
+            color: #777;
         }
         .popup {
             display: none;
@@ -108,122 +103,59 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
             justify-content: center;
             align-items: center;
         }
         .popup-content {
-            background: #fff;
+            background: white;
             padding: 20px;
             border-radius: 10px;
-            max-width: 400px;
             text-align: center;
             position: relative;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        .popup-content h2 {
-            color: #005566;
-            margin-top: 0;
-        }
-        .popup-content p {
-            margin: 10px 0;
-        }
-        .popup-content a {
-            color: #005566;
-            text-decoration: underline;
+            max-width: 500px;
+            width: 90%;
         }
         .close-btn {
             position: absolute;
             top: 10px;
             right: 10px;
-            font-size: 24px;
+            font-size: 1.5em;
             cursor: pointer;
-            color: #333;
         }
-        .admin-link {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 12px;
-            color: #005566;
-            text-decoration: none;
-            opacity: 0.5;
-        }
-        .admin-link:hover {
-            opacity: 1;
-        }
-        #publicidad-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f0f0f0;
-            border-radius: 5px;
-            text-align: center;
-        }
-        #publicidad-section img {
-            max-width: 100%;
-            height: auto;
-        }
-        #donaciones-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f0f0f0;
-            border-radius: 5px;
-            text-align: center;
-        }
-        #donaciones-section img {
-            max-width: 300px;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-        #admin-form {
-            display: none;
-            margin-top: 20px;
-        }
-        #registro-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f0f0f0;
-            border-radius: 5px;
-        }
-        #login-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f0f0f0;
-            border-radius: 5px;
+        #login-section, #registro-section, #user-section, #formulario-section, #admin-form, #calculos-registrados {
             display: none;
         }
-        #user-section {
-            display: none;
-            margin-top: 20px;
-        }
-        #formulario-section {
-            display: none;
-        }
-        .auth-message {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #005566;
-        }
-        #history-section {
+        #calculos-registrados {
             margin-top: 20px;
             padding: 15px;
             background: #f0f0f0;
             border-radius: 5px;
         }
-        #history-section ul {
+        #calculos-registrados ul {
             list-style: none;
             padding: 0;
         }
-        #history-section li {
+        #calculos-registrados li {
             padding: 5px 0;
             border-bottom: 1px solid #ddd;
         }
-        #admin-history-section {
+        #admin-calculos {
+            display: none;
             margin-top: 20px;
             padding: 15px;
             background: #f0f0f0;
             border-radius: 5px;
+        }
+        #admin-calculos ul {
+            list-style: none;
+            padding: 0;
+        }
+        #admin-calculos li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .modificacion-campos {
+            display: none;
         }
     </style>
 </head>
@@ -242,234 +174,115 @@
         <!-- Enlace discreto para admin -->
         <a href="#" class="admin-link" onclick="mostrarLoginAdmin()">Admin</a>
 
-        <!-- Updated Logo -->
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAzFBMVEX///8jL3cAHW25vc+AhagUJXPoGhwRIXKVm7ofMHfa3OcKJnMAFmwAH219hKkAEm11fqXnAACnrMKxtcoWJ3EAG2/97u7CxdUhLXbe4OhPV4/qJSWepL7nDA9tc51XYpM4Q37rUFHu7/MqN35IT4sAAGeMkK/1ubTmKiru7PVgaJX4+f1XX5ZKV4r0m5zc3+X1zMvrREZncZgAGHLzwLv3084gMnT24N/rU1fxgX/53dyho8EvP4HoKSn2r61kbprO0d3tPD87Q4V6gKscEqAUAAAFzklEQVR4nO2aC3eiOBiG8YKIqCiGIXa8bSpulTrTdnl2Zlt360z//3+aJBBARerUetvzPqfnGBMueUjIl8RqGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADnCKvl8/nUFdybnm3l4Y5PXcG9cRpmHnR+6gruDTcs5GD9zw3NxXBwd3d36jruRyfP0HrWPrTbf526jvuRbWhSk/K/Jjes9P84dR33I9PQNObF+bXZYCxl+OG0FX0zWYam+0WrVmv2V6Ylhvftv09c1TeSZei2eAHTlnbK8L7dv1DFDEO9HJX1JtzwozS861cqlfZFjqqbhuZIlTm+FxneC8ELVdw0fOAxIsTxJ6HhfVsK9vvfTlrXt5HRS+c1VTh5EobfleDHixxOMwwbpbh0yg0rNx9DwZtLbMHM99BseEn5h1BPCF5kC2YY0oKlk1a5E5Urw4sV3DAktqcFQcv3nbA8Muxf7uR0zZAMe1KtU101rPzzKeJRnbl0qgn8ey31tRcOViWRnjCRrCVHP4UvwaSaygmOZWha1bXyuJe2I/6LClpfXUPRqIsr2fF3o1hvymNEll+ThY2k1B6IQj/JMNwFO5JhYauhQhkufTP9YOSV0heyRUM1dZEShubKc6xPeVY9fbg+ODtDx11p+thQNwwiP8tpw2lR3oXoOhWfRU8ZUsOQWXRxsH7aKb5i+O8Ww6KsoK4TyyJ6XRmSQe9pJq5IZmnDrivyrOfmQBq6ypCOetWJNDQP1k1XDU29t254E5mtvYfSkAwnEcrQ5bMFxiNOliEZqqzYUGY9i0an3eMYFuhVS7QiG9nlFcP+pz8jviWGq88jNORxlD1sMfzCs3rGhuHgqIYF6jq1ZUn3h9qq4Y+1gC8NGzmGcYOdmyEfI+r+zKupF1/10vU5TV4bXm9pw8GZGBYazVS5MlxXDA2rbCpgsaHhBEFJjI7keTfDIJiOqJgrTo9nSJLQxLrcsH9z0w8XT+m1RTiWWrbAH8eGfNZny5K6s4thgdZtW8RKcrhfDzYNTSOasGndRYlHi/73b5XN9WFoWAjD3DAxVI9pHOxkqO7pRsuZgBOnDmWoT1TZxO+Ea/xHtQSOJ6XKMNS5TQwpR8Q52XF3aEN5eEGPljKtxWixWMi3e7x4eJ8QmdFL1TCqtXgYDvdpHqNdjGSfJjKk4ucbMk8MeZejwkZG8B3a8IEr8lN8ueruGoSOKLkWrTci7vu8mpuGD8Ys7B/BeBnvtT1W+nzyndqIkob0+ueIs5jFhobD2FK0SrG6iyG5ZYzNxcA0EpeoWeSKmUROw0e0eChDPpjywOWxYC6eZWSoPfbTLRgZGtWACYLYMIkWO46lPNHi0YLKLtkVhiNzGBza0DQGnt8ZyWepDPm7uLKVKKOFkRMPMyJ+jmEYD7s6/anGl4Ma8js3qPjllE0TwzXeMeKnDPkisl4kvSMYmnLIuB628g23zNq2tKG+ZdaWGGpOeTIj0UhzWEP1Qk7E74c/3mSY0Ybi1azmGnIYpdcHH2liKLVmW877PcPP8i605zhiirbVkF2NJ3ztdUTDqKL7GzK5AjZ1I9xR2Gb4uUjGU5OqXvo+Eb+Ua2huN3R/x1AjK3ex1T5NEi2kIY+HY8+kC2/occPGkgWd4d7/0PNmwzohxE3veXRsnmMLQ8oThhxpijwl99qqvk4Uui0v6vNkQxq64ng5lhYtYpHG/Atfno4MnjmY++vbKkcz9AYtTimVsxQ5gyU3fBFFomaOSAxkZ/MmLUU5PGugjuqJxEu4AuOHv5S77KWm1cSpzvJl7676VsPLoVQnOWwfSy8Hb3x7e3u1yjhF69QVBK+ybJbPm6b3ukQuHVs/b+ynfQ3z5zQnZ3MXHoYwPDdguIOhXzxv9p56d0vnTu11CQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHCG/ALEebfyBqnm8gAAAABJRU5ErkJggg==" alt="Logo JCALCULO" class="logo">
-        <!-- Updated Title -->
-        <h1>JCALCULO</h1>
+        <h1>jCalculo</h1>
 
-        <!-- Mensaje para usuarios no autenticados -->
-        <div id="auth-message" class="auth-message">
-            Por favor, regístrate o inicia sesión para usar la calculadora.
-        </div>
-
-        <!-- Formulario de Registro -->
-        <div id="registro-section">
-            <h3>Regístrate</h3>
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" placeholder="Tu nombre" required>
-            <label for="profesion">Profesión:</label>
-            <select id="profesion" required>
-                <option value="ganadero">Ganadero</option>
-                <option value="tecnico">Técnico</option>
-                <option value="otro">Otro</option>
-            </select>
-            <label for="email">Correo Electrónico:</label>
-            <input type="email" id="email" placeholder="tu@correo.com" required>
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" placeholder="Contraseña" required>
-            <button type="button" onclick="registrarUsuario()">Registrarse</button>
-            <p>¿Ya tienes cuenta? <a href="#" onclick="mostrarLoginUsuario()">Inicia sesión</a></p>
-        </div>
-
-        <!-- Formulario de Login de Usuario -->
+        <!-- Sección de login -->
         <div id="login-section">
-            <h3>Iniciar Sesión</h3>
-            <label for="login-email">Correo Electrónico:</label>
-            <input type="email" id="login-email" placeholder="tu@correo.com" required>
-            <label for="login-password">Contraseña:</label>
-            <input type="password" id="login-password" placeholder="Contraseña" required>
-            <button type="button" onclick="loginUsuario()">Iniciar Sesión</button>
-            <p>¿No tienes cuenta? <a href="#" onclick="mostrarRegistro()">Regístrate</a></p>
+            <h2>Iniciar Sesión</h2>
+            <input type="email" id="login-email" placeholder="Correo electrónico">
+            <input type="password" id="login-password" placeholder="Contraseña">
+            <button onclick="iniciarSesion()">Iniciar Sesión</button>
+            <p>¿No tienes cuenta? <a href="#" onclick="mostrarRegistro()">Regístrate aquí</a></p>
         </div>
 
-        <!-- Sección de usuario logueado -->
+        <!-- Sección de registro -->
+        <div id="registro-section">
+            <h2>Registro</h2>
+            <input type="email" id="registro-email" placeholder="Correo electrónico">
+            <input type="password" id="registro-password" placeholder="Contraseña">
+            <button onclick="registrarUsuario()">Registrarse</button>
+            <p>¿Ya tienes cuenta? <a href="#" onclick="mostrarLogin()">Inicia sesión aquí</a></p>
+        </div>
+
+        <!-- Sección de usuario autenticado -->
         <div id="user-section">
-            <h3>Bienvenido, <span id="user-name">Usuario</span></h3>
-            <p>Profesión: <span id="user-profesion">N/A</span></p>
-            <label for="notificacion-preferencia">Notificarme sobre el cambio de pezoneras:</label>
-            <select id="notificacion-preferencia">
-                <option value="email">Por Correo Electrónico</option>
-                <option value="movil">Por Notificación Móvil</option>
-                <option value="ninguna">No notificar</option>
-            </select>
-            <button type="button" onclick="guardarPreferenciaNotificacion()">Guardar Preferencia</button>
-            <button type="button" onclick="cerrarSesionUsuario()">Cerrar Sesión</button>
+            <p class="auth-message">Bienvenido, <span id="user-email"></span> | <a href="#" onclick="cerrarSesion()">Cerrar Sesión</a></p>
         </div>
 
-        <!-- Formulario de la calculadora (visible solo para usuarios autenticados) -->
+        <!-- Formulario de la calculadora -->
         <div id="formulario-section">
-            <form id="formulario">
-                <label for="ordenosDia">Ordeños por Día:</label>
-                <input type="number" id="ordenosDia" required>
-
-                <label for="puntosOrdeno">Puntos de Ordeño (Inicial):</label>
-                <input type="number" id="puntosOrdeno" required>
-
-                <label for="vacas">Vacas Ordeñadas (Inicial):</label>
-                <input type="number" id="vacas" required>
-
-                <label for="durabilidad">Durabilidad de Pezoneras por Ordeño por Punto:</label>
-                <input type="number" id="durabilidad" value="2500" required>
-
-                <label for="fechaInicio">Fecha de Inicio (opcional):</label>
-                <input type="date" id="fechaInicio" placeholder="YYYY-MM-DD">
-
-                <label for="diasEspecificos">Calcular para Días Específicos (opcional):</label>
-                <input type="number" id="diasEspecificos" placeholder="Número de días">
-
-                <label for="realizarModificacion">¿Modificar Vacas o Puntos?</label>
-                <select id="realizarModificacion" onchange="mostrarCamposModificacion()">
-                    <option value="no">No</option>
-                    <option value="si">Sí</option>
-                </select>
-
-                <div id="modificacion-campos" class="modificacion-campos">
-                    <label for="fechaCambio">Fecha de Cambio:</label>
-                    <input type="date" id="fechaCambio" placeholder="YYYY-MM-DD">
-
-                    <label for="nuevoNumeroVacas">Nuevo Número de Vacas:</label>
-                    <input type="number" id="nuevoNumeroVacas" placeholder="Nuevo número de vacas">
-
-                    <label for="nuevoPuntosOrdeno">Nuevo Número de Puntos:</label>
-                    <input type="number" id="nuevoPuntosOrdeno" placeholder="Nuevo número de puntos">
-                </div>
-
-                <label for="guardarCalculo">¿Guardar este cálculo en el historial?</label>
-                <select id="guardarCalculo">
-                    <option value="no">No</option>
-                    <option value="si">Sí</option>
-                </select>
-
-                <button type="button" onclick="calcular()">Calcular</button>
-                <button type="button" onclick="limpiarPantalla()">Limpiar</button>
-            </form>
+            <label for="num1">Primer número:</label>
+            <input type="number" id="num1" placeholder="Ingresa el primer número">
+            <label for="num2">Segundo número:</label>
+            <input type="number" id="num2" placeholder="Ingresa el segundo número">
+            <label for="operacion">Operación:</label>
+            <select id="operacion">
+                <option value="suma">Suma</option>
+                <option value="resta">Resta</option>
+                <option value="multiplicacion">Multiplicación</option>
+                <option value="division">División</option>
+            </select>
+            <label><input type="checkbox" id="guardar-calculo"> Guardar este cálculo</label>
+            <button onclick="calcular()">Calcular</button>
             <div id="resultado"></div>
         </div>
 
-        <!-- Historial de cálculos -->
-        <div id="history-section" style="display: none;">
-            <h3>Historial de Cálculos</h3>
-            <button type="button" onclick="exportarHistorialExcel()">Exportar a Excel</button>
-            <ul id="history-list"></ul>
+        <!-- Sección de cálculos registrados -->
+        <div id="calculos-registrados">
+            <h3>Mis Cálculos</h3>
+            <ul id="lista-calculos"></ul>
+            <button onclick="exportarCalculosUsuario()">Exportar a Excel</button>
         </div>
 
-        <!-- Publicidad con Google AdSense -->
-        <div style="margin-top: 20px; text-align: center;">
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-tu-id-de-cliente" crossorigin="anonymous"></script>
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-tu-id-de-cliente"
-                 data-ad-slot="tu-id-de-slot"
-                 data-ad-format="auto"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-
-        <!-- Sección de publicidad dinámica -->
+        <!-- Sección de publicidad principal -->
         <div id="publicidad-section"></div>
 
-        <!-- Formulario de login para admin -->
-        <div id="admin-login" style="display: none; margin-top: 20px;">
-            <h3>Iniciar Sesión (Admin)</h3>
-            <label for="admin-email">Correo Electrónico:</label>
-            <input type="email" id="admin-email" placeholder="alfstiven@gmail.com">
-            <label for="admin-password">Contraseña:</label>
-            <input type="password" id="admin-password" placeholder="Dylan-2022">
-            <button type="button" onclick="loginAdmin()">Iniciar Sesión</button>
+        <!-- Sección de donaciones -->
+        <div id="donaciones-section">
+            <p>¿Te ha sido útil esta calculadora? ¡Considera hacer una donación!</p>
+            <a href="https://www.paypal.com/donate?hosted_button_id=TU_CODIGO" target="_blank">Dona aquí</a>
         </div>
 
-        <!-- Formulario para agregar publicidad -->
-        <div id="admin-form" style="display: none;">
-            <h3>Administrar Publicidad</h3>
-            <h4>Publicidad Principal (Texto o Imagen)</h4>
-            <label for="ad-type">Tipo de Publicidad:</label>
-            <select id="ad-type" onchange="mostrarCamposPublicidad()">
+        <!-- Formulario de administración -->
+        <div id="admin-form">
+            <h2>Panel de Administración</h2>
+            <h3>Publicidad Principal</h3>
+            <label for="publicidad-tipo">Tipo de Publicidad:</label>
+            <select id="publicidad-tipo" onchange="mostrarCamposPublicidad()">
                 <option value="texto">Texto</option>
                 <option value="imagen">Imagen</option>
             </select>
-            <div id="ad-texto" style="display: block;">
-                <label for="ad-texto-content">Texto de la Publicidad:</label>
-                <textarea id="ad-texto-content" placeholder="Escribe el texto de la publicidad"></textarea>
+            <div id="publicidad-texto-campos">
+                <label for="publicidad-texto">Texto:</label>
+                <textarea id="publicidad-texto" placeholder="Ingresa el texto de la publicidad"></textarea>
+                <label for="publicidad-url">URL (opcional):</label>
+                <input type="url" id="publicidad-url" placeholder="Ingresa la URL">
             </div>
-            <div id="ad-imagen" style="display: none;">
-                <label for="ad-imagen-source">Fuente de la Imagen:</label>
-                <select id="ad-imagen-source" onchange="mostrarCamposImagen()">
-                    <option value="url">URL</option>
-                    <option value="upload">Subir desde el dispositivo</option>
-                </select>
-                <div id="ad-imagen-url-section" style="display: block;">
-                    <label for="ad-imagen-url">URL de la Imagen:</label>
-                    <input type="text" id="ad-imagen-url" placeholder="Ingresa la URL de la imagen (opcional)">
-                </div>
-                <div id="ad-imagen-upload-section" style="display: none;">
-                    <label for="ad-imagen-upload">Subir Imagen:</label>
-                    <input type="file" id="ad-imagen-upload" accept="image/*">
-                </div>
+            <div id="publicidad-imagen-campos" class="modificacion-campos">
+                <label for="publicidad-imagen">Subir Imagen:</label>
+                <input type="file" id="publicidad-imagen" accept="image/*">
+                <label for="publicidad-imagen-url">URL (opcional):</label>
+                <input type="url" id="publicidad-imagen-url" placeholder="Ingresa la URL">
             </div>
-            <button type="button" onclick="guardarPublicidad()">Guardar Publicidad Principal</button>
+            <button onclick="guardarPublicidadPrincipal()">Guardar Publicidad Principal</button>
 
-            <h4>Publicidad Secundaria (Imagen con Enlace)</h4>
-            <label for="ad-secundaria-source">Fuente de la Imagen:</label>
-            <select id="ad-secundaria-source" onchange="mostrarCamposImagenSecundaria()">
-                <option value="url">URL</option>
-                <option value="upload">Subir desde el dispositivo</option>
-            </select>
-            <div id="ad-secundaria-url-section" style="display: block;">
-                <label for="ad-secundaria-imagen-url">URL de la Imagen:</label>
-                <input type="text" id="ad-secundaria-imagen-url" placeholder="Ingresa la URL de la imagen (opcional)">
-            </div>
-            <div id="ad-secundaria-upload-section" style="display: none;">
-                <label for="ad-secundaria-imagen-upload">Subir Imagen:</label>
-                <input type="file" id="ad-secundaria-imagen-upload" accept="image/*">
-            </div>
-            <label for="ad-secundaria-link">Enlace de la Publicidad (opcional si subes desde el dispositivo):</label>
-            <input type="text" id="ad-secundaria-link" placeholder="Ingresa el enlace (ej. https://ejemplo.com)">
-            <button type="button" onclick="guardarPublicidadSecundaria()">Guardar Publicidad Secundaria</button>
+            <h3>Publicidad Secundaria (Donaciones)</h3>
+            <label for="donaciones-imagen">Subir Imagen:</label>
+            <input type="file" id="donaciones-imagen" accept="image/*">
+            <label for="donaciones-url">URL (opcional):</label>
+            <input type="url" id="donaciones-url" placeholder="Ingresa la URL">
+            <button onclick="guardarPublicidadSecundaria()">Guardar Publicidad Secundaria</button>
 
-            <h4>Mensaje del Pop-up</h4>
-            <label for="popup-message-content">Mensaje del Pop-up:</label>
-            <textarea id="popup-message-content" placeholder="Escribe el mensaje del pop-up"></textarea>
-            <button type="button" onclick="guardarPopupMessage()">Guardar Mensaje del Pop-up</button>
-
-            <!-- Admin: Ver historial de todos los usuarios -->
-            <div id="admin-history-section">
-                <h3>Historial de Cálculos de Todos los Usuarios</h3>
-                <button type="button" onclick="exportarHistorialAdminExcel()">Exportar a Excel</button>
-                <ul id="admin-history-list"></ul>
+            <!-- Sección para ver todos los cálculos -->
+            <div id="admin-calculos">
+                <h3>Cálculos de Todos los Usuarios</h3>
+                <ul id="lista-calculos-admin"></ul>
+                <button onclick="exportarCalculosAdmin()">Exportar Todos los Cálculos a Excel</button>
             </div>
-
-            <button type="button" onclick="cerrarSesionAdmin()">Cerrar Sesión</button>
         </div>
 
-        <!-- WhatsApp Section -->
-        <div id="whatsapp-section">
-            <label for="codigoCliente">Código del Cliente:</label>
-            <input type="text" id="codigoCliente" placeholder="Ingresa el código del cliente" required>
-            <button type="button" onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
-        </div>
-
-        <!-- Sección de publicidad secundaria -->
-        <div id="donaciones-section" style="text-align: center;"></div>
-
-        <!-- Marketing de Afiliados (text updated) -->
-        <div style="margin-top: 20px; text-align: center;">
-            <p>¿Necesitas pezoneras nuevas? <a href="/comprar-pezoneras" target="_blank">Compra aquí</a>.</p>
-        </div>
-
-        <div class="signature">J.Castle</div>
+        <div class="signature">jCalculo</div>
     </div>
 
     <script>
         // Configuración de Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyDokCTsjDgQ94nu23rXf_HkvLeXpZmJU2c",
-            authDomain: "jcalculador-ac481.firebaseapp.com",
-            projectId: "jcalculador-ac481",
-            storageBucket: "jcalculador-ac481.firebasestorage.app",
-            messagingSenderId: "597989051329",
-            appId: "1:597989051329:web:33b32c795cf7f51c63bd40",
-            measurementId: "G-X4Z78DYMLD"
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_AUTH_DOMAIN",
+            projectId: "TU_PROJECT_ID",
+            storageBucket: "TU_STORAGE_BUCKET",
+            messagingSenderId: "TU_MESSAGING_SENDER_ID",
+            appId: "TU_APP_ID"
         };
 
         // Inicializar Firebase
@@ -477,811 +290,494 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
-        const messaging = firebase.messaging();
 
-        let resultadoTexto = '';
-        let costoManoObra = 0;
-        let vacasIniciales = 0;
-        let puntosOrdenoIniciales = 0;
-        let isAdminLoggedIn = false;
-        let fechaProximoCambio = null;
-        let currentUser = null;
-        let adminUser = null;
-        const ADMIN_EMAIL = "alfstiven@gmail.com"; // Define the admin email
+        // UID del administrador (reemplaza con tu UID real)
+        const ADMIN_UID = 'UID_DEL_ADMIN';
 
-        // Solicitar permiso para notificaciones
-        function solicitarPermisoNotificaciones() {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    console.log('Permiso de notificaciones concedido.');
-                    messaging.getToken({ vapidKey: 'BCaTUfW00kYdZyQ2BqdbR6HeTnAZtpxRWrF3jscJQXz4-3SaDNP2Z-y8EtWMtEu6DeUNekFhZQCQOYqRmEn-9Xg' }).then(token => {
-                        console.log('Token FCM:', token);
-                        if (currentUser) {
-                            db.collection('users').doc(currentUser.uid).update({
-                                fcmToken: token
-                            }).catch(error => {
-                                console.error('Error al guardar el token FCM:', error);
-                            });
-                        }
-                    }).catch(error => {
-                        console.error('Error al obtener el token FCM:', error);
-                    });
-                } else {
-                    console.log('Permiso de notificaciones denegado.');
-                }
-            }).catch(error => {
-                console.error('Error al solicitar permiso de notificaciones:', error);
-            });
-        }
-
-        // Mostrar el pop-up y cargar publicidades al cargar la página
-        window.onload = function() {
-            document.getElementById('popup').style.display = 'flex';
-            try {
-                cargarPublicidad();
-                cargarPublicidadSecundaria();
-                cargarPopupMessage();
-            } catch (error) {
-                console.error('Error al cargar las publicidades:', error);
-            }
-            // Verificar si hay un usuario logueado
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    if (!user.emailVerified) {
-                        alert('Por favor, verifica tu correo electrónico para continuar.');
-                        auth.signOut();
-                        return;
-                    }
-                    currentUser = user;
-                    cargarDatosUsuario(user.uid);
-                    document.getElementById('registro-section').style.display = 'none';
-                    document.getElementById('login-section').style.display = 'none';
-                    document.getElementById('user-section').style.display = 'block';
-                    document.getElementById('formulario-section').style.display = 'block';
-                    document.getElementById('auth-message').style.display = 'none';
-                    solicitarPermisoNotificaciones();
-                    programarNotificacion(user.uid);
-                    cargarHistorialUsuario(user.uid);
-                } else {
-                    currentUser = null;
-                    document.getElementById('registro-section').style.display = 'block';
-                    document.getElementById('user-section').style.display = 'none';
-                    document.getElementById('formulario-section').style.display = 'none';
-                    document.getElementById('auth-message').style.display = 'block';
-                }
-            });
-        };
-
-        function cerrarPopup() {
-            document.getElementById('popup').style.display = 'none';
-        }
-
-        function mostrarCamposModificacion() {
-            const seleccion = document.getElementById('realizarModificacion').value;
-            document.getElementById('modificacion-campos').style.display = seleccion === 'si' ? 'block' : 'none';
-        }
-
-        function calcular() {
-            const ordenosDiaInput = document.getElementById('ordenosDia').value;
-            const puntosOrdenoInput = document.getElementById('puntosOrdeno').value;
-            const vacasInput = document.getElementById('vacas').value;
-            const durabilidadInput = document.getElementById('durabilidad').value;
-            const fechaInicioInput = document.getElementById('fechaInicio').value;
-            const diasEspecificosInput = document.getElementById('diasEspecificos').value;
-            const realizarModificacion = document.getElementById('realizarModificacion').value;
-            const fechaCambioInput = document.getElementById('fechaCambio').value;
-            const nuevoNumeroVacasInput = document.getElementById('nuevoNumeroVacas').value;
-            const nuevoPuntosOrdenoInput = document.getElementById('nuevoPuntosOrdeno').value;
-            const guardarCalculo = document.getElementById('guardarCalculo').value;
-
-            const ordenosDia = parseInt(ordenosDiaInput) || 0;
-            let puntosOrdeno = parseInt(puntosOrdenoInput) || 0;
-            const vacas = parseInt(vacasInput) || 0;
-            const durabilidad = parseInt(durabilidadInput) || 0;
-            const diasEspecificos = parseInt(diasEspecificosInput) || 0;
-            const nuevoNumeroVacas = parseInt(nuevoNumeroVacasInput) || 0;
-            const nuevoPuntosOrdeno = parseInt(nuevoPuntosOrdenoInput) || 0;
-
-            vacasIniciales = vacas;
-            puntosOrdenoIniciales = puntosOrdeno;
-
-            if (ordenosDia <= 0) {
-                alert("Por favor, ingresa un número válido de ordeños por día (mayor que 0).");
-                return;
-            }
-            if (puntosOrdeno <= 0) {
-                alert("Por favor, ingresa un número válido de puntos de ordeño (mayor que 0).");
-                return;
-            }
-            if (vacas <= 0) {
-                alert("Por favor, ingresa un número válido de vacas ordeñadas (mayor que 0).");
-                return;
-            }
-            if (durabilidad <= 0) {
-                alert("Por favor, ingresa una durabilidad válida para las pezoneras (mayor que 0).");
-                return;
-            }
-
-            let fechaInicio = fechaInicioInput ? new Date(fechaInicioInput) : new Date();
-            if (isNaN(fechaInicio.getTime())) {
-                alert("Por favor, selecciona una fecha de inicio válida.");
-                return;
-            }
-
-            if (diasEspecificos > 0 && ordenosDia === 0 && puntosOrdeno === 0 && vacas === 0) {
-                const fechaDiasEspecificos = new Date(fechaInicio.getTime() + diasEspecificos * 86400000);
-                resultadoTexto = `
-                    JCALCULO
-                    Fecha Inicio: ${fechaInicio.toLocaleDateString('es-ES')}
-                    Fecha para ${diasEspecificos} Días: ${fechaDiasEspecificos.toLocaleDateString('es-ES')}
-                `;
-                mostrarResultados();
-                if (guardarCalculo === 'si' && currentUser) {
-                    guardarCalculoEnHistorial(currentUser.uid, resultadoTexto);
-                }
-                return;
-            }
-
-            const ordeñosTotalesPorDia = ordenosDia * vacas;
-            const ordeñosPorPuntoPorDia = ordeñosTotalesPorDia / puntosOrdeno;
-            const diasDurabilidadInicial = durabilidad / ordeñosPorPuntoPorDia;
-
-            const fechaProximoCambioInicial = new Date(fechaInicio);
-            fechaProximoCambioInicial.setDate(fechaInicio.getDate() + Math.floor(diasDurabilidadInicial));
-
-            let fechaDiasEspecificos = diasEspecificos > 0 ? `Fecha para ${diasEspecificos} Días: ${new Date(fechaInicio.getTime() + diasEspecificos * 86400000).toLocaleDateString('es-ES')}` : '';
-
-            const diasEnMes = 30.42;
-            const mesesEquivalentes = Math.round(diasDurabilidadInicial / diasEnMes);
-
-            const pezonerasPorPunto = 4;
-            let totalPezoneras = puntosOrdeno * pezonerasPorPunto;
-            costoManoObra = puntosOrdeno * 4;
-            let desgastePezonerasPorDiaInicial = totalPezoneras / diasDurabilidadInicial;
-
-            let durabilidadAjustada = diasDurabilidadInicial;
-            let fechaProximoCambioAjustada = fechaProximoCambioInicial;
-            let desgastePezonerasPorDiaAjustada = desgastePezonerasPorDiaInicial;
-            let mensajeAjuste = '';
-
-            if (realizarModificacion === 'si' && fechaCambioInput && (nuevoNumeroVacas > 0 || nuevoPuntosOrdeno > 0)) {
-                const fechaCambio = new Date(fechaCambioInput);
-                if (isNaN(fechaCambio.getTime())) {
-                    alert("Por favor, selecciona una fecha de cambio válida.");
-                    return;
-                }
-
-                const diasTranscurridos = Math.floor((fechaCambio - fechaInicio) / (1000 * 60 * 60 * 24));
-
-                if (diasTranscurridos < 0) {
-                    alert("La fecha de cambio no puede ser anterior a la fecha de inicio.");
-                    return;
-                }
-
-                const ordeñosPorPuntoHastaCambio = ordeñosPorPuntoPorDia * diasTranscurridos;
-                const durabilidadRestante = durabilidad - ordeñosPorPuntoHastaCambio;
-
-                if (durabilidadRestante <= 0) {
-                    mensajeAjuste = `Nota: Las pezoneras ya debieron cambiarse antes de ${fechaCambio.toLocaleDateString('es-ES')}.`;
-                } else {
-                    const vacasAjustadas = nuevoNumeroVacas > 0 ? nuevoNumeroVacas : vacas;
-                    const puntosOrdenoAjustados = nuevoPuntosOrdeno > 0 ? nuevoPuntosOrdeno : puntosOrdeno;
-                    totalPezoneras = puntosOrdenoAjustados * pezonerasPorPunto;
-                    costoManoObra = puntosOrdenoAjustados * 4;
-                    const nuevosOrdeñosTotalesPorDia = ordenosDia * vacasAjustadas;
-                    const nuevosOrdeñosPorPuntoPorDia = nuevosOrdeñosTotalesPorDia / puntosOrdenoAjustados;
-                    const diasDurabilidadRestante = durabilidadRestante / nuevosOrdeñosPorPuntoPorDia;
-
-                    fechaProximoCambioAjustada = new Date(fechaCambio);
-                    fechaProximoCambioAjustada.setDate(fechaCambio.getDate() + Math.floor(diasDurabilidadRestante));
-
-                    durabilidadAjustada = diasTranscurridos + diasDurabilidadRestante;
-                    desgastePezonerasPorDiaAjustada = totalPezoneras / durabilidadAjustada;
-
-                    mensajeAjuste = `
-                        Ajuste por Modificación:
-                        Fecha de Cambio: ${fechaCambio.toLocaleDateString('es-ES')}
-                        Nuevo Número de Vacas: ${vacasAjustadas}
-                        Nuevo Número de Puntos: ${puntosOrdenoAjustados}
-                        Durabilidad Ajustada: ${Math.floor(durabilidadAjustada)} días
-                        Nueva Fecha de Cambio: ${fechaProximoCambioAjustada.toLocaleDateString('es-ES')}
-                        Total Pezoneras: ${totalPezoneras}
-                        Desgaste por Día: ${desgastePezonerasPorDiaAjustada.toFixed(2)}
-                    `;
-                }
-            }
-
-            fechaProximoCambio = realizarModificacion === 'si' ? fechaProximoCambioAjustada : fechaProximoCambioInicial;
-
-            resultadoTexto = `
-                JCALCULO
-                Fecha Inicio: ${fechaInicio.toLocaleDateString('es-ES')}
-                Vacas Iniciales: ${vacasIniciales}
-                Puntos Iniciales: ${puntosOrdenoIniciales}
-                Durabilidad Inicial: ${Math.floor(diasDurabilidadInicial)} días
-                Próximo Cambio Inicial: ${fechaProximoCambioInicial.toLocaleDateString('es-ES')}
-                Meses Equivalentes: ${mesesEquivalentes}
-                ${fechaDiasEspecificos}
-                Total Pezoneras Inicial: ${puntosOrdeno * pezonerasPorPunto}
-                Desgaste por Día Inicial: ${desgastePezonerasPorDiaInicial.toFixed(2)}
-                Costo Mano de Obra: ${costoManoObra} €
-                ${mensajeAjuste}
-            `;
-            mostrarResultados();
-
-            // Guardar la fecha del próximo cambio para el usuario
-            if (currentUser) {
-                guardarFechaProximoCambio(currentUser.uid, fechaProximoCambio);
-                if (guardarCalculo === 'si') {
-                    guardarCalculoEnHistorial(currentUser.uid, resultadoTexto);
-                }
-            }
-        }
-
-        function mostrarResultados() {
-            document.getElementById('resultado').innerHTML = resultadoTexto.replace(/\n/g, '<br>');
-            document.getElementById('whatsapp-section').style.display = 'block';
-            document.getElementById('donaciones-section').style.display = 'block';
-        }
-
-        function enviarWhatsApp() {
-            const codigoCliente = document.getElementById('codigoCliente').value.trim();
-            if (!codigoCliente) {
-                alert("Ingresa el código del cliente.");
-                return;
-            }
-            const mensajeWhatsApp = `Código del Cliente: ${codigoCliente}\n${resultadoTexto}`;
-            const urlWhatsApp = `https://api.whatsapp.com/send?text=${encodeURIComponent(mensajeWhatsApp)}`;
-            window.open(urlWhatsApp, '_blank');
-        }
-
-        function limpiarPantalla() {
-            const durabilidad = document.getElementById('durabilidad').value;
-            document.getElementById('formulario').reset();
-            document.getElementById('durabilidad').value = durabilidad;
-            document.getElementById('modificacion-campos').style.display = 'none';
-            document.getElementById('resultado').innerHTML = '';
-            document.getElementById('whatsapp-section').style.display = 'none';
-            document.getElementById('donaciones-section').style.display = 'none';
-            document.getElementById('codigoCliente').value = '';
-            resultadoTexto = '';
-            costoManoObra = 0;
-            vacasIniciales = 0;
-            puntosOrdenoIniciales = 0;
-            fechaProximoCambio = null;
-        }
-
-        // Funciones de administración
+        // Mostrar login de admin
         function mostrarLoginAdmin() {
-            document.getElementById('admin-login').style.display = 'block';
-            document.getElementById('admin-form').style.display = 'none';
-            return false;
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('registro-section').style.display = 'none';
+            document.getElementById('formulario-section').style.display = 'none';
         }
 
-        function loginAdmin() {
-            const email = document.getElementById('admin-email').value.trim();
-            const password = document.getElementById('admin-password').value.trim();
+        // Mostrar registro
+        function mostrarRegistro() {
+            document.getElementById('registro-section').style.display = 'block';
+            document.getElementById('login-section').style.display = 'none';
+        }
 
-            if (!email || !password) {
-                alert('Por favor, completa todos los campos.');
-                return;
-            }
+        // Mostrar login
+        function mostrarLogin() {
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('registro-section').style.display = 'none';
+        }
 
-            // Verificar si el email es el del administrador
-            if (email !== ADMIN_EMAIL) {
-                alert('Acceso denegado: Solo el administrador puede iniciar sesión aquí.');
-                return;
-            }
-
-            auth.signInWithEmailAndPassword(email, password)
+        // Registrar usuario
+        function registrarUsuario() {
+            const email = document.getElementById('registro-email').value;
+            const password = document.getElementById('registro-password').value;
+            auth.createUserWithEmailAndPassword(email, password)
                 .then(userCredential => {
-                    adminUser = userCredential.user;
-                    isAdminLoggedIn = true;
-                    document.getElementById('admin-login').style.display = 'none';
-                    document.getElementById('admin-form').style.display = 'block';
-                    try {
-                        cargarPublicidad();
-                        cargarPublicidadSecundaria();
-                        cargarPopupMessage();
-                        cargarHistorialAdmin(); // Cargar historial de todos los usuarios
-                    } catch (error) {
-                        console.error('Error al cargar las publicidades después de login:', error);
-                    }
+                    alert('Usuario registrado con éxito');
+                    mostrarLogin();
                 })
                 .catch(error => {
-                    console.error('Error al iniciar sesión como administrador:', error);
+                    alert('Error al registrar: ' + error.message);
+                });
+        }
+
+        // Iniciar sesión
+        function iniciarSesion() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            auth.signInWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    mostrarFormulario();
+                })
+                .catch(error => {
                     alert('Error al iniciar sesión: ' + error.message);
                 });
         }
 
-        function cerrarSesionAdmin() {
-            auth.signOut()
-                .then(() => {
-                    isAdminLoggedIn = false;
-                    adminUser = null;
-                    document.getElementById('admin-login').style.display = 'none';
-                    document.getElementById('admin-form').style.display = 'none';
-                    document.getElementById('admin-email').value = '';
-                    document.getElementById('admin-password').value = '';
-                    document.getElementById('admin-history-list').innerHTML = '';
-                })
-                .catch(error => {
-                    console.error('Error al cerrar sesión del administrador:', error);
-                    alert('Error al cerrar sesión: ' + error.message);
-                });
+        // Cerrar sesión
+        function cerrarSesion() {
+            auth.signOut().then(() => {
+                document.getElementById('user-section').style.display = 'none';
+                document.getElementById('formulario-section').style.display = 'none';
+                document.getElementById('calculos-registrados').style.display = 'none';
+                document.getElementById('admin-form').style.display = 'none';
+                document.getElementById('login-section').style.display = 'block';
+            });
         }
 
-        function mostrarCamposPublicidad() {
-            const adType = document.getElementById('ad-type').value;
-            document.getElementById('ad-texto').style.display = adType === 'texto' ? 'block' : 'none';
-            document.getElementById('ad-imagen').style.display = adType === 'imagen' ? 'block' : 'none';
+        // Mostrar formulario de calculadora
+        function mostrarFormulario() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('registro-section').style.display = 'none';
+            document.getElementById('user-section').style.display = 'block';
+            document.getElementById('formulario-section').style.display = 'block';
+            document.getElementById('calculos-registrados').style.display = 'block';
+            document.getElementById('user-email').textContent = auth.currentUser.email;
+            cargarCalculosUsuario();
+            mostrarAdmin();
         }
 
-        function mostrarCamposImagen() {
-            const source = document.getElementById('ad-imagen-source').value;
-            document.getElementById('ad-imagen-url-section').style.display = source === 'url' ? 'block' : 'none';
-            document.getElementById('ad-imagen-upload-section').style.display = source === 'upload' ? 'block' : 'none';
+        // Mostrar formulario de admin solo si es administrador
+        function mostrarAdmin() {
+            if (auth.currentUser && auth.currentUser.uid === ADMIN_UID) {
+                document.getElementById('admin-form').style.display = 'block';
+                cargarCalculosAdmin();
+            } else {
+                document.getElementById('admin-form').style.display = 'none';
+            }
         }
 
-        function mostrarCamposImagenSecundaria() {
-            const source = document.getElementById('ad-secundaria-source').value;
-            document.getElementById('ad-secundaria-url-section').style.display = source === 'url' ? 'block' : 'none';
-            document.getElementById('ad-secundaria-upload-section').style.display = source === 'upload' ? 'block' : 'none';
-        }
+        // Calcular
+        function calcular() {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const num2 = parseFloat(document.getElementById('num2').value);
+            const operacion = document.getElementById('operacion').value;
+            const guardar = document.getElementById('guardar-calculo').checked;
+            let resultado;
 
-        function guardarPublicidad() {
-            if (!isAdminLoggedIn) {
-                alert('Debes iniciar sesión como administrador para guardar la publicidad.');
+            if (isNaN(num1) || isNaN(num2)) {
+                document.getElementById('resultado').innerHTML = 'Por favor, ingresa números válidos.';
                 return;
             }
 
-            const adType = document.getElementById('ad-type').value;
-            let adContent = {};
+            switch (operacion) {
+                case 'suma':
+                    resultado = num1 + num2;
+                    break;
+                case 'resta':
+                    resultado = num1 - num2;
+                    break;
+                case 'multiplicacion':
+                    resultado = num1 * num2;
+                    break;
+                case 'division':
+                    if (num2 === 0) {
+                        document.getElementById('resultado').innerHTML = 'No se puede dividir por cero.';
+                        return;
+                    }
+                    resultado = num1 / num2;
+                    break;
+            }
 
-            if (adType === 'texto') {
-                const textoContent = document.getElementById('ad-texto-content').value.trim();
-                if (!textoContent) {
-                    alert('Por favor, ingresa un texto para la publicidad principal.');
-                    return;
-                }
-                adContent = {
-                    type: 'texto',
-                    content: textoContent
-                };
-                saveAdToFirestore(adContent);
-            } else {
-                const source = document.getElementById('ad-imagen-source').value;
-                if (source === 'url') {
-                    const imagenUrl = document.getElementById('ad-imagen-url').value.trim();
-                    if (!imagenUrl) {
-                        alert('Por favor, ingresa una URL válida para la imagen.');
-                        return;
+            document.getElementById('resultado').innerHTML = `Resultado: ${resultado}`;
+
+            if (guardar) {
+                guardarCalculo(num1, num2, operacion, resultado);
+            }
+        }
+
+        // Guardar cálculo en Firestore
+        function guardarCalculo(num1, num2, operacion, resultado) {
+            const userId = auth.currentUser.uid;
+            const calculo = {
+                num1,
+                num2,
+                operacion,
+                resultado,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            // Obtener los cálculos actuales del usuario
+            db.collection('calculos').doc(userId).collection('userCalculos').get()
+                .then(snapshot => {
+                    const calculos = snapshot.docs;
+                    if (calculos.length >= 10) {
+                        // Eliminar el cálculo más antiguo
+                        const oldestCalculo = calculos.sort((a, b) => {
+                            const aTime = a.data().timestamp ? a.data().timestamp.toMillis() : 0;
+                            const bTime = b.data().timestamp ? b.data().timestamp.toMillis() : 0;
+                            return aTime - bTime;
+                        })[0];
+                        db.collection('calculos').doc(userId).collection('userCalculos').doc(oldestCalculo.id).delete();
                     }
-                    adContent = {
-                        type: 'imagen',
-                        content: imagenUrl
-                    };
-                    saveAdToFirestore(adContent);
-                } else {
-                    const fileInput = document.getElementById('ad-imagen-upload');
-                    const file = fileInput.files[0];
-                    if (!file) {
-                        alert('Por favor, selecciona una imagen para subir.');
-                        return;
-                    }
-                    const storageRef = storage.ref(`publicidad/principal/${file.name}`);
-                    storageRef.put(file)
-                        .then(snapshot => snapshot.ref.getDownloadURL())
-                        .then(downloadURL => {
-                            adContent = {
-                                type: 'imagen',
-                                content: downloadURL
-                            };
-                            saveAdToFirestore(adContent);
+
+                    // Agregar el nuevo cálculo
+                    db.collection('calculos').doc(userId).collection('userCalculos').add(calculo)
+                        .then(() => {
+                            cargarCalculosUsuario();
                         })
                         .catch(error => {
-                            console.error('Error al subir la imagen:', error);
-                            alert('Error al subir la imagen: ' + error.message);
+                            console.error('Error al guardar cálculo:', error);
+                            alert('Error al guardar el cálculo');
                         });
-                }
-            }
-        }
-
-        function saveAdToFirestore(adContent) {
-            db.collection('publicidad').doc('principal').set(adContent)
-                .then(() => {
-                    alert('Publicidad principal guardada correctamente.');
-                    cargarPublicidad();
                 })
                 .catch(error => {
-                    console.error('Error al guardar la publicidad principal:', error);
-                    alert('Error al guardar la publicidad principal: ' + error.message);
+                    console.error('Error al obtener cálculos:', error);
+                    alert('Error al obtener los cálculos');
                 });
         }
 
-        function guardarPublicidadSecundaria() {
-            if (!isAdminLoggedIn) {
-                alert('Debes iniciar sesión como administrador para guardar la publicidad.');
-                return;
-            }
+        // Cargar cálculos del usuario
+        function cargarCalculosUsuario() {
+            const userId = auth.currentUser.uid;
+            const lista = document.getElementById('lista-calculos');
+            lista.innerHTML = '';
 
-            const source = document.getElementById('ad-secundaria-source').value;
-            const enlace = document.getElementById('ad-secundaria-link').value.trim();
-
-            // Hacer el enlace opcional si la fuente es 'upload'
-            if (source === 'upload' && !enlace) {
-                // Permitir guardar sin enlace
-            } else if (source === 'url' && !enlace) {
-                alert('Por favor, ingresa el enlace para la publicidad secundaria cuando usas una URL.');
-                return;
-            }
-
-            if (source === 'url') {
-                const imagenUrl = document.getElementById('ad-secundaria-imagen-url').value.trim();
-                if (!imagenUrl) {
-                    alert('Por favor, ingresa una URL válida para la imagen.');
-                    return;
-                }
-                const adContent = {
-                    imagenUrl: imagenUrl,
-                    enlace: enlace
-                };
-                saveSecondaryAdToFirestore(adContent);
-            } else {
-                const fileInput = document.getElementById('ad-secundaria-imagen-upload');
-                const file = fileInput.files[0];
-                if (!file) {
-                    alert('Por favor, selecciona una imagen para subir.');
-                    return;
-                }
-                const storageRef = storage.ref(`publicidad/secundaria/${file.name}`);
-                storageRef.put(file)
-                    .then(snapshot => snapshot.ref.getDownloadURL())
-                    .then(downloadURL => {
-                        const adContent = {
-                            imagenUrl: downloadURL,
-                            enlace: enlace || '#' // Si no hay enlace, usar un valor por defecto
-                        };
-                        saveSecondaryAdToFirestore(adContent);
-                    })
-                    .catch(error => {
-                        console.error('Error al subir la imagen secundaria:', error);
-                        alert('Error al subir la imagen secundaria: ' + error.message);
+            db.collection('calculos').doc(userId).collection('userCalculos')
+                .orderBy('timestamp', 'asc')
+                .get()
+                .then(snapshot => {
+                    snapshot.forEach(doc => {
+                        const calculo = doc.data();
+                        const li = document.createElement('li');
+                        li.textContent = `${calculo.num1} ${getOperacionSimbolo(calculo.operacion)} ${calculo.num2} = ${calculo.resultado}`;
+                        lista.appendChild(li);
                     });
-            }
-        }
-
-        function saveSecondaryAdToFirestore(adContent) {
-            db.collection('publicidad').doc('secundaria').set(adContent)
-                .then(() => {
-                    alert('Publicidad secundaria guardada correctamente.');
-                    cargarPublicidadSecundaria();
                 })
                 .catch(error => {
-                    console.error('Error al guardar la publicidad secundaria:', error);
-                    alert('Error al guardar la publicidad secundaria: ' + error.message);
+                    console.error('Error al cargar cálculos:', error);
+                    alert('Error al cargar los cálculos');
                 });
         }
 
-        function guardarPopupMessage() {
-            if (!isAdminLoggedIn) {
-                alert('Debes iniciar sesión como administrador para guardar el mensaje del pop-up.');
-                return;
-            }
+        // Exportar cálculos del usuario a Excel
+        function exportarCalculosUsuario() {
+            const userId = auth.currentUser.uid;
+            const calculos = [];
 
-            const messageContent = document.getElementById('popup-message-content').value.trim();
-            if (!messageContent) {
-                alert('Por favor, ingresa un mensaje para el pop-up.');
-                return;
-            }
+            db.collection('calculos').doc(userId).collection('userCalculos')
+                .orderBy('timestamp', 'asc')
+                .get()
+                .then(snapshot => {
+                    snapshot.forEach(doc => {
+                        const calculo = doc.data();
+                        calculos.push({
+                            'Primer Número': calculo.num1,
+                            'Operación': calculo.operacion,
+                            'Segundo Número': calculo.num2,
+                            'Resultado': calculo.resultado,
+                            'Fecha': calculo.timestamp ? calculo.timestamp.toDate().toLocaleString() : 'N/A'
+                        });
+                    });
 
-            db.collection('config').doc('popup').set({
-                title: "¡Promociona tu negocio aquí!",
-                message: messageContent,
-                contact: "📧 Escribe a: alfstiven@gmail.com"
-            })
-                .then(() => {
-                    alert('Mensaje del pop-up guardado correctamente.');
-                    cargarPopupMessage();
+                    const ws = XLSX.utils.json_to_sheet(calculos);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'Cálculos');
+                    XLSX.writeFile(wb, 'calculos_usuario.xlsx');
                 })
                 .catch(error => {
-                    console.error('Error al guardar el mensaje del pop-up:', error);
-                    alert('Error al guardar el mensaje del pop-up: ' + error.message);
+                    console.error('Error al exportar cálculos:', error);
+                    alert('Error al exportar los cálculos');
                 });
         }
 
-        function cargarPublicidad() {
-            const publicidadSection = document.getElementById('publicidad-section');
+        // Cargar cálculos de todos los usuarios (admin)
+        function cargarCalculosAdmin() {
+            const lista = document.getElementById('lista-calculos-admin');
+            lista.innerHTML = '';
+
+            db.collection('calculos').get()
+                .then(snapshot => {
+                    snapshot.forEach(userDoc => {
+                        const userId = userDoc.id;
+                        db.collection('calculos').doc(userId).collection('userCalculos')
+                            .orderBy('timestamp', 'asc')
+                            .get()
+                            .then(userSnapshot => {
+                                userSnapshot.forEach(doc => {
+                                    const calculo = doc.data();
+                                    const li = document.createElement('li');
+                                    li.textContent = `Usuario ${userId}: ${calculo.num1} ${getOperacionSimbolo(calculo.operacion)} ${calculo.num2} = ${calculo.resultado}`;
+                                    lista.appendChild(li);
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Error al cargar cálculos de usuario:', error);
+                            });
+                    });
+                    document.getElementById('admin-calculos').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error al cargar usuarios:', error);
+                    alert('Error al cargar los cálculos de los usuarios');
+                });
+        }
+
+        // Exportar todos los cálculos a Excel (admin)
+        function exportarCalculosAdmin() {
+            const calculos = [];
+
+            db.collection('calculos').get()
+                .then(snapshot => {
+                    const promises = [];
+                    snapshot.forEach(userDoc => {
+                        const userId = userDoc.id;
+                        const promise = db.collection('calculos').doc(userId).collection('userCalculos')
+                            .orderBy('timestamp', 'asc')
+                            .get()
+                            .then(userSnapshot => {
+                                userSnapshot.forEach(doc => {
+                                    const calculo = doc.data();
+                                    calculos.push({
+                                        'Usuario': userId,
+                                        'Primer Número': calculo.num1,
+                                        'Operación': calculo.operacion,
+                                        'Segundo Número': calculo.num2,
+                                        'Resultado': calculo.resultado,
+                                        'Fecha': calculo.timestamp ? calculo.timestamp.toDate().toLocaleString() : 'N/A'
+                                    });
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Error al exportar cálculos de usuario:', error);
+                            });
+                        promises.push(promise);
+                    });
+
+                    Promise.all(promises).then(() => {
+                        const ws = XLSX.utils.json_to_sheet(calculos);
+                        const wb = XLSX.utils.book_new();
+                        XLSX.utils.book_append_sheet(wb, ws, 'Cálculos');
+                        XLSX.writeFile(wb, 'calculos_todos.xlsx');
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al exportar cálculos:', error);
+                    alert('Error al exportar los cálculos');
+                });
+        }
+
+        // Obtener símbolo de la operación
+        function getOperacionSimbolo(operacion) {
+            switch (operacion) {
+                case 'suma': return '+';
+                case 'resta': return '-';
+                case 'multiplicacion': return '×';
+                case 'division': return '÷';
+            }
+        }
+
+        // Mostrar campos de publicidad según el tipo
+        function mostrarCamposPublicidad() {
+            const tipo = document.getElementById('publicidad-tipo').value;
+            document.getElementById('publicidad-texto-campos').style.display = tipo === 'texto' ? 'block' : 'none';
+            document.getElementById('publicidad-imagen-campos').style.display = tipo === 'imagen' ? 'block' : 'none';
+        }
+
+        // Guardar publicidad principal
+        function guardarPublicidadPrincipal() {
+            const tipo = document.getElementById('publicidad-tipo').value;
+            const publicidadData = { tipo };
+
+            if (tipo === 'texto') {
+                publicidadData.texto = document.getElementById('publicidad-texto').value;
+                publicidadData.url = document.getElementById('publicidad-url').value || '';
+                guardarPublicidadEnFirestore(publicidadData);
+            } else {
+                const file = document.getElementById('publicidad-imagen').files[0];
+                publicidadData.url = document.getElementById('publicidad-imagen-url').value || '';
+                if (file) {
+                    const storageRef = storage.ref(`publicidad/principal/${file.name}`);
+                    storageRef.put(file).then(snapshot => {
+                        snapshot.ref.getDownloadURL().then(url => {
+                            publicidadData.imagenUrl = url;
+                            guardarPublicidadEnFirestore(publicidadData);
+                        }).catch(error => {
+                            console.error('Error al obtener URL de imagen:', error);
+                            alert('Error al subir la imagen');
+                        });
+                    }).catch(error => {
+                        console.error('Error al subir imagen:', error);
+                        alert('Error al subir la imagen');
+                    });
+                } else {
+                    guardarPublicidadEnFirestore(publicidadData);
+                }
+            }
+        }
+
+        // Guardar publicidad en Firestore
+        function guardarPublicidadEnFirestore(publicidadData) {
+            db.collection('publicidad').doc('principal').set(publicidadData)
+                .then(() => {
+                    alert('Publicidad principal guardada con éxito');
+                    cargarPublicidadPrincipal();
+                })
+                .catch(error => {
+                    console.error('Error al guardar publicidad:', error);
+                    alert('Error al guardar publicidad');
+                });
+        }
+
+        // Cargar publicidad principal
+        function cargarPublicidadPrincipal() {
             db.collection('publicidad').doc('principal').get()
                 .then(doc => {
                     if (doc.exists) {
-                        const ad = doc.data();
-                        if (ad.type === 'texto') {
-                            publicidadSection.innerHTML = `<p>${ad.content}</p>`;
-                        } else if (ad.type === 'imagen') {
-                            publicidadSection.innerHTML = `<img src="${ad.content}" alt="Publicidad">`;
-                        }
-                    } else {
-                        publicidadSection.innerHTML = '<p>No hay publicidad principal configurada.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al cargar la publicidad principal:', error);
-                    publicidadSection.innerHTML = '<p>Error al cargar la publicidad principal: ' + error.message + '</p>';
-                });
-        }
-
-        function cargarPublicidadSecundaria() {
-            const donacionesSection = document.getElementById('donaciones-section');
-            db.collection('publicidad').doc('secundaria').get()
-                .then(doc => {
-                    if (doc.exists) {
-                        const ad = doc.data();
-                        donacionesSection.innerHTML = `
-                            <a href="${ad.enlace}" target="_blank">
-                                <img src="${ad.imagenUrl}" alt="Publicidad Secundaria">
-                            </a>
-                        `;
-                    } else {
-                        donacionesSection.innerHTML = '<p>No hay publicidad secundaria configurada.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al cargar la publicidad secundaria:', error);
-                    donacionesSection.innerHTML = '<p>Error al cargar la publicidad secundaria: ' + error.message + '</p>';
-                });
-        }
-
-        function cargarPopupMessage() {
-            const popupTitle = document.getElementById('popup-title');
-            const popupMessage = document.getElementById('popup-message');
-            const popupContact = document.getElementById('popup-contact');
-            db.collection('config').doc('popup').get()
-                .then(doc => {
-                    if (doc.exists) {
                         const data = doc.data();
-                        popupTitle.textContent = data.title;
-                        popupMessage.textContent = data.message;
-                        popupContact.innerHTML = `📧 Escribe a: <a href="mailto:alfstiven@gmail.com">${data.contact}</a>`;
-                    } else {
-                        popupTitle.textContent = "¡Promociona tu negocio aquí!";
-                        popupMessage.textContent = "¿Quieres que tu producto o servicio aparezca en esta calculadora? ¡Contáctame para publicidad!";
-                        popupContact.innerHTML = '📧 Escribe a: <a href="mailto:alfstiven@gmail.com">alfstiven@gmail.com</a>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al cargar el mensaje del pop-up:', error);
-                });
-        }
+                        const section = document.getElementById('publicidad-section');
+                        section.innerHTML = '';
 
-        // Funciones de registro y login de usuarios
-        function registrarUsuario() {
-            const nombre = document.getElementById('nombre').value.trim();
-            const profesion = document.getElementById('profesion').value;
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-
-            if (!nombre || !profesion || !email || !password) {
-                alert('Por favor, completa todos los campos.');
-                return;
-            }
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    const user = userCredential.user;
-                    return Promise.all([
-                        user.sendEmailVerification(),
-                        db.collection('users').doc(user.uid).set({
-                            nombre: nombre,
-                            profesion: profesion,
-                            email: email,
-                            notificacionPreferencia: 'ninguna',
-                            fechaProximoCambio: null,
-                            fcmToken: null
-                        })
-                    ]);
-                })
-                .then(() => {
-                    alert('Usuario registrado correctamente. Revisa tu correo para verificar tu cuenta.');
-                    auth.signOut();
-                    document.getElementById('registro-section').style.display = 'none';
-                    document.getElementById('login-section').style.display = 'block';
-                })
-                .catch(error => {
-                    console.error('Error al registrar usuario:', error);
-                    alert('Error al registrar usuario: ' + error.message);
-                });
-        }
-
-        function loginUsuario() {
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value.trim();
-
-            if (!email || !password) {
-                alert('Por favor, completa todos los campos.');
-                return;
-            }
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    const user = userCredential.user;
-                    if (!user.emailVerified) {
-                        alert('Por favor, verifica tu correo electrónico para continuar.');
-                        auth.signOut();
-                        return;
-                    }
-                    alert('Inicio de sesión exitoso.');
-                    document.getElementById('login-section').style.display = 'none';
-                    document.getElementById('user-section').style.display = 'block';
-                    document.getElementById('formulario-section').style.display = 'block';
-                    document.getElementById('auth-message').style.display = 'none';
-                })
-                .catch(error => {
-                    console.error('Error al iniciar sesión:', error);
-                    alert('Error al iniciar sesión: ' + error.message);
-                });
-        }
-
-        function cerrarSesionUsuario() {
-            auth.signOut()
-                .then(() => {
-                    currentUser = null;
-                    document.getElementById('user-section').style.display = 'none';
-                    document.getElementById('formulario-section').style.display = 'none';
-                    document.getElementById('registro-section').style.display = 'block';
-                    document.getElementById('auth-message').style.display = 'block';
-                    document.getElementById('user-name').textContent = 'Usuario';
-                    document.getElementById('user-profesion').textContent = 'N/A';
-                    document.getElementById('history-section').style.display = 'none';
-                })
-                .catch(error => {
-                    console.error('Error al cerrar sesión:', error);
-                    alert('Error al cerrar sesión: ' + error.message);
-                });
-        }
-
-        function mostrarRegistro() {
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('registro-section').style.display = 'block';
-        }
-
-        function mostrarLoginUsuario() {
-            document.getElementById('registro-section').style.display = 'none';
-            document.getElementById('login-section').style.display = 'block';
-        }
-        function cargarDatosUsuario(uid) {
-            db.collection('users').doc(uid).get()
-                .then(doc => {
-                    if (doc.exists) {
-                        const data = doc.data();
-                        document.getElementById('user-name').textContent = data.nombre || 'Usuario';
-                        document.getElementById('user-profesion').textContent = data.profesion || 'N/A';
-                        document.getElementById('notificacion-preferencia').value = data.notificacionPreferencia || 'ninguna';
-                    } else {
-                        console.error('No se encontraron datos del usuario.');
-                        document.getElementById('user-name').textContent = 'Usuario';
-                        document.getElementById('user-profesion').textContent = 'N/A';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al cargar datos del usuario:', error);
-                    document.getElementById('user-name').textContent = 'Usuario';
-                    document.getElementById('user-profesion').textContent = 'N/A';
-                });
-        }
-
-        function guardarPreferenciaNotificacion() {
-            const preferencia = document.getElementById('notificacion-preferencia').value;
-            if (currentUser) {
-                db.collection('users').doc(currentUser.uid).update({
-                    notificacionPreferencia: preferencia
-                })
-                    .then(() => {
-                        alert('Preferencia de notificación guardada.');
-                        if (preferencia === 'movil') {
-                            solicitarPermisoNotificaciones();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error al guardar preferencia de notificación:', error);
-                        alert('Error al guardar preferencia de notificación: ' + error.message);
-                    });
-            }
-        }
-
-        function guardarFechaProximoCambio(uid, fecha) {
-            db.collection('users').doc(uid).update({
-                fechaProximoCambio: fecha.toISOString()
-            })
-                .then(() => {
-                    console.log('Fecha del próximo cambio guardada.');
-                    programarNotificacion(uid);
-                })
-                .catch(error => {
-                    console.error('Error al guardar la fecha del próximo cambio:', error);
-                });
-        }
-
-        function programarNotificacion(uid) {
-            db.collection('users').doc(uid).get()
-                .then(doc => {
-                    if (doc.exists) {
-                        const data = doc.data();
-                        const preferencia = data.notificacionPreferencia;
-                        const fechaCambio = data.fechaProximoCambio ? new Date(data.fechaProximoCambio) : null;
-                        if (!fechaCambio) return;
-
-                        const hoy = new Date();
-                        hoy.setHours(0, 0, 0, 0);
-                        fechaCambio.setHours(0, 0, 0, 0);
-
-                        if (fechaCambio.getTime() === hoy.getTime()) {
-                            const mensaje = "🔔 ¡Es hora de actuar! Cambia tus pezoneras hoy para asegurar una ordeña eficiente y la mejor calidad en tu producción. 🐄 Con FRIOR, tu éxito está garantizado. ✨";
-                            if (preferencia === 'email') {
-                                enviarCorreoNotificacion(data.email, mensaje);
-                            } else if (preferencia === 'movil' && data.fcmToken) {
-                                enviarNotificacionMovil(data.fcmToken, mensaje);
+                        if (data.tipo === 'texto') {
+                            const p = document.createElement('p');
+                            p.textContent = data.texto;
+                            if (data.url) {
+                                const a = document.createElement('a');
+                                a.href = data.url;
+                                a.target = '_blank';
+                                a.appendChild(p);
+                                section.appendChild(a);
+                            } else {
+                                section.appendChild(p);
+                            }
+                        } else if (data.imagenUrl) {
+                            const img = document.createElement('img');
+                            img.src = data.imagenUrl;
+                            if (data.url) {
+                                const a = document.createElement('a');
+                                a.href = data.url;
+                                a.target = '_blank';
+                                a.appendChild(img);
+                                section.appendChild(a);
+                            } else {
+                                section.appendChild(img);
                             }
                         }
                     }
                 })
                 .catch(error => {
-                    console.error('Error al programar notificación:', error);
+                    console.error('Error al cargar publicidad principal:', error);
                 });
         }
 
-        function enviarCorreoNotificacion(email, mensaje) {
-            fetch('https://us-central1-jcalculador-ac481.cloudfunctions.net/sendEmail', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    message: mensaje
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Correo enviado:', data);
-            })
-            .catch(error => {
-                console.error('Error al enviar correo:', error);
-            });
+        // Guardar publicidad secundaria
+        function guardarPublicidadSecundaria() {
+            const file = document.getElementById('donaciones-imagen').files[0];
+            const url = document.getElementById('donaciones-url').value || '';
+
+            if (file) {
+                const storageRef = storage.ref(`publicidad/secundaria/${file.name}`);
+                storageRef.put(file).then(snapshot => {
+                    snapshot.ref.getDownloadURL().then(imagenUrl => {
+                        db.collection('publicidad').doc('secundaria').set({ imagenUrl, url })
+                            .then(() => {
+                                alert('Publicidad secundaria guardada con éxito');
+                                cargarPublicidadSecundaria();
+                            })
+                            .catch(error => {
+                                console.error('Error al guardar publicidad secundaria:', error);
+                                alert('Error al guardar publicidad secundaria');
+                            });
+                    }).catch(error => {
+                        console.error('Error al obtener URL de imagen:', error);
+                        alert('Error al subir la imagen');
+                    });
+                }).catch(error => {
+                    console.error('Error al subir imagen:', error);
+                    alert('Error al subir la imagen');
+                });
+            } else {
+                db.collection('publicidad').doc('secundaria').set({ url })
+                    .then(() => {
+                        alert('Publicidad secundaria guardada con éxito');
+                        cargarPublicidadSecundaria();
+                    })
+                    .catch(error => {
+                        console.error('Error al guardar publicidad secundaria:', error);
+                        alert('Error al guardar publicidad secundaria');
+                    });
+            }
         }
 
-        function enviarNotificacionMovil(fcmToken, mensaje) {
-            fetch('https://fcm.googleapis.com/fcm/send', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'key=YOUR_SERVER_KEY' // 3447639f4d49e6f899b27c5be258a941b22878e1
-                },
-                body: JSON.stringify({
-                    to: fcmToken,
-                    notification: {
-                        title: 'Recordatorio de Cambio de Pezoneras',
-                        body: mensaje
+        // Cargar publicidad secundaria
+        function cargarPublicidadSecundaria() {
+            db.collection('publicidad').doc('secundaria').get()
+                .then(doc => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        const section = document.getElementById('donaciones-section');
+                        let img = section.querySelector('img');
+                        const a = section.querySelector('a');
+
+                        if (data.imagenUrl) {
+                            if (!img) {
+                                img = document.createElement('img');
+                                section.insertBefore(img, a);
+                            }
+                            img.src = data.imagenUrl;
+                        } else if (img) {
+                            img.remove();
+                        }
+
+                        if (data.url) {
+                            a.href = data.url;
+                        } else {
+                            a.href = 'https://www.paypal.com/donate?hosted_button_id=TU_CODIGO';
+                        }
                     }
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Notificación enviada:', data);
-            })
-            .catch(error => {
-                console.error('Error al enviar notificación:', error);
-            });
+                .catch(error => {
+                    console.error('Error al cargar publicidad secundaria:', error);
+                });
         }
 
-        document.querySelectorAll('#formulario input').forEach(input => {
-            input.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    calcular();
-                }
-            });
+        // Cerrar pop-up
+        function cerrarPopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        // Listener de autenticación
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                mostrarFormulario();
+            } else {
+                document.getElementById('login-section').style.display = 'block';
+                document.getElementById('user-section').style.display = 'none';
+                document.getElementById('formulario-section').style.display = 'none';
+                document.getElementById('calculos-registrados').style.display = 'none';
+                document.getElementById('admin-form').style.display = 'none';
+            }
         });
+
+        // Cargar publicidad al iniciar
+        cargarPublicidadPrincipal();
+        cargarPublicidadSecundaria();
     </script>
 </body>
 </html>
