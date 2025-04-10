@@ -45,7 +45,7 @@
             font-weight: bold;
             color: #005566;
         }
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -53,7 +53,7 @@
             box-sizing: border-box;
             font-size: 14px;
         }
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             border-color: #005566;
             outline: none;
         }
@@ -335,8 +335,8 @@
         <!-- Formulario de login para admin -->
         <div id="admin-login" style="display: none; margin-top: 20px;">
             <h3>Iniciar Sesión (Admin)</h3>
-            <label for="admin-username">Usuario:</label>
-            <input type="text" id="admin-username" placeholder="Usuario">
+            <label for="admin-email">Correo Electrónico:</label>
+            <input type="email" id="admin-email" placeholder="admin@jcalculator.com">
             <label for="admin-password">Contraseña:</label>
             <input type="password" id="admin-password" placeholder="Contraseña">
             <button type="button" onclick="loginAdmin()">Iniciar Sesión</button>
@@ -363,7 +363,7 @@
                 </select>
                 <div id="ad-imagen-url-section" style="display: block;">
                     <label for="ad-imagen-url">URL de la Imagen:</label>
-                    <input type="text" id="ad-imagen-url" placeholder="Ingresa la URL de la imagen">
+                    <input type="text" id="ad-imagen-url" placeholder="Ingresa la URL de la imagen (opcional)">
                 </div>
                 <div id="ad-imagen-upload-section" style="display: none;">
                     <label for="ad-imagen-upload">Subir Imagen:</label>
@@ -380,7 +380,7 @@
             </select>
             <div id="ad-secundaria-url-section" style="display: block;">
                 <label for="ad-secundaria-imagen-url">URL de la Imagen:</label>
-                <input type="text" id="ad-secundaria-imagen-url" placeholder="Ingresa la URL de la imagen">
+                <input type="text" id="ad-secundaria-imagen-url" placeholder="Ingresa la URL de la imagen (opcional)">
             </div>
             <div id="ad-secundaria-upload-section" style="display: none;">
                 <label for="ad-secundaria-imagen-upload">Subir Imagen:</label>
@@ -442,6 +442,7 @@
         let isAdminLoggedIn = false;
         let fechaProximoCambio = null;
         let currentUser = null;
+        let adminUser = null; // Para manejar la sesión del administrador
 
         // Solicitar permiso para notificaciones
         function solicitarPermisoNotificaciones() {
@@ -496,6 +497,7 @@
                     solicitarPermisoNotificaciones();
                     programarNotificacion(user.uid);
                 } else {
+                    currentUser = null;
                     document.getElementById('registro-section').style.display = 'block';
                     document.getElementById('user-section').style.display = 'none';
                     document.getElementById('formulario-section').style.display = 'none';
@@ -704,31 +706,48 @@
         }
 
         function loginAdmin() {
-            const username = document.getElementById('admin-username').value;
-            const password = document.getElementById('admin-password').value;
+            const email = document.getElementById('admin-email').value.trim();
+            const password = document.getElementById('admin-password').value.trim();
 
-            if (username === 'jcalculo' && password === 'Dylan-05') {
-                isAdminLoggedIn = true;
-                document.getElementById('admin-login').style.display = 'none';
-                document.getElementById('admin-form').style.display = 'block';
-                try {
-                    cargarPublicidad();
-                    cargarPublicidadSecundaria();
-                    cargarPopupMessage();
-                } catch (error) {
-                    console.error('Error al cargar las publicidades después de login:', error);
-                }
-            } else {
-                alert('Usuario o contraseña incorrectos.');
+            if (!email || !password) {
+                alert('Por favor, completa todos los campos.');
+                return;
             }
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    adminUser = userCredential.user;
+                    isAdminLoggedIn = true;
+                    document.getElementById('admin-login').style.display = 'none';
+                    document.getElementById('admin-form').style.display = 'block';
+                    try {
+                        cargarPublicidad();
+                        cargarPublicidadSecundaria();
+                        cargarPopupMessage();
+                    } catch (error) {
+                        console.error('Error al cargar las publicidades después de login:', error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al iniciar sesión como administrador:', error);
+                    alert('Error al iniciar sesión: ' + error.message);
+                });
         }
 
         function cerrarSesionAdmin() {
-            isAdminLoggedIn = false;
-            document.getElementById('admin-login').style.display = 'none';
-            document.getElementById('admin-form').style.display = 'none';
-            document.getElementById('admin-username').value = '';
-            document.getElementById('admin-password').value = '';
+            auth.signOut()
+                .then(() => {
+                    isAdminLoggedIn = false;
+                    adminUser = null;
+                    document.getElementById('admin-login').style.display = 'none';
+                    document.getElementById('admin-form').style.display = 'none';
+                    document.getElementById('admin-email').value = '';
+                    document.getElementById('admin-password').value = '';
+                })
+                .catch(error => {
+                    console.error('Error al cerrar sesión del administrador:', error);
+                    alert('Error al cerrar sesión: ' + error.message);
+                });
         }
 
         function mostrarCamposPublicidad() {
@@ -986,17 +1005,17 @@
             auth.createUserWithEmailAndPassword(email, password)
                 .then(userCredential => {
                     const user = userCredential.user;
-                    return user.sendEmailVerification()
-                        .then(() => {
-                            return db.collection('users').doc(user.uid).set({
-                                nombre: nombre,
-                                profesion: profesion,
-                                email: email,
-                                notificacionPreferencia: 'ninguna',
-                                fechaProximoCambio: null,
-                                fcmToken: null
-                            });
-                        });
+                    return Promise.all([
+                        user.sendEmailVerification(),
+                        db.collection('users').doc(user.uid).set({
+                            nombre: nombre,
+                            profesion: profesion,
+                            email: email,
+                            notificacionPreferencia: 'ninguna',
+                            fechaProximoCambio: null,
+                            fcmToken: null
+                        })
+                    ]);
                 })
                 .then(() => {
                     alert('Usuario registrado correctamente. Revisa tu correo para verificar tu cuenta.');
@@ -1168,14 +1187,18 @@
         }
 
         function enviarNotificacionMovil(fcmToken, mensaje) {
-            fetch('https://us-central1-jcalculador-ac481.cloudfunctions.net/sendNotification', {
+            fetch('https://fcm.googleapis.com/fcm/send', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'key=YOUR_SERVER_KEY' // Reemplaza con tu clave de servidor de FCM
                 },
                 body: JSON.stringify({
-                    token: fcmToken,
-                    message: mensaje
+                    to: fcmToken,
+                    notification: {
+                        title: 'Recordatorio de Cambio de Pezoneras',
+                        body: mensaje
+                    }
                 })
             })
             .then(response => response.json())
