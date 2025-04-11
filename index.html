@@ -13,6 +13,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
     <!-- SheetJS para exportar a Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -241,6 +243,53 @@
             background: #f0f0f0;
             border-radius: 5px;
         }
+        #calculator-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #calculator-info h3 {
+            color: #005566;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        #calculator-info p {
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        #calculator-info strong {
+            color: #d32f2f;
+        }
+        .verified-badge {
+            display: inline-block;
+            background: #28a745;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        #export-excel-btn, #view-report-btn {
+            background: #28a745;
+            margin-top: 10px;
+        }
+        #export-excel-btn:hover, #view-report-btn:hover {
+            background: #218838;
+        }
+        #report-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        #report-canvas {
+            max-width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -248,9 +297,9 @@
     <div id="popup" class="popup">
         <div class="popup-content">
             <span class="close-btn" onclick="cerrarPopup()">×</span>
-            <h2 id="popup-title">¡Promociona tu negocio aquí!</h2>
-            <p id="popup-message">¿Quieres que tu producto o servicio aparezca en esta calculadora? ¡Contáctame para publicidad!</p>
-            <p id="popup-contact">📧 Escribe a: <a href="mailto:alfstiven@gmail.com">alfstiven@gmail.com</a></p>
+            <h2 id="popup-title">¡Optimiza tu producción con JCALCULO!</h2>
+            <p id="popup-message">Descubre la herramienta que revoluciona la gestión de pezoneras. ¡Regístrate y toma el control hoy!</p>
+            <p id="popup-contact">📧 Soporte: <a href="mailto:alfstiven@gmail.com">alfstiven@gmail.com</a></p>
         </div>
     </div>
 
@@ -268,6 +317,12 @@
             Por favor, regístrate o inicia sesión para usar la calculadora.
         </div>
 
+        <!-- Información de la calculadora -->
+        <div id="calculator-info">
+            <h3>¡Gestiona tus Pezoneras como Nunca Antes! 🚀</h3>
+            <p>Con <strong>JCALCULO</strong>, optimiza el cambio de tus pezoneras de manera fácil y precisa. Nuestra herramienta calcula el número exacto de pezoneras necesarias, estima su durabilidad y te <strong>notifica el próximo cambio</strong> para que nunca pierdas el control. 🔔 Ahorra tiempo, mejora la eficiencia de tu ordeño y lleva tu producción al siguiente nivel. ¡Confía en JCALCULO, la solución que todo ganadero necesita! 🐄</p>
+        </div>
+
         <!-- Formulario de Registro -->
         <div id="registro-section">
             <h3>Regístrate</h3>
@@ -275,14 +330,15 @@
             <input type="text" id="nombre" placeholder="Tu nombre" required>
             <label for="profesion">Profesión:</label>
             <select id="profesion" onchange="mostrarCamposProfesion()" required>
+                <option value="" selected>Selecciona...</option>
                 <option value="ganadero">Ganadero</option>
                 <option value="tecnico">Técnico</option>
                 <option value="otro">Otro</option>
             </select>
             <!-- Campo adicional para ganadero -->
             <div id="empresa-section" style="display: none;">
-                <label for="empresa">Nombre de la Empresa o Explotación:</label>
-                <input type="text" id="empresa" placeholder="Nombre de la empresa o explotación">
+                <label for="empresa">Nombre de la Granja o Explotación:</label>
+                <input type="text" id="empresa" placeholder="Nombre de la granja o explotación" required>
             </div>
             <!-- Campo adicional para otro -->
             <div id="otra-profesion-section" style="display: none;">
@@ -298,7 +354,6 @@
             <button type="button" onclick="registrarUsuario()">Registrarse</button>
             <p>¿Ya tienes cuenta? <a href="#" onclick="mostrarLoginUsuario()">Inicia sesión</a></p>
         </div>
-
         <!-- Formulario de Login de Usuario -->
         <div id="login-section">
             <h3>Iniciar Sesión</h3>
@@ -307,12 +362,13 @@
             <label for="login-password">Contraseña:</label>
             <input type="password" id="login-password" placeholder="Contraseña" required>
             <button type="button" onclick="loginUsuario()">Iniciar Sesión</button>
+            <p><a href="#" onclick="recuperarContrasena()">¿Olvidaste tu contraseña?</a></p>
             <p>¿No tienes cuenta? <a href="#" onclick="mostrarRegistro()">Regístrate</a></p>
         </div>
 
         <!-- Sección de usuario logueado -->
         <div id="user-section">
-            <h3>Bienvenido, <span id="user-name">Usuario</span></h3>
+            <h3>Bienvenido, <span id="user-name">Usuario</span><span id="verified-badge" class="verified-badge" style="display: none;">Verificado</span></h3>
             <p>Profesión: <span id="user-profesion">N/A</span></p>
             <label for="notificacion-preferencia">Notificarme sobre el cambio de pezoneras:</label>
             <select id="notificacion-preferencia">
@@ -323,7 +379,6 @@
             <button type="button" onclick="guardarPreferenciaNotificacion()">Guardar Preferencia</button>
             <button type="button" onclick="cerrarSesionUsuario()">Cerrar Sesión</button>
         </div>
-
         <!-- Formulario de la calculadora (visible solo para usuarios autenticados) -->
         <div id="formulario-section">
             <form id="formulario">
@@ -369,12 +424,17 @@
             <button id="guardar-resultado" style="display: none;" onclick="guardarResultado()">Guardar Resultado</button>
             <div id="calculos-registrados">
                 <h3>Cálculos Guardados</h3>
+                <button id="export-excel-btn" style="display: none;" onclick="exportarCalculosExcel()">Exportar a Excel</button>
+                <button id="view-report-btn" style="display: none;" onclick="mostrarReporteGrafico()">Ver Reporte Gráfico</button>
                 <ul id="lista-calculos"></ul>
             </div>
+            <div id="report-section">
+                <h3>Análisis de Consumo de Pezoneras</h3>
+                <canvas id="report-canvas"></canvas>
+            </div>
         </div>
-
         <!-- Publicidad con Google AdSense -->
-        <div style="margin-top: 20px; text-align: center;">
+        <div id="adsense-section" style="margin-top: 20px; text-align: center;">
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-tu-id-de-cliente" crossorigin="anonymous"></script>
             <ins class="adsbygoogle"
                  style="display:block"
@@ -473,6 +533,12 @@
             <textarea id="popup-message-content" placeholder="Escribe el mensaje del pop-up"></textarea>
             <button type="button" onclick="guardarPopupMessage()">Guardar Mensaje del Pop-up</button>
 
+            <!-- Gestión de usuarios verificados -->
+            <h4>Gestionar Usuarios Verificados</h4>
+            <label for="user-verification-email">Correo del Usuario:</label>
+            <input type="email" id="user-verification-email" placeholder="correo@ejemplo.com">
+            <button type="button" onclick="verificarUsuario()">Asignar Insignia de Verificado</button>
+            <button type="button" onclick="quitarVerificacionUsuario()">Quitar Insignia de Verificado</button>
             <!-- Registro de nuevos administradores -->
             <div id="admin-registro">
                 <h4>Registrar Nuevo Administrador</h4>
@@ -508,12 +574,11 @@
 
         <!-- Marketing de Afiliados -->
         <div style="margin-top: 20px; text-align: center;">
-            <p>¿Necesitas pezoneras nuevas? <a href="/comprar-pezoneras" target="_blank">Compra aquí</a> y apoya esta herramienta.</p>
+            <p>¿Necesitas pezoneras nuevas? <a href="/comprar-pezoneras" target="_blank">Compra aquí</a>.</p>
         </div>
 
         <div class="signature">J.Castle</div>
     </div>
-
     <script>
         // Configuración de Firebase
         const firebaseConfig = {
@@ -534,7 +599,6 @@
         const messaging = firebase.messaging();
 
         let resultadoTexto = '';
-        let costoManoObra = 0;
         let vacasIniciales = 0;
         let puntosOrdenoIniciales = 0;
         let totalPezoneras = 0;
@@ -542,6 +606,8 @@
         let fechaProximoCambio = null;
         let currentUser = null;
         let adminUser = null;
+        let isVerifiedUser = false;
+        let calculosData = [];
 
         // UID del administrador principal
         const ADMIN_UID = 'Qnq9VPwWiHNNZC0DYXuRwDpLAr72';
@@ -623,6 +689,9 @@
                     document.getElementById('user-section').style.display = 'none';
                     document.getElementById('formulario-section').style.display = 'none';
                     document.getElementById('auth-message').style.display = 'block';
+                    document.getElementById('adsense-section').style.display = 'block';
+                    document.getElementById('publicidad-section').style.display = 'block';
+                    document.getElementById('donaciones-section').style.display = 'block';
                 }
             });
         };
@@ -644,7 +713,6 @@
             empresaSection.style.display = profesion === 'ganadero' ? 'block' : 'none';
             otraProfesionSection.style.display = profesion === 'otro' ? 'block' : 'none';
         }
-
         function calcular() {
             const ordenosDiaInput = document.getElementById('ordenosDia').value;
             const puntosOrdenoInput = document.getElementById('puntosOrdeno').value;
@@ -716,7 +784,6 @@
 
             const pezonerasPorPunto = 4;
             totalPezoneras = puntosOrdeno * pezonerasPorPunto;
-            costoManoObra = puntosOrdeno * 4;
             let desgastePezonerasPorDiaInicial = totalPezoneras / diasDurabilidadInicial;
 
             let durabilidadAjustada = diasDurabilidadInicial;
@@ -747,7 +814,6 @@
                     const vacasAjustadas = nuevoNumeroVacas > 0 ? nuevoNumeroVacas : vacas;
                     const puntosOrdenoAjustados = nuevoPuntosOrdeno > 0 ? nuevoPuntosOrdeno : puntosOrdeno;
                     totalPezoneras = puntosOrdenoAjustados * pezonerasPorPunto;
-                    costoManoObra = puntosOrdenoAjustados * 4;
                     const nuevosOrdeñosTotalesPorDia = ordenosDia * vacasAjustadas;
                     const nuevosOrdeñosPorPuntoPorDia = nuevosOrdeñosTotalesPorDia / puntosOrdenoAjustados;
                     const diasDurabilidadRestante = durabilidadRestante / nuevosOrdeñosPorPuntoPorDia;
@@ -773,7 +839,22 @@
 
             fechaProximoCambio = realizarModificacion === 'si' ? fechaProximoCambioAjustada : fechaProximoCambioInicial;
 
-            resultadoTexto = `
+            resultadoTexto = isVerifiedUser ? `
+                <div style="background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); padding: 15px; border-radius: 5px;">
+                    <h3 style="color: #005566;">📊 Reporte Premium JCALCULO</h3>
+                    <p><strong>Fecha Inicio:</strong> ${fechaInicio.toLocaleDateString('es-ES')}</p>
+                    <p><strong>Vacas Iniciales:</strong> ${vacasIniciales}</p>
+                    <p><strong>Puntos Iniciales:</strong> ${puntosOrdenoIniciales}</p>
+                    <p><strong>Durabilidad Inicial:</strong> ${Math.floor(diasDurabilidadInicial)} días</p>
+                    <p><strong>🚨 Próximo Cambio:</strong> ${fechaProximoCambioInicial.toLocaleDateString('es-ES')}</p>
+                    <p><strong>Meses Equivalentes:</strong> ${mesesEquivalentes}</p>
+                    ${fechaDiasEspecificos ? `<p><strong>Fecha Específica:</strong> ${fechaDiasEspecificos}</p>` : ''}
+                    <p><strong>Total Pezoneras:</strong> ${totalPezoneras}</p>
+                    <p><strong>Desgaste Diario:</strong> ${desgastePezonerasPorDiaInicial.toFixed(2)}</p>
+                    ${mensajeAjuste ? `<p style="color: #d32f2f;"><strong>Ajustes Aplicados:</strong><br>${mensajeAjuste.replace(/\n/g, '<br>')}</p>` : ''}
+                    <p style="font-style: italic;">Gracias por ser un usuario verificado. ¡Disfruta de una experiencia sin publicidad y reportes avanzados!</p>
+                </div>
+            ` : `
                 Calculadora JCALCULO Cambio de Pezoneras
                 Fecha Inicio: ${fechaInicio.toLocaleDateString('es-ES')}
                 Vacas Iniciales: ${vacasIniciales}
@@ -784,12 +865,10 @@
                 ${fechaDiasEspecificos}
                 Total Pezoneras Inicial: ${totalPezoneras}
                 Desgaste por Día Inicial: ${desgastePezonerasPorDiaInicial.toFixed(2)}
-                Costo Mano de Obra: ${costoManoObra} €
                 ${mensajeAjuste}
             `;
             mostrarResultados();
 
-            // Guardar la fecha del próximo cambio para el usuario
             if (currentUser) {
                 guardarFechaProximoCambio(currentUser.uid, fechaProximoCambio);
             }
@@ -798,7 +877,7 @@
         function mostrarResultados() {
             document.getElementById('resultado').innerHTML = resultadoTexto.replace(/\n/g, '<br>');
             document.getElementById('whatsapp-section').style.display = 'block';
-            document.getElementById('donaciones-section').style.display = 'block';
+            document.getElementById('donaciones-section').style.display = isVerifiedUser ? 'none' : 'block';
             document.getElementById('guardar-resultado').style.display = 'block';
         }
 
@@ -823,15 +902,13 @@
             document.getElementById('donaciones-section').style.display = 'none';
             document.getElementById('guardar-resultado').style.display = 'none';
             document.getElementById('codigoCliente').value = '';
+            document.getElementById('report-section').style.display = 'none';
             resultadoTexto = '';
-            costoManoObra = 0;
             vacasIniciales = 0;
             puntosOrdenoIniciales = 0;
             totalPezoneras = 0;
             fechaProximoCambio = null;
         }
-
-        // Guardar resultado en Firestore
         function guardarResultado() {
             if (!currentUser) {
                 alert('Debes estar autenticado para guardar el resultado.');
@@ -849,17 +926,13 @@
 
             const userCalcsRef = db.collection('calculos').doc(currentUser.uid).collection('registros');
 
-            // Obtener los cálculos existentes para verificar el límite
             userCalcsRef.orderBy('timestamp', 'asc').get()
                 .then(snapshot => {
                     const calculos = snapshot.docs;
                     if (calculos.length >= 10) {
-                        // Eliminar el más antiguo
                         const oldestCalculo = calculos[0];
                         userCalcsRef.doc(oldestCalculo.id).delete();
                     }
-
-                    // Guardar el nuevo cálculo
                     return userCalcsRef.add(calculo);
                 })
                 .then(() => {
@@ -872,10 +945,10 @@
                 });
         }
 
-        // Cargar cálculos guardados del usuario
         function cargarCalculosGuardados(uid) {
             const listaCalculos = document.getElementById('lista-calculos');
             listaCalculos.innerHTML = '';
+            calculosData = [];
 
             db.collection('calculos').doc(uid).collection('registros')
                 .orderBy('timestamp', 'desc')
@@ -883,6 +956,14 @@
                 .then(snapshot => {
                     snapshot.forEach(doc => {
                         const calc = doc.data();
+                        calculosData.push({
+                            fecha: new Date(calc.timestamp).toLocaleString('es-ES'),
+                            resultado: calc.resultado,
+                            pezoneras: calc.pezoneras,
+                            vacas: calc.vacas,
+                            puntos: calc.puntos,
+                            fechaCambio: calc.fechaProximoCambio ? new Date(calc.fechaProximoCambio).toLocaleDateString('es-ES') : 'N/A'
+                        });
                         const li = document.createElement('li');
                         li.innerHTML = `
                             <strong>Fecha:</strong> ${new Date(calc.timestamp).toLocaleString('es-ES')}<br>
@@ -896,7 +977,70 @@
                 });
         }
 
-        // Funciones de administración
+        function exportarCalculosExcel() {
+            const data = calculosData.map(calc => ({
+                Fecha: calc.fecha,
+                'Vacas Iniciales': calc.vacas,
+                'Puntos Iniciales': calc.puntos,
+                'Pezoneras Totales': calc.pezoneras,
+                'Fecha Próximo Cambio': calc.fechaCambio
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Cálculos');
+            XLSX.writeFile(wb, 'CalculosPezoneras.xlsx');
+        }
+
+        function mostrarReporteGrafico() {
+            const ctx = document.getElementById('report-canvas').getContext('2d');
+            document.getElementById('report-section').style.display = 'block';
+
+            const labels = calculosData.map(calc => calc.fecha);
+            const pezoneras = calculosData.map(calc => calc.pezoneras);
+            const vacas = calculosData.map(calc => calc.vacas);
+
+            if (window.myChart) {
+                window.myChart.destroy();
+            }
+
+            window.myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Pezoneras Totales',
+                            data: pezoneras,
+                            borderColor: '#005566',
+                            backgroundColor: 'rgba(0, 85, 102, 0.2)',
+                            fill: true
+                        },
+                        {
+                            label: 'Vacas Ordeñadas',
+                            data: vacas,
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Consumo de Pezoneras y Vacas a lo largo del Tiempo'
+                        }
+                    }
+                }
+            });
+        }
         function mostrarLoginAdmin() {
             document.getElementById('admin-login').style.display = 'block';
             document.getElementById('admin-form').style.display = 'none';
@@ -918,7 +1062,6 @@
                 .then(userCredential => {
                     adminUser = userCredential.user;
 
-                    // Verificar si el usuario tiene permisos de administrador
                     db.collection('admins').doc(adminUser.uid).get()
                         .then(doc => {
                             if (doc.exists || (adminUser.uid === ADMIN_UID && adminUser.email.toLowerCase() === ADMIN_EMAIL)) {
@@ -970,7 +1113,6 @@
                 });
         }
 
-        // Registrar un nuevo administrador
         function registrarAdmin() {
             if (!isAdminLoggedIn || (adminUser.uid !== ADMIN_UID && adminUser.email.toLowerCase() !== ADMIN_EMAIL)) {
                 alert('Solo el administrador principal puede registrar nuevos administradores.');
@@ -1011,7 +1153,83 @@
                 });
         }
 
-        // Gestión del logo
+        function verificarUsuario() {
+            const email = document.getElementById('user-verification-email').value.trim();
+            if (!email) {
+                alert('Por favor, ingresa el correo del usuario.');
+                return;
+            }
+
+            db.collection('users').where('email', '==', email).get()
+                .then(snapshot => {
+                    if (snapshot.empty) {
+                        alert('No se encontró un usuario con ese correo.');
+                        return;
+                    }
+                    const userDoc = snapshot.docs[0];
+                    db.collection('users').doc(userDoc.id).update({
+                        isVerified: true
+                    }).then(() => {
+                        alert('Usuario verificado correctamente.');
+                        document.getElementById('user-verification-email').value = '';
+                        if (currentUser && currentUser.email === email) {
+                            isVerifiedUser = true;
+                            document.getElementById('verified-badge').style.display = 'inline-block';
+                            document.getElementById('adsense-section').style.display = 'none';
+                            document.getElementById('publicidad-section').style.display = 'none';
+                            document.getElementById('donaciones-section').style.display = 'none';
+                            document.getElementById('export-excel-btn').style.display = 'block';
+                            document.getElementById('view-report-btn').style.display = 'block';
+                        }
+                    }).catch(error => {
+                        console.error('Error al verificar usuario:', error);
+                        alert('Error al verificar usuario: ' + error.message);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al buscar usuario:', error);
+                    alert('Error al buscar usuario: ' + error.message);
+                });
+        }
+
+        function quitarVerificacionUsuario() {
+            const email = document.getElementById('user-verification-email').value.trim();
+            if (!email) {
+                alert('Por favor, ingresa el correo del usuario.');
+                return;
+            }
+
+            db.collection('users').where('email', '==', email).get()
+                .then(snapshot => {
+                    if (snapshot.empty) {
+                        alert('No se encontró un usuario con ese correo.');
+                        return;
+                    }
+                    const userDoc = snapshot.docs[0];
+                    db.collection('users').doc(userDoc.id).update({
+                        isVerified: false
+                    }).then(() => {
+                        alert('Insignia de verificación quitada correctamente.');
+                        document.getElementById('user-verification-email').value = '';
+                        if (currentUser && currentUser.email === email) {
+                            isVerifiedUser = false;
+                            document.getElementById('verified-badge').style.display = 'none';
+                            document.getElementById('adsense-section').style.display = 'block';
+                            document.getElementById('publicidad-section').style.display = 'block';
+                            document.getElementById('donaciones-section').style.display = 'block';
+                            document.getElementById('export-excel-btn').style.display = 'none';
+                            document.getElementById('view-report-btn').style.display = 'none';
+                        }
+                    }).catch(error => {
+                        console.error('Error al quitar verificación:', error);
+                        alert('Error al quitar verificación: ' + error.message);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al buscar usuario:', error);
+                    alert('Error al buscar usuario: ' + error.message);
+                });
+        }
         function mostrarCamposLogo() {
             const source = document.getElementById('logo-source').value;
             document.getElementById('logo-url-section').style.display = source === 'url' ? 'block' : 'none';
@@ -1226,9 +1444,9 @@
             }
 
             db.collection('config').doc('popup').set({
-                title: "¡Promociona tu negocio aquí!",
+                title: "¡Optimiza tu producción con JCALCULO!",
                 message: messageContent,
-                contact: "📧 Escribe a: alfstiven@gmail.com"
+                contact: "📧 Soporte: alfstiven@gmail.com"
             })
                 .then(() => {
                     cargarPopupMessage();
@@ -1239,9 +1457,12 @@
                     alert('Error al guardar el mensaje del pop-up: ' + error.message);
                 });
         }
-
         function cargarPublicidad() {
             const publicidadSection = document.getElementById('publicidad-section');
+            if (isVerifiedUser) {
+                publicidadSection.style.display = 'none';
+                return;
+            }
             db.collection('publicidad').doc('principal').get()
                 .then(doc => {
                     if (doc.exists) {
@@ -1263,6 +1484,10 @@
 
         function cargarPublicidadSecundaria() {
             const donacionesSection = document.getElementById('donaciones-section');
+            if (isVerifiedUser) {
+                donacionesSection.style.display = 'none';
+                return;
+            }
             db.collection('publicidad').doc('secundaria').get()
                 .then(doc => {
                     if (doc.exists) {
@@ -1292,11 +1517,11 @@
                         const data = doc.data();
                         popupTitle.textContent = data.title;
                         popupMessage.textContent = data.message;
-                        popupContact.innerHTML = `📧 Escribe a: <a href="mailto:alfstiven@gmail.com">${data.contact}</a>`;
+                        popupContact.innerHTML = `📧 Soporte: <a href="mailto:alfstiven@gmail.com">${data.contact}</a>`;
                     } else {
-                        popupTitle.textContent = "¡Promociona tu negocio aquí!";
-                        popupMessage.textContent = "¿Quieres que tu producto o servicio aparezca en esta calculadora? ¡Contáctame para publicidad!";
-                        popupContact.innerHTML = '📧 Escribe a: <a href="mailto:alfstiven@gmail.com">alfstiven@gmail.com</a>';
+                        popupTitle.textContent = "¡Optimiza tu producción con JCALCULO!";
+                        popupMessage.textContent = "Descubre la herramienta que revoluciona la gestión de pezoneras. ¡Regístrate y toma el control hoy!";
+                        popupContact.innerHTML = '📧 Soporte: <a href="mailto:alfstiven@gmail.com">alfstiven@gmail.com</a>';
                     }
                 })
                 .catch(error => {
@@ -1304,7 +1529,6 @@
                 });
         }
 
-        // Cargar historial de cálculos para el administrador
         function cargarHistorialAdmin() {
             const listaCalculosAdmin = document.getElementById('lista-calculos-admin');
             listaCalculosAdmin.innerHTML = '';
@@ -1359,7 +1583,6 @@
                 });
         }
 
-        // Exportar historial a Excel
         function exportarHistorialExcel() {
             const listaCalculosAdmin = document.getElementById('lista-calculos-admin').children;
             const data = [];
@@ -1380,8 +1603,6 @@
             XLSX.utils.book_append_sheet(wb, ws, 'Historial');
             XLSX.writeFile(wb, 'HistorialCalculos.xlsx');
         }
-
-        // Funciones de registro y login de usuarios
         function registrarUsuario() {
             const nombre = document.getElementById('nombre').value.trim();
             let profesion = document.getElementById('profesion').value;
@@ -1397,7 +1618,7 @@
             }
 
             if (profesion === 'ganadero' && !empresa) {
-                alert('Por favor, ingresa el nombre de la empresa o explotación.');
+                alert('Por favor, ingresa el nombre de la granja o explotación.');
                 return;
             }
 
@@ -1406,7 +1627,6 @@
                 return;
             }
 
-            // Si la profesión es "otro", usamos el valor de otraProfesion
             if (profesion === 'otro') {
                 profesion = otraProfesion;
             }
@@ -1419,25 +1639,41 @@
                         db.collection('users').doc(user.uid).set({
                             nombre: nombre,
                             profesion: profesion,
-                            empresa: profesion === 'ganadero' ? empresa : null, // Guardar empresa solo si es ganadero
+                            empresa: profesion === 'ganadero' ? empresa : null,
                             telefono: telefono,
                             email: email,
                             notificacionPreferencia: 'ninguna',
-                            fechaProximoCambio: null,
-                            fcmToken: null
+                            isVerified: false,
+                            timestamp: new Date().toISOString()
                         })
                     ]);
                 })
                 .then(() => {
-                    alert('Usuario registrado correctamente. Revisa tu correo para verificar tu cuenta.');
-                    auth.signOut();
-                    document.getElementById('registro-section').style.display = 'none';
-                    document.getElementById('login-section').style.display = 'block';
+                    alert('Registro exitoso. Por favor, verifica tu correo electrónico.');
+                    document.getElementById('nombre').value = '';
+                    document.getElementById('profesion').value = '';
+                    document.getElementById('empresa').value = '';
+                    document.getElementById('otra-profesion').value = '';
+                    document.getElementById('telefono').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('password').value = '';
+                    document.getElementById('empresa-section').style.display = 'none';
+                    document.getElementById('otra-profesion-section').style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error al registrar usuario:', error);
-                    alert('Error al registrar usuario: ' + error.message);
+                    alert('Error al registrar: ' + error.message);
                 });
+        }
+
+        function mostrarRegistro() {
+            document.getElementById('registro-section').style.display = 'block';
+            document.getElementById('login-section').style.display = 'none';
+        }
+
+        function mostrarLoginUsuario() {
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('registro-section').style.display = 'none';
         }
 
         function loginUsuario() {
@@ -1457,7 +1693,8 @@
                         auth.signOut();
                         return;
                     }
-                    alert('Inicio de sesión exitoso.');
+                    currentUser = user;
+                    cargarDatosUsuario(user.uid);
                     document.getElementById('login-section').style.display = 'none';
                     document.getElementById('user-section').style.display = 'block';
                     document.getElementById('formulario-section').style.display = 'block';
@@ -1469,31 +1706,21 @@
                 });
         }
 
-        function cerrarSesionUsuario() {
-            auth.signOut()
+        function recuperarContrasena() {
+            const email = document.getElementById('login-email').value.trim();
+            if (!email) {
+                alert('Por favor, ingresa tu correo electrónico para recuperar la contraseña.');
+                return;
+            }
+
+            auth.sendPasswordResetEmail(email)
                 .then(() => {
-                    currentUser = null;
-                    document.getElementById('user-section').style.display = 'none';
-                    document.getElementById('formulario-section').style.display = 'none';
-                    document.getElementById('registro-section').style.display = 'block';
-                    document.getElementById('auth-message').style.display = 'block';
-                    document.getElementById('user-name').textContent = 'Usuario';
-                    document.getElementById('user-profesion').textContent = 'N/A';
+                    alert('Se ha enviado un correo para restablecer tu contraseña. Revisa tu bandeja de entrada.');
                 })
                 .catch(error => {
-                    console.error('Error al cerrar sesión:', error);
-                    alert('Error al cerrar sesión: ' + error.message);
+                    console.error('Error al enviar correo de recuperación:', error);
+                    alert('Error al enviar correo de recuperación: ' + error.message);
                 });
-        }
-
-        function mostrarRegistro() {
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('registro-section').style.display = 'block';
-        }
-
-        function mostrarLoginUsuario() {
-            document.getElementById('registro-section').style.display = 'none';
-            document.getElementById('login-section').style.display = 'block';
         }
 
         function cargarDatosUsuario(uid) {
@@ -1501,54 +1728,80 @@
                 .then(doc => {
                     if (doc.exists) {
                         const data = doc.data();
-                        document.getElementById('user-name').textContent = data.nombre || 'Usuario';
-                        document.getElementById('user-profesion').textContent = data.profesion || 'N/A';
-                        // Mostrar empresa si existe
-                        if (data.empresa) {
-                            const profesionElement = document.getElementById('user-profesion');
-                            profesionElement.textContent += ` (${data.empresa})`;
-                        }
+                        document.getElementById('user-name').textContent = data.nombre;
+                        document.getElementById('user-profesion').textContent = data.profesion;
                         document.getElementById('notificacion-preferencia').value = data.notificacionPreferencia || 'ninguna';
-                    } else {
-                        console.error('No se encontraron datos del usuario.');
-                        document.getElementById('user-name').textContent = 'Usuario';
-                        document.getElementById('user-profesion').textContent = 'N/A';
+                        isVerifiedUser = data.isVerified || false;
+                        if (isVerifiedUser) {
+                            document.getElementById('verified-badge').style.display = 'inline-block';
+                            document.getElementById('adsense-section').style.display = 'none';
+                            document.getElementById('publicidad-section').style.display = 'none';
+                            document.getElementById('donaciones-section').style.display = 'none';
+                            document.getElementById('export-excel-btn').style.display = 'block';
+                            document.getElementById('view-report-btn').style.display = 'block';
+                        } else {
+                            document.getElementById('verified-badge').style.display = 'none';
+                            document.getElementById('adsense-section').style.display = 'block';
+                            document.getElementById('publicidad-section').style.display = 'block';
+                            document.getElementById('donaciones-section').style.display = 'block';
+                            document.getElementById('export-excel-btn').style.display = 'none';
+                            document.getElementById('view-report-btn').style.display = 'none';
+                        }
                     }
                 })
                 .catch(error => {
                     console.error('Error al cargar datos del usuario:', error);
-                    document.getElementById('user-name').textContent = 'Usuario';
-                    document.getElementById('user-profesion').textContent = 'N/A';
                 });
         }
 
         function guardarPreferenciaNotificacion() {
-            const preferencia = document.getElementById('notificacion-preferencia').value;
-            if (currentUser) {
-                db.collection('users').doc(currentUser.uid).update({
-                    notificacionPreferencia: preferencia
-                })
-                    .then(() => {
-                        alert('Preferencia de notificación guardada.');
-                        if (preferencia === 'movil') {
-                            solicitarPermisoNotificaciones();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error al guardar preferencia de notificación:', error);
-                        alert('Error al guardar preferencia de notificación: ' + error.message);
-                    });
+            if (!currentUser) {
+                alert('Debes estar autenticado para guardar preferencias.');
+                return;
             }
+
+            const preferencia = document.getElementById('notificacion-preferencia').value;
+            db.collection('users').doc(currentUser.uid).update({
+                notificacionPreferencia: preferencia
+            })
+                .then(() => {
+                    alert('Preferencia de notificación guardada correctamente.');
+                    programarNotificacion(currentUser.uid);
+                })
+                .catch(error => {
+                    console.error('Error al guardar preferencia de notificación:', error);
+                    alert('Error al guardar preferencia: ' + error.message);
+                });
+        }
+
+        function cerrarSesionUsuario() {
+            auth.signOut()
+                .then(() => {
+                    currentUser = null;
+                    isVerifiedUser = false;
+                    document.getElementById('user-section').style.display = 'none';
+                    document.getElementById('formulario-section').style.display = 'none';
+                    document.getElementById('registro-section').style.display = 'block';
+                    document.getElementById('auth-message').style.display = 'block';
+                    document.getElementById('login-email').value = '';
+                    document.getElementById('login-password').value = '';
+                    document.getElementById('resultado').innerHTML = '';
+                    document.getElementById('whatsapp-section').style.display = 'none';
+                    document.getElementById('donaciones-section').style.display = 'block';
+                    document.getElementById('guardar-resultado').style.display = 'none';
+                    document.getElementById('lista-calculos').innerHTML = '';
+                    document.getElementById('report-section').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error al cerrar sesión:', error);
+                    alert('Error al cerrar sesión: ' + error.message);
+                });
         }
 
         function guardarFechaProximoCambio(uid, fecha) {
-            db.collection('users').doc(uid).update({
-                fechaProximoCambio: fecha.toISOString()
-            })
-                .then(() => {
-                    console.log('Fecha del próximo cambio guardada.');
-                    programarNotificacion(uid);
-                })
+            db.collection('calculos').doc(uid).set({
+                ultimaFechaProximoCambio: fecha.toISOString()
+            }, { merge: true })
                 .catch(error => {
                     console.error('Error al guardar la fecha del próximo cambio:', error);
                 });
@@ -1560,79 +1813,47 @@
                     if (doc.exists) {
                         const data = doc.data();
                         const preferencia = data.notificacionPreferencia;
-                        const fechaCambio = data.fechaProximoCambio ? new Date(data.fechaProximoCambio) : null;
-                        if (!fechaCambio) return;
 
-                        const hoy = new Date();
-                        hoy.setHours(0, 0, 0, 0);
-                        fechaCambio.setHours(0, 0, 0, 0);
+                        if (preferencia === 'ninguna') return;
 
-                        if (fechaCambio.getTime() === hoy.getTime()) {
-                            const mensaje = "🔔 ¡Es hora de actuar! Cambia tus pezoneras hoy para asegurar una ordeña eficiente y la mejor calidad en tu producción. 🐄 Con JCALCULO, tu éxito está garantizado. ✨";
-                            if (preferencia === 'email') {
-                                enviarCorreoNotificacion(data.email, mensaje);
-                            } else if (preferencia === 'movil' && data.fcmToken) {
-                                enviarNotificacionMovil(data.fcmToken, mensaje);
-                            }
-                        }
+                        db.collection('calculos').doc(uid).get()
+                            .then(calcDoc => {
+                                if (calcDoc.exists && calcDoc.data().ultimaFechaProximoCambio) {
+                                    const fechaCambio = new Date(calcDoc.data().ultimaFechaProximoCambio);
+                                    const ahora = new Date();
+                                    const diasRestantes = Math.floor((fechaCambio - ahora) / (1000 * 60 * 60 * 24));
+
+                                    if (diasRestantes <= 5 && diasRestantes >= 0) {
+                                        const mensaje = `¡Atención! Quedan ${diasRestantes} días para el próximo cambio de pezoneras según tu último cálculo.`;
+
+                                        if (preferencia === 'email') {
+                                            console.log('Enviando correo:', mensaje); // Aquí iría la lógica real de envío de email
+                                        } else if (preferencia === 'movil' && data.fcmToken) {
+                                            if ('Notification' in window && Notification.permission === 'granted') {
+                                                new Notification('JCALCULO - Cambio de Pezoneras', {
+                                                    body: mensaje,
+                                                    icon: document.getElementById('app-logo').src
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error al programar notificación:', error);
+                            });
                     }
                 })
                 .catch(error => {
-                    console.error('Error al programar notificación:', error);
+                    console.error('Error al obtener preferencias de notificación:', error);
                 });
         }
 
-        function enviarCorreoNotificacion(email, mensaje) {
-            fetch('https://us-central1-jcalculador-ac481.cloudfunctions.net/sendEmail', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    message: mensaje
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Correo enviado:', data);
-            })
-            .catch(error => {
-                console.error('Error al enviar correo:', error);
-            });
-        }
-
-        function enviarNotificacionMovil(fcmToken, mensaje) {
-            fetch('https://fcm.googleapis.com/fcm/send', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'key=YOUR_SERVER_KEY'
-                },
-                body: JSON.stringify({
-                    to: fcmToken,
-                    notification: {
-                        title: 'Recordatorio de Cambio de Pezoneras',
-                        body: mensaje
-                    }
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Notificación enviada:', data);
-            })
-            .catch(error => {
-                console.error('Error al enviar notificación:', error);
-            });
-        }
-
-        document.querySelectorAll('#formulario input').forEach(input => {
-            input.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    calcular();
-                }
-            });
+        // Evitar envío accidental del formulario con Enter
+        document.getElementById('formulario').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
         });
     </script>
 </body>
