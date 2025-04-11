@@ -15,7 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
+<style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -75,7 +75,7 @@
         button:hover {
             background: #003d4a;
         }
-        #resultado {
+#resultado {
             margin-top: 20px;
             padding: 15px;
             background: #f9f9f9;
@@ -142,7 +142,7 @@
             cursor: pointer;
             color: #333;
         }
-        .admin-link {
+.admin-link {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -160,6 +160,7 @@
             background: #f0f0f0;
             border-radius: 5px;
             text-align: center;
+            display: none;
         }
         #publicidad-section img {
             max-width: 100%;
@@ -171,6 +172,7 @@
             background: #f0f0f0;
             border-radius: 5px;
             text-align: center;
+            display: none;
         }
         #donaciones-section img {
             max-width: 300px;
@@ -207,7 +209,7 @@
             margin-bottom: 20px;
             color: #005566;
         }
-        #calculos-registrados {
+#calculos-registrados {
             margin-top: 20px;
             padding: 15px;
             background: #f0f0f0;
@@ -316,8 +318,7 @@
         <div id="auth-message" class="auth-message">
             Por favor, regístrate o inicia sesión para usar la calculadora.
         </div>
-
-        <!-- Información de la calculadora -->
+<!-- Información de la calculadora -->
         <div id="calculator-info">
             <h3>¡Gestiona tus Pezoneras como Nunca Antes! 🚀</h3>
             <p>Con <strong>JCALCULO</strong>, optimiza el cambio de tus pezoneras de manera fácil y precisa. Nuestra herramienta calcula el número exacto de pezoneras necesarias, estima su durabilidad y te <strong>notifica el próximo cambio</strong> para que nunca pierdas el control. 🔔 Ahorra tiempo, mejora la eficiencia de tu ordeño y lleva tu producción al siguiente nivel. ¡Confía en JCALCULO, la solución que todo ganadero necesita! 🐄</p>
@@ -354,7 +355,7 @@
             <button type="button" onclick="registrarUsuario()">Registrarse</button>
             <p>¿Ya tienes cuenta? <a href="#" onclick="mostrarLoginUsuario()">Inicia sesión</a></p>
         </div>
-        <!-- Formulario de Login de Usuario -->
+<!-- Formulario de Login de Usuario -->
         <div id="login-section">
             <h3>Iniciar Sesión</h3>
             <label for="login-email">Correo Electrónico:</label>
@@ -379,7 +380,7 @@
             <button type="button" onclick="guardarPreferenciaNotificacion()">Guardar Preferencia</button>
             <button type="button" onclick="cerrarSesionUsuario()">Cerrar Sesión</button>
         </div>
-        <!-- Formulario de la calculadora (visible solo para usuarios autenticados) -->
+<!-- Formulario de la calculadora (visible solo para usuarios autenticados) -->
         <div id="formulario-section">
             <form id="formulario">
                 <label for="ordenosDia">Ordeños por Día:</label>
@@ -433,8 +434,8 @@
                 <canvas id="report-canvas"></canvas>
             </div>
         </div>
-        <!-- Publicidad con Google AdSense -->
-        <div id="adsense-section" style="margin-top: 20px; text-align: center;">
+<!-- Publicidad con Google AdSense -->
+        <div id="adsense-section" style="margin-top: 20px; text-align: center; display: none;">
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163239656988692"></script>
             <ins class="adsbygoogle"
                  style="display:block"
@@ -458,8 +459,7 @@
             <input type="password" id="admin-password" placeholder="Contraseña">
             <button type="button" onclick="loginAdmin()">Iniciar Sesión</button>
         </div>
-
-        <!-- Formulario para agregar publicidad y gestionar logo -->
+<!-- Formulario para agregar publicidad y gestionar logo -->
         <div id="admin-form" style="display: none;">
             <h3>Administrar Configuración</h3>
 
@@ -507,8 +507,7 @@
                 </div>
             </div>
             <button type="button" onclick="guardarPublicidad()">Guardar Publicidad Principal</button>
-
-            <!-- Publicidad Secundaria -->
+<!-- Publicidad Secundaria -->
             <h4>Publicidad Secundaria (Imagen con Enlace)</h4>
             <label for="ad-secundaria-source">Fuente de la Imagen:</label>
             <select id="ad-secundaria-source" onchange="mostrarCamposImagenSecundaria()">
@@ -533,7 +532,10 @@
             <textarea id="popup-message-content" placeholder="Escribe el mensaje del pop-up"></textarea>
             <button type="button" onclick="guardarPopupMessage()">Guardar Mensaje del Pop-up</button>
 
-            <!-- Gestión de usuarios verificados -->
+            <!-- Prueba de Notificación -->
+            <h4>Probar Notificación</h4>
+            <button type="button" onclick="probarNotificacion()">Enviar Notificación de Prueba</button>
+<!-- Gestión de usuarios verificados -->
             <h4>Gestionar Usuarios Verificados</h4>
             <label for="user-verification-email">Correo del Usuario:</label>
             <input type="email" id="user-verification-email" placeholder="correo@ejemplo.com">
@@ -579,7 +581,7 @@
 
         <div class="signature">J.Castle</div>
     </div>
-    <script>
+<script>
         // Configuración de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDokCTsjDgQ94nu23rXf_HkvLeXpZmJU2c",
@@ -647,10 +649,13 @@
                         const logoElement = document.getElementById('app-logo');
                         logoElement.src = logoUrl;
                         logoElement.style.display = 'block';
+                    } else {
+                        document.getElementById('app-logo').style.display = 'none';
                     }
                 })
                 .catch(error => {
                     console.error('Error al cargar el logo:', error);
+                    document.getElementById('app-logo').style.display = 'none';
                 });
         }
 
@@ -689,9 +694,8 @@
                     document.getElementById('user-section').style.display = 'none';
                     document.getElementById('formulario-section').style.display = 'none';
                     document.getElementById('auth-message').style.display = 'block';
-                    document.getElementById('adsense-section').style.display = 'block';
-                    document.getElementById('publicidad-section').style.display = 'block';
-                    document.getElementById('donaciones-section').style.display = 'block';
+                    cargarPublicidad();
+                    cargarPublicidadSecundaria();
                 }
             });
         };
@@ -713,6 +717,7 @@
             empresaSection.style.display = profesion === 'ganadero' ? 'block' : 'none';
             otraProfesionSection.style.display = profesion === 'otro' ? 'block' : 'none';
         }
+
         function calcular() {
             const ordenosDiaInput = document.getElementById('ordenosDia').value;
             const puntosOrdenoInput = document.getElementById('puntosOrdeno').value;
@@ -877,7 +882,6 @@
         function mostrarResultados() {
             document.getElementById('resultado').innerHTML = resultadoTexto.replace(/\n/g, '<br>');
             document.getElementById('whatsapp-section').style.display = 'block';
-            document.getElementById('donaciones-section').style.display = isVerifiedUser ? 'none' : 'block';
             document.getElementById('guardar-resultado').style.display = 'block';
         }
 
@@ -899,7 +903,6 @@
             document.getElementById('modificacion-campos').style.display = 'none';
             document.getElementById('resultado').innerHTML = '';
             document.getElementById('whatsapp-section').style.display = 'none';
-            document.getElementById('donaciones-section').style.display = 'none';
             document.getElementById('guardar-resultado').style.display = 'none';
             document.getElementById('codigoCliente').value = '';
             document.getElementById('report-section').style.display = 'none';
@@ -909,6 +912,7 @@
             totalPezoneras = 0;
             fechaProximoCambio = null;
         }
+
         function guardarResultado() {
             if (!currentUser) {
                 alert('Debes estar autenticado para guardar el resultado.');
@@ -971,8 +975,7 @@
                         `;
                         listaCalculos.appendChild(li);
                     });
-                })
-                .catch(error => {
+                }).catch(error => {
                     console.error('Error al cargar cálculos guardados:', error);
                 });
         }
@@ -1041,495 +1044,7 @@
                 }
             });
         }
-        function mostrarLoginAdmin() {
-            document.getElementById('admin-login').style.display = 'block';
-            document.getElementById('admin-form').style.display = 'none';
-            document.getElementById('admin-registro').style.display = 'none';
-            document.getElementById('admin-calculos').style.display = 'none';
-            return false;
-        }
-
-        function loginAdmin() {
-            const email = document.getElementById('admin-email').value.trim();
-            const password = document.getElementById('admin-password').value.trim();
-
-            if (!email || !password) {
-                alert('Por favor, completa todos los campos.');
-                return;
-            }
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    adminUser = userCredential.user;
-
-                    db.collection('admins').doc(adminUser.uid).get()
-                        .then(doc => {
-                            if (doc.exists || (adminUser.uid === ADMIN_UID && adminUser.email.toLowerCase() === ADMIN_EMAIL)) {
-                                isAdminLoggedIn = true;
-                                document.getElementById('admin-login').style.display = 'none';
-                                document.getElementById('admin-form').style.display = 'block';
-                                document.getElementById('admin-registro').style.display = 'block';
-                                document.getElementById('admin-calculos').style.display = 'block';
-                                try {
-                                    cargarPublicidad();
-                                    cargarPublicidadSecundaria();
-                                    cargarPopupMessage();
-                                    cargarHistorialAdmin();
-                                } catch (error) {
-                                    console.error('Error al cargar las configuraciones después de login:', error);
-                                }
-                            } else {
-                                alert('No tienes permisos de administrador.');
-                                auth.signOut();
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error al verificar permisos de administrador:', error);
-                            alert('Error al verificar permisos: ' + error.message);
-                            auth.signOut();
-                        });
-                })
-                .catch(error => {
-                    console.error('Error al iniciar sesión como administrador:', error);
-                    alert('Error al iniciar sesión: ' + error.message);
-                });
-        }
-
-        function cerrarSesionAdmin() {
-            auth.signOut()
-                .then(() => {
-                    isAdminLoggedIn = false;
-                    adminUser = null;
-                    document.getElementById('admin-login').style.display = 'none';
-                    document.getElementById('admin-form').style.display = 'none';
-                    document.getElementById('admin-registro').style.display = 'none';
-                    document.getElementById('admin-calculos').style.display = 'none';
-                    document.getElementById('admin-email').value = '';
-                    document.getElementById('admin-password').value = '';
-                })
-                .catch(error => {
-                    console.error('Error al cerrar sesión del administrador:', error);
-                    alert('Error al cerrar sesión: ' + error.message);
-                });
-        }
-
-        function registrarAdmin() {
-            if (!isAdminLoggedIn || (adminUser.uid !== ADMIN_UID && adminUser.email.toLowerCase() !== ADMIN_EMAIL)) {
-                alert('Solo el administrador principal puede registrar nuevos administradores.');
-                return;
-            }
-
-            const nombre = document.getElementById('admin-nombre').value.trim();
-            const email = document.getElementById('admin-registro-email').value.trim();
-            const password = document.getElementById('admin-registro-password').value.trim();
-
-            if (!nombre || !email || !password) {
-                alert('Por favor, completa todos los campos.');
-                return;
-            }
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    const newAdmin = userCredential.user;
-                    return Promise.all([
-                        newAdmin.sendEmailVerification(),
-                        db.collection('admins').doc(newAdmin.uid).set({
-                            nombre: nombre,
-                            email: email,
-                            registradoPor: adminUser.uid,
-                            timestamp: new Date().toISOString()
-                        })
-                    ]);
-                })
-                .then(() => {
-                    alert('Administrador registrado correctamente. Debe verificar su correo para acceder.');
-                    document.getElementById('admin-nombre').value = '';
-                    document.getElementById('admin-registro-email').value = '';
-                    document.getElementById('admin-registro-password').value = '';
-                })
-                .catch(error => {
-                    console.error('Error al registrar administrador:', error);
-                    alert('Error al registrar administrador: ' + error.message);
-                });
-        }
-
-        function verificarUsuario() {
-            const email = document.getElementById('user-verification-email').value.trim();
-            if (!email) {
-                alert('Por favor, ingresa el correo del usuario.');
-                return;
-            }
-
-            db.collection('users').where('email', '==', email).get()
-                .then(snapshot => {
-                    if (snapshot.empty) {
-                        alert('No se encontró un usuario con ese correo.');
-                        return;
-                    }
-                    const userDoc = snapshot.docs[0];
-                    db.collection('users').doc(userDoc.id).update({
-                        isVerified: true
-                    }).then(() => {
-                        alert('Usuario verificado correctamente.');
-                        document.getElementById('user-verification-email').value = '';
-                        if (currentUser && currentUser.email === email) {
-                            isVerifiedUser = true;
-                            document.getElementById('verified-badge').style.display = 'inline-block';
-                            document.getElementById('adsense-section').style.display = 'none';
-                            document.getElementById('publicidad-section').style.display = 'none';
-                            document.getElementById('donaciones-section').style.display = 'none';
-                            document.getElementById('export-excel-btn').style.display = 'block';
-                            document.getElementById('view-report-btn').style.display = 'block';
-                        }
-                    }).catch(error => {
-                        console.error('Error al verificar usuario:', error);
-                        alert('Error al verificar usuario: ' + error.message);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error al buscar usuario:', error);
-                    alert('Error al buscar usuario: ' + error.message);
-                });
-        }
-
-        function quitarVerificacionUsuario() {
-            const email = document.getElementById('user-verification-email').value.trim();
-            if (!email) {
-                alert('Por favor, ingresa el correo del usuario.');
-                return;
-            }
-
-            db.collection('users').where('email', '==', email).get()
-                .then(snapshot => {
-                    if (snapshot.empty) {
-                        alert('No se encontró un usuario con ese correo.');
-                        return;
-                    }
-                    const userDoc = snapshot.docs[0];
-                    db.collection('users').doc(userDoc.id).update({
-                        isVerified: false
-                    }).then(() => {
-                        alert('Insignia de verificación quitada correctamente.');
-                        document.getElementById('user-verification-email').value = '';
-                        if (currentUser && currentUser.email === email) {
-                            isVerifiedUser = false;
-                            document.getElementById('verified-badge').style.display = 'none';
-                            document.getElementById('adsense-section').style.display = 'block';
-                            document.getElementById('publicidad-section').style.display = 'block';
-                            document.getElementById('donaciones-section').style.display = 'block';
-                            document.getElementById('export-excel-btn').style.display = 'none';
-                            document.getElementById('view-report-btn').style.display = 'none';
-                        }
-                    }).catch(error => {
-                        console.error('Error al quitar verificación:', error);
-                        alert('Error al quitar verificación: ' + error.message);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error al buscar usuario:', error);
-                    alert('Error al buscar usuario: ' + error.message);
-                });
-        }
-        function mostrarCamposLogo() {
-            const source = document.getElementById('logo-source').value;
-            document.getElementById('logo-url-section').style.display = source === 'url' ? 'block' : 'none';
-            document.getElementById('logo-upload-section').style.display = source === 'upload' ? 'block' : 'none';
-        }
-
-        function guardarLogo() {
-            if (!isAdminLoggedIn) {
-                alert('Debes iniciar sesión como administrador para guardar el logo.');
-                return;
-            }
-
-            const source = document.getElementById('logo-source').value;
-            if (source === 'url') {
-                const logoUrl = document.getElementById('logo-url').value.trim();
-                if (!logoUrl) {
-                    alert('Por favor, ingresa una URL válida para el logo.');
-                    return;
-                }
-                db.collection('config').doc('logo').set({ url: logoUrl })
-                    .then(() => {
-                        cargarLogo();
-                        alert('Logo actualizado correctamente.');
-                    })
-                    .catch(error => {
-                        console.error('Error al guardar el logo:', error);
-                        alert('Error al guardar el logo: ' + error.message);
-                    });
-            } else {
-                const fileInput = document.getElementById('logo-upload');
-                const file = fileInput.files[0];
-                if (!file) {
-                    alert('Por favor, selecciona una imagen para subir.');
-                    return;
-                }
-                const storageRef = storage.ref(`logos/${file.name}`);
-                storageRef.put(file)
-                    .then(snapshot => snapshot.ref.getDownloadURL())
-                    .then(downloadURL => {
-                        return db.collection('config').doc('logo').set({ url: downloadURL });
-                    })
-                    .then(() => {
-                        cargarLogo();
-                        alert('Logo actualizado correctamente.');
-                    })
-                    .catch(error => {
-                        console.error('Error al subir el logo:', error);
-                        alert('Error al subir el logo: ' + error.message);
-                    });
-            }
-        }
-
-        function mostrarCamposPublicidad() {
-            const adType = document.getElementById('ad-type').value;
-            document.getElementById('ad-texto').style.display = adType === 'texto' ? 'block' : 'none';
-            document.getElementById('ad-imagen').style.display = adType === 'imagen' ? 'block' : 'none';
-        }
-
-        function mostrarCamposImagen() {
-            const source = document.getElementById('ad-imagen-source').value;
-            document.getElementById('ad-imagen-url-section').style.display = source === 'url' ? 'block' : 'none';
-            document.getElementById('ad-imagen-upload-section').style.display = source === 'upload' ? 'block' : 'none';
-        }
-
-        function mostrarCamposImagenSecundaria() {
-            const source = document.getElementById('ad-secundaria-source').value;
-            document.getElementById('ad-secundaria-url-section').style.display = source === 'url' ? 'block' : 'none';
-            document.getElementById('ad-secundaria-upload-section').style.display = source === 'upload' ? 'block' : 'none';
-        }
-
-        function guardarPublicidad() {
-            if (!isAdminLoggedIn) {
-                alert('Debes iniciar sesión como administrador para guardar la publicidad.');
-                return;
-            }
-
-            const adType = document.getElementById('ad-type').value;
-            let adContent = {};
-
-            if (adType === 'texto') {
-                const textoContent = document.getElementById('ad-texto-content').value.trim();
-                if (!textoContent) {
-                    alert('Por favor, ingresa un texto para la publicidad principal.');
-                    return;
-                }
-                adContent = {
-                    type: 'texto',
-                    content: textoContent
-                };
-                saveAdToFirestore(adContent);
-            } else {
-                const source = document.getElementById('ad-imagen-source').value;
-                if (source === 'url') {
-                    const imagenUrl = document.getElementById('ad-imagen-url').value.trim();
-                    if (!imagenUrl) {
-                        alert('Por favor, ingresa una URL válida para la imagen.');
-                        return;
-                    }
-                    adContent = {
-                        type: 'imagen',
-                        content: imagenUrl
-                    };
-                    saveAdToFirestore(adContent);
-                } else {
-                    const fileInput = document.getElementById('ad-imagen-upload');
-                    const file = fileInput.files[0];
-                    if (!file) {
-                        alert('Por favor, selecciona una imagen para subir.');
-                        return;
-                    }
-                    const storageRef = storage.ref(`publicidad/principal/${file.name}`);
-                    storageRef.put(file)
-                        .then(snapshot => snapshot.ref.getDownloadURL())
-                        .then(downloadURL => {
-                            adContent = {
-                                type: 'imagen',
-                                content: downloadURL
-                            };
-                            saveAdToFirestore(adContent);
-                        })
-                        .catch(error => {
-                            console.error('Error al subir la imagen:', error);
-                            alert('Error al subir la imagen: ' + error.message);
-                        });
-                }
-            }
-        }
-
-        function saveAdToFirestore(adContent) {
-            db.collection('publicidad').doc('principal').set(adContent)
-                .then(() => {
-                    cargarPublicidad();
-                    alert('Publicidad principal guardada correctamente.');
-                })
-                .catch(error => {
-                    console.error('Error al guardar la publicidad principal:', error);
-                    alert('Error al guardar la publicidad principal: ' + error.message);
-                });
-        }
-
-        function guardarPublicidadSecundaria() {
-            if (!isAdminLoggedIn) {
-                alert('Debes iniciar sesión como administrador para guardar la publicidad.');
-                return;
-            }
-
-            const source = document.getElementById('ad-secundaria-source').value;
-            const enlace = document.getElementById('ad-secundaria-link').value.trim();
-
-            if (!enlace) {
-                alert('Por favor, ingresa el enlace para la publicidad secundaria.');
-                return;
-            }
-
-            if (source === 'url') {
-                const imagenUrl = document.getElementById('ad-secundaria-imagen-url').value.trim();
-                if (!imagenUrl) {
-                    alert('Por favor, ingresa una URL válida para la imagen.');
-                    return;
-                }
-                const adContent = {
-                    imagenUrl: imagenUrl,
-                    enlace: enlace
-                };
-                saveSecondaryAdToFirestore(adContent);
-            } else {
-                const fileInput = document.getElementById('ad-secundaria-imagen-upload');
-                const file = fileInput.files[0];
-                if (!file) {
-                    alert('Por favor, selecciona una imagen para subir.');
-                    return;
-                }
-                const storageRef = storage.ref(`publicidad/secundaria/${file.name}`);
-                storageRef.put(file)
-                    .then(snapshot => snapshot.ref.getDownloadURL())
-                    .then(downloadURL => {
-                        const adContent = {
-                            imagenUrl: downloadURL,
-                            enlace: enlace
-                        };
-                        saveSecondaryAdToFirestore(adContent);
-                    })
-                    .catch(error => {
-                        console.error('Error al subir la imagen secundaria:', error);
-                        alert('Error al subir la imagen secundaria: ' + error.message);
-                    });
-            }
-        }
-
-        function saveSecondaryAdToFirestore(adContent) {
-            db.collection('publicidad').doc('secundaria').set(adContent)
-                .then(() => {
-                    cargarPublicidadSecundaria();
-                    alert('Publicidad secundaria guardada correctamente.');
-                })
-                .catch(error => {
-                    console.error('Error al guardar la publicidad secundaria:', error);
-                    alert('Error al guardar la publicidad secundaria: ' + error.message);
-                });
-        }
-
-        function guardarPopupMessage() {
-            if (!isAdminLoggedIn) {
-                alert('Debes iniciar sesión como administrador para guardar el mensaje del pop-up.');
-                return;
-            }
-
-            const messageContent = document.getElementById('popup-message-content').value.trim();
-            if (!messageContent) {
-                alert('Por favor, ingresa un mensaje para el pop-up.');
-                return;
-            }
-
-            db.collection('config').doc('popup').set({
-                title: "¡Optimiza tu producción con JCALCULO!",
-                message: messageContent,
-                contact: "📧 Soporte: alfstiven@gmail.com"
-            })
-                .then(() => {
-                    cargarPopupMessage();
-                    alert('Mensaje del pop-up guardado correctamente.');
-                })
-                .catch(error => {
-                    console.error('Error al guardar el mensaje del pop-up:', error);
-                    alert('Error al guardar el mensaje del pop-up: ' + error.message);
-                });
-        }
-        function cargarPublicidad() {
-            const publicidadSection = document.getElementById('publicidad-section');
-            if (isVerifiedUser) {
-                publicidadSection.style.display = 'none';
-                return;
-            }
-            db.collection('publicidad').doc('principal').get()
-                .then(doc => {
-                    if (doc.exists) {
-                        const ad = doc.data();
-                        if (ad.type === 'texto') {
-                            publicidadSection.innerHTML = `<p>${ad.content}</p>`;
-                        } else if (ad.type === 'imagen') {
-                            publicidadSection.innerHTML = `<img src="${ad.content}" alt="Publicidad">`;
-                        }
-                    } else {
-                        publicidadSection.innerHTML = '<p>No hay publicidad principal configurada.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al cargar la publicidad principal:', error);
-                    publicidadSection.innerHTML = '<p>Error al cargar la publicidad principal: ' + error.message + '</p>';
-                });
-        }
-
-        function cargarPublicidadSecundaria() {
-            const donacionesSection = document.getElementById('donaciones-section');
-            if (isVerifiedUser) {
-                donacionesSection.style.display = 'none';
-                return;
-            }
-            db.collection('publicidad').doc('secundaria').get()
-                .then(doc => {
-                    if (doc.exists) {
-                        const ad = doc.data();
-                        donacionesSection.innerHTML = `
-                            <a href="${ad.enlace}" target="_blank">
-                                <img src="${ad.imagenUrl}" alt="Publicidad Secundaria">
-                            </a>
-                        `;
-                    } else {
-                        donacionesSection.innerHTML = '<p>No hay publicidad secundaria configurada.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al cargar la publicidad secundaria:', error);
-                    donacionesSection.innerHTML = '<p>Error al cargar la publicidad secundaria: ' + error.message + '</p>';
-                });
-        }
-
-        function cargarPopupMessage() {
-            const popupTitle = document.getElementById('popup-title');
-            const popupMessage = document.getElementById('popup-message');
-            const popupContact = document.getElementById('popup-contact');
-            db.collection('config').doc('popup').get()
-                .then(doc => {
-                    if (doc.exists) {
-                        const data = doc.data();
-                        popupTitle.textContent = data.title;
-                        popupMessage.textContent = data.message;
-                        popupContact.innerHTML = `📧 Soporte: <a href="mailto:alfstiven@gmail.com">${data.contact}</a>`;
-                    } else {
-                        popupTitle.textContent = "¡Optimiza tu producción con JCALCULO!";
-                        popupMessage.textContent = "Descubre la herramienta que revoluciona la gestión de pezoneras. ¡Regístrate y toma el control hoy!";
-                        popupContact.innerHTML = '📧 Soporte: <a href="mailto:alfstiven@gmail.com">alfstiven@gmail.com</a>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al cargar el mensaje del pop-up:', error);
-                });
-        }
-
-        function cargarHistorialAdmin() {
+function cargarHistorialAdmin() {
             const listaCalculosAdmin = document.getElementById('lista-calculos-admin');
             listaCalculosAdmin.innerHTML = '';
 
@@ -1559,17 +1074,56 @@
                                                 Correo: ${email} | 
                                                 Fecha de Cambio: ${fechaCambio.toLocaleDateString('es-ES')} | 
                                                 Puntos: ${calc.puntos} | 
-                                                Pezoneras: ${calc.pezoneras} | 
-                                                Vacas: ${calc.vacas}
+                                                Pezoneras: ${calc.pezoneras}
                                             `;
-                                            li.dataset.calculo = JSON.stringify({
-                                                email: email,
-                                                fechaCambio: fechaCambio.toLocaleDateString('es-ES'),
-                                                puntos: calc.puntos,
-                                                pezoneras: calc.pezoneras,
-                                                vacas: calc.vacas
-                                            });
                                             listaCalculosAdmin.appendChild(li);
+                                        }
+                                    }
+                                });
+                            })
+                            .catch(error => {
+                                console.error(`Error al cargar cálculos de ${email}:`, error);
+                            });
+                        promesas.push(promesa);
+                    });
+                    return Promise.all(promesas);
+                })
+                .catch(error => {
+                    console.error('Error al cargar historial de usuarios:', error);
+                    listaCalculosAdmin.innerHTML = '<li>Error al cargar el historial.</li>';
+                });
+        }
+
+        function exportarHistorialExcel() {
+            const hoy = new Date();
+            const mesActual = hoy.getMonth();
+            const añoActual = hoy.getFullYear();
+            const historialData = [];
+
+            db.collection('users').get()
+                .then(userSnapshot => {
+                    const promesas = [];
+                    userSnapshot.forEach(userDoc => {
+                        const userId = userDoc.id;
+                        const userData = userDoc.data();
+                        const email = userData.email;
+
+                        const promesa = db.collection('calculos').doc(userId).collection('registros')
+                            .orderBy('timestamp', 'desc')
+                            .get()
+                            .then(snapshot => {
+                                snapshot.forEach(doc => {
+                                    const calc = doc.data();
+                                    if (calc.fechaProximoCambio) {
+                                        const fechaCambio = new Date(calc.fechaProximoCambio);
+                                        if (fechaCambio.getMonth() === mesActual && fechaCambio.getFullYear() === añoActual) {
+                                            historialData.push({
+                                                Email: email,
+                                                'Fecha Cambio': fechaCambio.toLocaleDateString('es-ES'),
+                                                'Vacas': calc.vacas,
+                                                'Puntos': calc.puntos,
+                                                'Pezoneras': calc.pezoneras
+                                            });
                                         }
                                     }
                                 });
@@ -1578,34 +1132,21 @@
                     });
                     return Promise.all(promesas);
                 })
+                .then(() => {
+                    const ws = XLSX.utils.json_to_sheet(historialData);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'Historial');
+                    XLSX.writeFile(wb, 'HistorialCalculos.xlsx');
+                })
                 .catch(error => {
-                    console.error('Error al cargar el historial de cálculos:', error);
+                    console.error('Error al exportar historial a Excel:', error);
+                    alert('Error al exportar historial: ' + error.message);
                 });
         }
 
-        function exportarHistorialExcel() {
-            const listaCalculosAdmin = document.getElementById('lista-calculos-admin').children;
-            const data = [];
-
-            for (let li of listaCalculosAdmin) {
-                const calc = JSON.parse(li.dataset.calculo);
-                data.push({
-                    Correo: calc.email,
-                    'Fecha de Cambio': calc.fechaCambio,
-                    Puntos: calc.puntos,
-                    Pezoneras: calc.pezoneras,
-                    Vacas: calc.vacas
-                });
-            }
-
-            const ws = XLSX.utils.json_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Historial');
-            XLSX.writeFile(wb, 'HistorialCalculos.xlsx');
-        }
         function registrarUsuario() {
             const nombre = document.getElementById('nombre').value.trim();
-            let profesion = document.getElementById('profesion').value;
+            const profesion = document.getElementById('profesion').value;
             const empresa = document.getElementById('empresa').value.trim();
             const otraProfesion = document.getElementById('otra-profesion').value.trim();
             const telefono = document.getElementById('telefono').value.trim();
@@ -1627,29 +1168,28 @@
                 return;
             }
 
-            if (profesion === 'otro') {
-                profesion = otraProfesion;
-            }
-
             auth.createUserWithEmailAndPassword(email, password)
                 .then(userCredential => {
                     const user = userCredential.user;
+                    const userData = {
+                        nombre: nombre,
+                        profesion: profesion === 'otro' ? otraProfesion : profesion,
+                        empresa: profesion === 'ganadero' ? empresa : null,
+                        telefono: telefono,
+                        email: email,
+                        isVerified: false,
+                        notificacionPreferencia: 'email',
+                        timestamp: new Date().toISOString()
+                    };
                     return Promise.all([
-                        user.sendEmailVerification(),
-                        db.collection('users').doc(user.uid).set({
-                            nombre: nombre,
-                            profesion: profesion,
-                            empresa: profesion === 'ganadero' ? empresa : null,
-                            telefono: telefono,
-                            email: email,
-                            notificacionPreferencia: 'ninguna',
-                            isVerified: false,
-                            timestamp: new Date().toISOString()
-                        })
+                        db.collection('users').doc(user.uid).set(userData),
+                        user.sendEmailVerification()
                     ]);
                 })
                 .then(() => {
-                    alert('Registro exitoso. Por favor, verifica tu correo electrónico.');
+                    alert('Usuario registrado correctamente. Por favor, verifica tu correo para continuar.');
+                    document.getElementById('registro-section').style.display = 'none';
+                    document.getElementById('login-section').style.display = 'block';
                     document.getElementById('nombre').value = '';
                     document.getElementById('profesion').value = '';
                     document.getElementById('empresa').value = '';
@@ -1657,23 +1197,11 @@
                     document.getElementById('telefono').value = '';
                     document.getElementById('email').value = '';
                     document.getElementById('password').value = '';
-                    document.getElementById('empresa-section').style.display = 'none';
-                    document.getElementById('otra-profesion-section').style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error al registrar usuario:', error);
-                    alert('Error al registrar: ' + error.message);
+                    alert('Error al registrar usuario: ' + error.message);
                 });
-        }
-
-        function mostrarRegistro() {
-            document.getElementById('registro-section').style.display = 'block';
-            document.getElementById('login-section').style.display = 'none';
-        }
-
-        function mostrarLoginUsuario() {
-            document.getElementById('login-section').style.display = 'block';
-            document.getElementById('registro-section').style.display = 'none';
         }
 
         function loginUsuario() {
@@ -1695,10 +1223,6 @@
                     }
                     currentUser = user;
                     cargarDatosUsuario(user.uid);
-                    document.getElementById('login-section').style.display = 'none';
-                    document.getElementById('user-section').style.display = 'block';
-                    document.getElementById('formulario-section').style.display = 'block';
-                    document.getElementById('auth-message').style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error al iniciar sesión:', error);
@@ -1729,24 +1253,15 @@
                     if (doc.exists) {
                         const data = doc.data();
                         document.getElementById('user-name').textContent = data.nombre;
-                        document.getElementById('user-profesion').textContent = data.profesion;
-                        document.getElementById('notificacion-preferencia').value = data.notificacionPreferencia || 'ninguna';
+                        document.getElementById('user-profesion').textContent = data.profesion + (data.empresa ? ` (${data.empresa})` : '');
+                        document.getElementById('notificacion-preferencia').value = data.notificacionPreferencia || 'email';
                         isVerifiedUser = data.isVerified || false;
-                        if (isVerifiedUser) {
-                            document.getElementById('verified-badge').style.display = 'inline-block';
-                            document.getElementById('adsense-section').style.display = 'none';
-                            document.getElementById('publicidad-section').style.display = 'none';
-                            document.getElementById('donaciones-section').style.display = 'none';
-                            document.getElementById('export-excel-btn').style.display = 'block';
-                            document.getElementById('view-report-btn').style.display = 'block';
-                        } else {
-                            document.getElementById('verified-badge').style.display = 'none';
-                            document.getElementById('adsense-section').style.display = 'block';
-                            document.getElementById('publicidad-section').style.display = 'block';
-                            document.getElementById('donaciones-section').style.display = 'block';
-                            document.getElementById('export-excel-btn').style.display = 'none';
-                            document.getElementById('view-report-btn').style.display = 'none';
-                        }
+                        document.getElementById('verified-badge').style.display = isVerifiedUser ? 'inline-block' : 'none';
+                        document.getElementById('adsense-section').style.display = isVerifiedUser ? 'none' : 'block';
+                        document.getElementById('export-excel-btn').style.display = isVerifiedUser ? 'block' : 'none';
+                        document.getElementById('view-report-btn').style.display = isVerifiedUser ? 'block' : 'none';
+                        cargarPublicidad();
+                        cargarPublicidadSecundaria();
                     }
                 })
                 .catch(error => {
@@ -1766,7 +1281,9 @@
             })
                 .then(() => {
                     alert('Preferencia de notificación guardada correctamente.');
-                    programarNotificacion(currentUser.uid);
+                    if (preferencia === 'movil') {
+                        solicitarPermisoNotificaciones();
+                    }
                 })
                 .catch(error => {
                     console.error('Error al guardar preferencia de notificación:', error);
@@ -1785,12 +1302,13 @@
                     document.getElementById('auth-message').style.display = 'block';
                     document.getElementById('login-email').value = '';
                     document.getElementById('login-password').value = '';
-                    document.getElementById('resultado').innerHTML = '';
-                    document.getElementById('whatsapp-section').style.display = 'none';
+                    document.getElementById('verified-badge').style.display = 'none';
+                    document.getElementById('adsense-section').style.display = 'block';
+                    document.getElementById('publicidad-section').style.display = 'block';
                     document.getElementById('donaciones-section').style.display = 'block';
-                    document.getElementById('guardar-resultado').style.display = 'none';
-                    document.getElementById('lista-calculos').innerHTML = '';
-                    document.getElementById('report-section').style.display = 'none';
+                    document.getElementById('export-excel-btn').style.display = 'none';
+                    document.getElementById('view-report-btn').style.display = 'none';
+                    limpiarPantalla();
                 })
                 .catch(error => {
                     console.error('Error al cerrar sesión:', error);
@@ -1799,62 +1317,51 @@
         }
 
         function guardarFechaProximoCambio(uid, fecha) {
-            db.collection('calculos').doc(uid).set({
-                ultimaFechaProximoCambio: fecha.toISOString()
-            }, { merge: true })
-                .catch(error => {
-                    console.error('Error al guardar la fecha del próximo cambio:', error);
-                });
+            db.collection('users').doc(uid).update({
+                fechaProximoCambio: fecha.toISOString()
+            }).catch(error => {
+                console.error('Error al guardar fecha de próximo cambio:', error);
+            });
         }
 
         function programarNotificacion(uid) {
             db.collection('users').doc(uid).get()
                 .then(doc => {
-                    if (doc.exists) {
-                        const data = doc.data();
-                        const preferencia = data.notificacionPreferencia;
+                    if (doc.exists && doc.data().fechaProximoCambio) {
+                        const fechaCambio = new Date(doc.data().fechaProximoCambio);
+                        const ahora = new Date();
+                        const diasRestantes = Math.ceil((fechaCambio - ahora) / (1000 * 60 * 60 * 24));
 
-                        if (preferencia === 'ninguna') return;
-
-                        db.collection('calculos').doc(uid).get()
-                            .then(calcDoc => {
-                                if (calcDoc.exists && calcDoc.data().ultimaFechaProximoCambio) {
-                                    const fechaCambio = new Date(calcDoc.data().ultimaFechaProximoCambio);
-                                    const ahora = new Date();
-                                    const diasRestantes = Math.floor((fechaCambio - ahora) / (1000 * 60 * 60 * 24));
-
-                                    if (diasRestantes <= 5 && diasRestantes >= 0) {
-                                        const mensaje = `¡Atención! Quedan ${diasRestantes} días para el próximo cambio de pezoneras según tu último cálculo.`;
-
-                                        if (preferencia === 'email') {
-                                            console.log('Enviando correo:', mensaje); // Aquí iría la lógica real de envío de email
-                                        } else if (preferencia === 'movil' && data.fcmToken) {
-                                            if ('Notification' in window && Notification.permission === 'granted') {
-                                                new Notification('JCALCULO - Cambio de Pezoneras', {
-                                                    body: mensaje,
-                                                    icon: document.getElementById('app-logo').src
-                                                });
-                                            }
-                                        }
-                                    }
+                        if (diasRestantes <= 3 && diasRestantes > 0) {
+                            const preferencia = doc.data().notificacionPreferencia;
+                            if (preferencia === 'email') {
+                                console.log(`Enviando correo a ${doc.data().email} para notificar cambio en ${diasRestantes} días.`);
+                            } else if (preferencia === 'movil' && doc.data().fcmToken) {
+                                if ('Notification' in window && Notification.permission === 'granted') {
+                                    new Notification('JCALCULO - Cambio de Pezoneras', {
+                                        body: `Faltan ${diasRestantes} días para el próximo cambio de pezoneras.`,
+                                        icon: document.getElementById('app-logo').src || '/path/to/default-icon.png'
+                                    });
                                 }
-                            })
-                            .catch(error => {
-                                console.error('Error al programar notificación:', error);
-                            });
+                            }
+                        }
                     }
                 })
                 .catch(error => {
-                    console.error('Error al obtener preferencias de notificación:', error);
+                    console.error('Error al programar notificación:', error);
                 });
         }
 
-        // Evitar envío accidental del formulario con Enter
-        document.getElementById('formulario').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-            }
-        });
+        function mostrarRegistro() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('registro-section').style.display = 'block';
+        }
+
+        function mostrarLoginUsuario() {
+            document.getElementById('registro-section').style.display = 'none';
+            document.getElementById('login-section').style.display = 'block';
+        }
+
     </script>
 </body>
 </html>
