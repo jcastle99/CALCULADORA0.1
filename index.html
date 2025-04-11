@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora FRIOR Cambio de Pezoneras</title>
+    <title>JCALCULO</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -11,6 +11,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
+    <!-- SheetJS para exportar a Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,6 +29,11 @@
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             position: relative;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: 150px;
         }
         h1 {
             text-align: center;
@@ -198,6 +205,42 @@
             margin-bottom: 20px;
             color: #005566;
         }
+        #calculos-registrados {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        #calculos-registrados ul {
+            list-style: none;
+            padding: 0;
+        }
+        #calculos-registrados li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        #admin-calculos {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        #admin-calculos ul {
+            list-style: none;
+            padding: 0;
+        }
+        #admin-calculos li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        #admin-registro {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -215,7 +258,10 @@
         <!-- Enlace discreto para admin -->
         <a href="#" class="admin-link" onclick="mostrarLoginAdmin()">Admin</a>
 
-        <h1>Calculadora FRIOR Cambio de Pezoneras</h1>
+        <!-- Contenedor para el logo dinámico -->
+        <img id="app-logo" class="logo" style="display: none;" alt="Logo de JCALCULO">
+
+        <h1>JCALCULO</h1>
 
         <!-- Mensaje para usuarios no autenticados -->
         <div id="auth-message" class="auth-message">
@@ -308,6 +354,11 @@
                 <button type="button" onclick="limpiarPantalla()">Limpiar</button>
             </form>
             <div id="resultado"></div>
+            <button id="guardar-resultado" style="display: none;" onclick="guardarResultado()">Guardar Resultado</button>
+            <div id="calculos-registrados">
+                <h3>Cálculos Guardados</h3>
+                <ul id="lista-calculos"></ul>
+            </div>
         </div>
 
         <!-- Publicidad con Google AdSense -->
@@ -332,13 +383,32 @@
             <label for="admin-email">Correo Electrónico:</label>
             <input type="email" id="admin-email" placeholder="alfstiven@gmail.com">
             <label for="admin-password">Contraseña:</label>
-            <input type="password" id="admin-password" placeholder="Dylan-2022">
+            <input type="password" id="admin-password" placeholder="Contraseña">
             <button type="button" onclick="loginAdmin()">Iniciar Sesión</button>
         </div>
 
-        <!-- Formulario para agregar publicidad -->
+        <!-- Formulario para agregar publicidad y gestionar logo -->
         <div id="admin-form" style="display: none;">
-            <h3>Administrar Publicidad</h3>
+            <h3>Administrar Configuración</h3>
+
+            <!-- Gestión del Logo -->
+            <h4>Actualizar Logo</h4>
+            <label for="logo-source">Fuente del Logo:</label>
+            <select id="logo-source" onchange="mostrarCamposLogo()">
+                <option value="url">URL</option>
+                <option value="upload">Subir desde el dispositivo</option>
+            </select>
+            <div id="logo-url-section" style="display: block;">
+                <label for="logo-url">URL del Logo:</label>
+                <input type="text" id="logo-url" placeholder="Ingresa la URL del logo">
+            </div>
+            <div id="logo-upload-section" style="display: none;">
+                <label for="logo-upload">Subir Logo:</label>
+                <input type="file" id="logo-upload" accept="image/*">
+            </div>
+            <button type="button" onclick="guardarLogo()">Guardar Logo</button>
+
+            <!-- Publicidad Principal -->
             <h4>Publicidad Principal (Texto o Imagen)</h4>
             <label for="ad-type">Tipo de Publicidad:</label>
             <select id="ad-type" onchange="mostrarCamposPublicidad()">
@@ -366,6 +436,7 @@
             </div>
             <button type="button" onclick="guardarPublicidad()">Guardar Publicidad Principal</button>
 
+            <!-- Publicidad Secundaria -->
             <h4>Publicidad Secundaria (Imagen con Enlace)</h4>
             <label for="ad-secundaria-source">Fuente de la Imagen:</label>
             <select id="ad-secundaria-source" onchange="mostrarCamposImagenSecundaria()">
@@ -384,10 +455,31 @@
             <input type="text" id="ad-secundaria-link" placeholder="Ingresa el enlace (ej. https://ejemplo.com)">
             <button type="button" onclick="guardarPublicidadSecundaria()">Guardar Publicidad Secundaria</button>
 
+            <!-- Mensaje del Pop-up -->
             <h4>Mensaje del Pop-up</h4>
             <label for="popup-message-content">Mensaje del Pop-up:</label>
             <textarea id="popup-message-content" placeholder="Escribe el mensaje del pop-up"></textarea>
             <button type="button" onclick="guardarPopupMessage()">Guardar Mensaje del Pop-up</button>
+
+            <!-- Registro de nuevos administradores -->
+            <div id="admin-registro">
+                <h4>Registrar Nuevo Administrador</h4>
+                <label for="admin-nombre">Nombre:</label>
+                <input type="text" id="admin-nombre" placeholder="Nombre del administrador">
+                <label for="admin-registro-email">Correo Electrónico:</label>
+                <input type="email" id="admin-registro-email" placeholder="correo@ejemplo.com">
+                <label for="admin-registro-password">Contraseña:</label>
+                <input type="password" id="admin-registro-password" placeholder="Contraseña">
+                <button type="button" onclick="registrarAdmin()">Registrar Administrador</button>
+            </div>
+
+            <!-- Historial de cálculos -->
+            <div id="admin-calculos">
+                <h4>Historial de Cálculos</h4>
+                <button type="button" onclick="exportarHistorialExcel()">Exportar a Excel</button>
+                <h5>Usuarios con cambio este mes:</h5>
+                <ul id="lista-calculos-admin"></ul>
+            </div>
 
             <button type="button" onclick="cerrarSesionAdmin()">Cerrar Sesión</button>
         </div>
@@ -433,10 +525,15 @@
         let costoManoObra = 0;
         let vacasIniciales = 0;
         let puntosOrdenoIniciales = 0;
+        let totalPezoneras = 0;
         let isAdminLoggedIn = false;
         let fechaProximoCambio = null;
         let currentUser = null;
-        let adminUser = null; // Para manejar la sesión del administrador
+        let adminUser = null;
+
+        // UID del administrador principal
+        const ADMIN_UID = 'Qnq9VPwWiHNNZC0DYXuRwDpLAr72';
+        const ADMIN_EMAIL = 'alfstiven@gmail.com';
 
         // Solicitar permiso para notificaciones
         function solicitarPermisoNotificaciones() {
@@ -463,15 +560,32 @@
             });
         }
 
-        // Mostrar el pop-up y cargar publicidades al cargar la página
+        // Cargar el logo al iniciar
+        function cargarLogo() {
+            db.collection('config').doc('logo').get()
+                .then(doc => {
+                    if (doc.exists) {
+                        const logoUrl = doc.data().url;
+                        const logoElement = document.getElementById('app-logo');
+                        logoElement.src = logoUrl;
+                        logoElement.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar el logo:', error);
+                });
+        }
+
+        // Mostrar el pop-up y cargar configuraciones al cargar la página
         window.onload = function() {
             document.getElementById('popup').style.display = 'flex';
             try {
+                cargarLogo();
                 cargarPublicidad();
                 cargarPublicidadSecundaria();
                 cargarPopupMessage();
             } catch (error) {
-                console.error('Error al cargar las publicidades:', error);
+                console.error('Error al cargar las configuraciones:', error);
             }
             // Verificar si hay un usuario logueado
             auth.onAuthStateChanged(user => {
@@ -490,6 +604,7 @@
                     document.getElementById('auth-message').style.display = 'none';
                     solicitarPermisoNotificaciones();
                     programarNotificacion(user.uid);
+                    cargarCalculosGuardados(user.uid);
                 } else {
                     currentUser = null;
                     document.getElementById('registro-section').style.display = 'block';
@@ -558,7 +673,7 @@
             if (diasEspecificos > 0 && ordenosDia === 0 && puntosOrdeno === 0 && vacas === 0) {
                 const fechaDiasEspecificos = new Date(fechaInicio.getTime() + diasEspecificos * 86400000);
                 resultadoTexto = `
-                    Calculadora FRIOR Cambio de Pezoneras
+                    Calculadora JCALCULO Cambio de Pezoneras
                     Fecha Inicio: ${fechaInicio.toLocaleDateString('es-ES')}
                     Fecha para ${diasEspecificos} Días: ${fechaDiasEspecificos.toLocaleDateString('es-ES')}
                 `;
@@ -579,7 +694,7 @@
             const mesesEquivalentes = Math.round(diasDurabilidadInicial / diasEnMes);
 
             const pezonerasPorPunto = 4;
-            let totalPezoneras = puntosOrdeno * pezonerasPorPunto;
+            totalPezoneras = puntosOrdeno * pezonerasPorPunto;
             costoManoObra = puntosOrdeno * 4;
             let desgastePezonerasPorDiaInicial = totalPezoneras / diasDurabilidadInicial;
 
@@ -638,7 +753,7 @@
             fechaProximoCambio = realizarModificacion === 'si' ? fechaProximoCambioAjustada : fechaProximoCambioInicial;
 
             resultadoTexto = `
-                Calculadora FRIOR Cambio de Pezoneras
+                Calculadora JCALCULO Cambio de Pezoneras
                 Fecha Inicio: ${fechaInicio.toLocaleDateString('es-ES')}
                 Vacas Iniciales: ${vacasIniciales}
                 Puntos Iniciales: ${puntosOrdenoIniciales}
@@ -646,7 +761,7 @@
                 Próximo Cambio Inicial: ${fechaProximoCambioInicial.toLocaleDateString('es-ES')}
                 Meses Equivalentes: ${mesesEquivalentes}
                 ${fechaDiasEspecificos}
-                Total Pezoneras Inicial: ${puntosOrdeno * pezonerasPorPunto}
+                Total Pezoneras Inicial: ${totalPezoneras}
                 Desgaste por Día Inicial: ${desgastePezonerasPorDiaInicial.toFixed(2)}
                 Costo Mano de Obra: ${costoManoObra} €
                 ${mensajeAjuste}
@@ -663,6 +778,7 @@
             document.getElementById('resultado').innerHTML = resultadoTexto.replace(/\n/g, '<br>');
             document.getElementById('whatsapp-section').style.display = 'block';
             document.getElementById('donaciones-section').style.display = 'block';
+            document.getElementById('guardar-resultado').style.display = 'block';
         }
 
         function enviarWhatsApp() {
@@ -684,18 +800,87 @@
             document.getElementById('resultado').innerHTML = '';
             document.getElementById('whatsapp-section').style.display = 'none';
             document.getElementById('donaciones-section').style.display = 'none';
+            document.getElementById('guardar-resultado').style.display = 'none';
             document.getElementById('codigoCliente').value = '';
             resultadoTexto = '';
             costoManoObra = 0;
             vacasIniciales = 0;
             puntosOrdenoIniciales = 0;
+            totalPezoneras = 0;
             fechaProximoCambio = null;
+        }
+
+        // Guardar resultado en Firestore
+        function guardarResultado() {
+            if (!currentUser) {
+                alert('Debes estar autenticado para guardar el resultado.');
+                return;
+            }
+
+            const calculo = {
+                resultado: resultadoTexto,
+                fechaProximoCambio: fechaProximoCambio ? fechaProximoCambio.toISOString() : null,
+                vacas: vacasIniciales,
+                puntos: puntosOrdenoIniciales,
+                pezoneras: totalPezoneras,
+                timestamp: new Date().toISOString()
+            };
+
+            const userCalcsRef = db.collection('calculos').doc(currentUser.uid).collection('registros');
+
+            // Obtener los cálculos existentes para verificar el límite
+            userCalcsRef.orderBy('timestamp', 'asc').get()
+                .then(snapshot => {
+                    const calculos = snapshot.docs;
+                    if (calculos.length >= 10) {
+                        // Eliminar el más antiguo
+                        const oldestCalculo = calculos[0];
+                        userCalcsRef.doc(oldestCalculo.id).delete();
+                    }
+
+                    // Guardar el nuevo cálculo
+                    return userCalcsRef.add(calculo);
+                })
+                .then(() => {
+                    alert('Resultado guardado correctamente.');
+                    cargarCalculosGuardados(currentUser.uid);
+                })
+                .catch(error => {
+                    console.error('Error al guardar el resultado:', error);
+                    alert('Error al guardar el resultado: ' + error.message);
+                });
+        }
+
+        // Cargar cálculos guardados del usuario
+        function cargarCalculosGuardados(uid) {
+            const listaCalculos = document.getElementById('lista-calculos');
+            listaCalculos.innerHTML = '';
+
+            db.collection('calculos').doc(uid).collection('registros')
+                .orderBy('timestamp', 'desc')
+                .get()
+                .then(snapshot => {
+                    snapshot.forEach(doc => {
+                        const calc = doc.data();
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            <strong>Fecha:</strong> ${new Date(calc.timestamp).toLocaleString('es-ES')}<br>
+                            ${calc.resultado.replace(/\n/g, '<br>')}
+                        `;
+                        listaCalculos.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al cargar cálculos guardados:', error);
+                });
         }
 
         // Funciones de administración
         function mostrarLoginAdmin() {
             document.getElementById('admin-login').style.display = 'block';
             document.getElementById('admin-form').style.display = 'none';
+            document.getElementById('admin-registro').style.display = 'none';
+            document.getElementById('admin-calculos').style.display = 'none';
             return false;
         }
 
@@ -711,16 +896,34 @@
             auth.signInWithEmailAndPassword(email, password)
                 .then(userCredential => {
                     adminUser = userCredential.user;
-                    isAdminLoggedIn = true;
-                    document.getElementById('admin-login').style.display = 'none';
-                    document.getElementById('admin-form').style.display = 'block';
-                    try {
-                        cargarPublicidad();
-                        cargarPublicidadSecundaria();
-                        cargarPopupMessage();
-                    } catch (error) {
-                        console.error('Error al cargar las publicidades después de login:', error);
-                    }
+
+                    // Verificar si el usuario tiene permisos de administrador
+                    db.collection('admins').doc(adminUser.uid).get()
+                        .then(doc => {
+                            if (doc.exists || (adminUser.uid === ADMIN_UID && adminUser.email.toLowerCase() === ADMIN_EMAIL)) {
+                                isAdminLoggedIn = true;
+                                document.getElementById('admin-login').style.display = 'none';
+                                document.getElementById('admin-form').style.display = 'block';
+                                document.getElementById('admin-registro').style.display = 'block';
+                                document.getElementById('admin-calculos').style.display = 'block';
+                                try {
+                                    cargarPublicidad();
+                                    cargarPublicidadSecundaria();
+                                    cargarPopupMessage();
+                                    cargarHistorialAdmin();
+                                } catch (error) {
+                                    console.error('Error al cargar las configuraciones después de login:', error);
+                                }
+                            } else {
+                                alert('No tienes permisos de administrador.');
+                                auth.signOut();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error al verificar permisos de administrador:', error);
+                            alert('Error al verificar permisos: ' + error.message);
+                            auth.signOut();
+                        });
                 })
                 .catch(error => {
                     console.error('Error al iniciar sesión como administrador:', error);
@@ -735,6 +938,8 @@
                     adminUser = null;
                     document.getElementById('admin-login').style.display = 'none';
                     document.getElementById('admin-form').style.display = 'none';
+                    document.getElementById('admin-registro').style.display = 'none';
+                    document.getElementById('admin-calculos').style.display = 'none';
                     document.getElementById('admin-email').value = '';
                     document.getElementById('admin-password').value = '';
                 })
@@ -742,6 +947,100 @@
                     console.error('Error al cerrar sesión del administrador:', error);
                     alert('Error al cerrar sesión: ' + error.message);
                 });
+        }
+
+        // Registrar un nuevo administrador
+        function registrarAdmin() {
+            if (!isAdminLoggedIn || (adminUser.uid !== ADMIN_UID && adminUser.email.toLowerCase() !== ADMIN_EMAIL)) {
+                alert('Solo el administrador principal puede registrar nuevos administradores.');
+                return;
+            }
+
+            const nombre = document.getElementById('admin-nombre').value.trim();
+            const email = document.getElementById('admin-registro-email').value.trim();
+            const password = document.getElementById('admin-registro-password').value.trim();
+
+            if (!nombre || !email || !password) {
+                alert('Por favor, completa todos los campos.');
+                return;
+            }
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    const newAdmin = userCredential.user;
+                    return Promise.all([
+                        newAdmin.sendEmailVerification(),
+                        db.collection('admins').doc(newAdmin.uid).set({
+                            nombre: nombre,
+                            email: email,
+                            registradoPor: adminUser.uid,
+                            timestamp: new Date().toISOString()
+                        })
+                    ]);
+                })
+                .then(() => {
+                    alert('Administrador registrado correctamente. Debe verificar su correo para acceder.');
+                    document.getElementById('admin-nombre').value = '';
+                    document.getElementById('admin-registro-email').value = '';
+                    document.getElementById('admin-registro-password').value = '';
+                })
+                .catch(error => {
+                    console.error('Error al registrar administrador:', error);
+                    alert('Error al registrar administrador: ' + error.message);
+                });
+        }
+
+        // Gestión del logo
+        function mostrarCamposLogo() {
+            const source = document.getElementById('logo-source').value;
+            document.getElementById('logo-url-section').style.display = source === 'url' ? 'block' : 'none';
+            document.getElementById('logo-upload-section').style.display = source === 'upload' ? 'block' : 'none';
+        }
+
+        function guardarLogo() {
+            if (!isAdminLoggedIn) {
+                alert('Debes iniciar sesión como administrador para guardar el logo.');
+                return;
+            }
+
+            const source = document.getElementById('logo-source').value;
+            if (source === 'url') {
+                const logoUrl = document.getElementById('logo-url').value.trim();
+                if (!logoUrl) {
+                    alert('Por favor, ingresa una URL válida para el logo.');
+                    return;
+                }
+                db.collection('config').doc('logo').set({ url: logoUrl })
+                    .then(() => {
+                        cargarLogo();
+                        alert('Logo actualizado correctamente.');
+                    })
+                    .catch(error => {
+                        console.error('Error al guardar el logo:', error);
+                        alert('Error al guardar el logo: ' + error.message);
+                    });
+            } else {
+                const fileInput = document.getElementById('logo-upload');
+                const file = fileInput.files[0];
+                if (!file) {
+                    alert('Por favor, selecciona una imagen para subir.');
+                    return;
+                }
+                const storageRef = storage.ref(`logos/${file.name}`);
+                storageRef.put(file)
+                    .then(snapshot => snapshot.ref.getDownloadURL())
+                    .then(downloadURL => {
+                        return db.collection('config').doc('logo').set({ url: downloadURL });
+                    })
+                    .then(() => {
+                        cargarLogo();
+                        alert('Logo actualizado correctamente.');
+                    })
+                    .catch(error => {
+                        console.error('Error al subir el logo:', error);
+                        alert('Error al subir el logo: ' + error.message);
+                    });
+            }
         }
 
         function mostrarCamposPublicidad() {
@@ -984,6 +1283,83 @@
                 });
         }
 
+        // Cargar historial de cálculos para el administrador
+        function cargarHistorialAdmin() {
+            const listaCalculosAdmin = document.getElementById('lista-calculos-admin');
+            listaCalculosAdmin.innerHTML = '';
+
+            const hoy = new Date();
+            const mesActual = hoy.getMonth();
+            const añoActual = hoy.getFullYear();
+
+            db.collection('users').get()
+                .then(userSnapshot => {
+                    const promesas = [];
+                    userSnapshot.forEach(userDoc => {
+                        const userId = userDoc.id;
+                        const userData = userDoc.data();
+                        const email = userData.email;
+
+                        const promesa = db.collection('calculos').doc(userId).collection('registros')
+                            .orderBy('timestamp', 'desc')
+                            .get()
+                            .then(snapshot => {
+                                snapshot.forEach(doc => {
+                                    const calc = doc.data();
+                                    if (calc.fechaProximoCambio) {
+                                        const fechaCambio = new Date(calc.fechaProximoCambio);
+                                        if (fechaCambio.getMonth() === mesActual && fechaCambio.getFullYear() === añoActual) {
+                                            const li = document.createElement('li');
+                                            li.innerHTML = `
+                                                Correo: ${email} | 
+                                                Fecha de Cambio: ${fechaCambio.toLocaleDateString('es-ES')} | 
+                                                Puntos: ${calc.puntos} | 
+                                                Pezoneras: ${calc.pezoneras} | 
+                                                Vacas: ${calc.vacas}
+                                            `;
+                                            li.dataset.calculo = JSON.stringify({
+                                                email: email,
+                                                fechaCambio: fechaCambio.toLocaleDateString('es-ES'),
+                                                puntos: calc.puntos,
+                                                pezoneras: calc.pezoneras,
+                                                vacas: calc.vacas
+                                            });
+                                            listaCalculosAdmin.appendChild(li);
+                                        }
+                                    }
+                                });
+                            });
+                        promesas.push(promesa);
+                    });
+                    return Promise.all(promesas);
+                })
+                .catch(error => {
+                    console.error('Error al cargar el historial de cálculos:', error);
+                });
+        }
+
+        // Exportar historial a Excel
+        function exportarHistorialExcel() {
+            const listaCalculosAdmin = document.getElementById('lista-calculos-admin').children;
+            const data = [];
+
+            for (let li of listaCalculosAdmin) {
+                const calc = JSON.parse(li.dataset.calculo);
+                data.push({
+                    Correo: calc.email,
+                    'Fecha de Cambio': calc.fechaCambio,
+                    Puntos: calc.puntos,
+                    Pezoneras: calc.pezoneras,
+                    Vacas: calc.vacas
+                });
+            }
+
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Historial');
+            XLSX.writeFile(wb, 'HistorialCalculos.xlsx');
+        }
+
         // Funciones de registro y login de usuarios
         function registrarUsuario() {
             const nombre = document.getElementById('nombre').value.trim();
@@ -1146,7 +1522,7 @@
                         fechaCambio.setHours(0, 0, 0, 0);
 
                         if (fechaCambio.getTime() === hoy.getTime()) {
-                            const mensaje = "🔔 ¡Es hora de actuar! Cambia tus pezoneras hoy para asegurar una ordeña eficiente y la mejor calidad en tu producción. 🐄 Con FRIOR, tu éxito está garantizado. ✨";
+                            const mensaje = "🔔 ¡Es hora de actuar! Cambia tus pezoneras hoy para asegurar una ordeña eficiente y la mejor calidad en tu producción. 🐄 Con JCALCULO, tu éxito está garantizado. ✨";
                             if (preferencia === 'email') {
                                 enviarCorreoNotificacion(data.email, mensaje);
                             } else if (preferencia === 'movil' && data.fcmToken) {
@@ -1185,7 +1561,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'key=YOUR_SERVER_KEY' // 3447639f4d49e6f899b27c5be258a941b22878e1
+                    'Authorization': 'key=YOUR_SERVER_KEY'
                 },
                 body: JSON.stringify({
                     to: fcmToken,
