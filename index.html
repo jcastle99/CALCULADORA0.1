@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1990,95 +1991,106 @@
     }
 
     function verificarUsuario() {
-        try {
-            const email = document.getElementById('user-verification-email').value.trim();
-            if (!email) {
-                alert('Por favor, ingresa el correo del usuario.');
-                return;
-            }
-
-            db.collection('users').where('email', '==', email).get()
-                .then(snapshot => {
-                    if (snapshot.empty) {
-                        alert('No se encontró un usuario con ese correo.');
-                        return;
-                    }
-                    snapshot.forEach(doc => {
-                        db.collection('users').doc(doc.id).update({
-                            isVerified: true
-                        })
-                            .then(() => {
-                                alert('Usuario verificado correctamente.');
-                                if (currentUser && currentUser.email === email) {
-                                    isVerifiedUser = true;
-                                    document.getElementById('verified-badge').style.display = 'inline-block';
-                                    document.getElementById('adsense-section').style.display = 'none';
-                                    document.getElementById('publicidad-section').style.display = 'none';
-                                    document.getElementById('donaciones-section').style.display = 'none';
-                                    document.getElementById('export-excel-btn').style.display = 'block';
-                                    document.getElementById('view-report-btn').style.display = 'block';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error al verificar usuario:', error);
-                                alert('Error al verificar usuario: ' + error.message);
-                            });
-                    });
-                })
-                .catch(error => {
-                    console.error('Error al buscar usuario:', error);
-                    alert('Error al buscar usuario: ' + error.message);
-                });
-        } catch (error) {
-            console.error("Error en verificarUsuario:", error);
+    try {
+        const email = document.getElementById('user-verification-email').value.trim();
+        if (!email) {
+            alert('Por favor, ingresa el correo del usuario.');
+            return;
         }
-    }
 
-    function quitarVerificacionUsuario() {
-        try {
-            const email = document.getElementById('user-verification-email').value.trim();
-            if (!email) {
-                alert('Por favor, ingresa el correo del usuario.');
-                return;
-            }
-
-            db.collection('users').where('email', '==', email).get()
-                .then(snapshot => {
-                    if (snapshot.empty) {
-                        alert('No se encontró un usuario con ese correo.');
-                        return;
-                    }
-                    snapshot.forEach(doc => {
-                        db.collection('users').doc(doc.id).update({
-                            isVerified: false
-                        })
-                            .then(() => {
-                                alert('Verificación retirada correctamente.');
-                                if (currentUser && currentUser.email === email) {
-                                    isVerifiedUser = false;
-                                    document.getElementById('verified-badge').style.display = 'none';
-                                    document.getElementById('adsense-section').style.display = 'block';
-                                    document.getElementById('publicidad-section').style.display = 'block';
-                                    document.getElementById('donaciones-section').style.display = 'block';
-                                    document.getElementById('export-excel-btn').style.display = 'none';
-                                    document.getElementById('view-report-btn').style.display = 'none';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error al quitar verificación:', error);
-                                alert('Error al quitar verificación: ' + error.message);
-                            });
-                    });
-                })
-                .catch(error => {
-                    console.error('Error al buscar usuario:', error);
-                    alert('Error al buscar usuario: ' + error.message);
-                });
-        } catch (error) {
-            console.error("Error en quitarVerificacionUsuario:", error);
+        if (!isAdminLoggedIn) {
+            alert('Debes ser un administrador para realizar esta acción.');
+            return;
         }
-    }
 
+        db.collection('users').where('email', '==', email).get()
+            .then(snapshot => {
+                if (snapshot.empty) {
+                    alert('No se encontró un usuario con ese correo.');
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    db.collection('users').doc(doc.id).update({
+                        isVerified: true
+                    })
+                        .then(() => {
+                            alert('Usuario verificado correctamente.');
+                            if (currentUser && currentUser.email === email) {
+                                isVerifiedUser = true;
+                                document.getElementById('verified-badge').style.display = 'inline-block';
+                                document.getElementById('adsense-section').style.display = 'none';
+                                document.getElementById('publicidad-section').style.display = 'none';
+                                document.getElementById('donaciones-section').style.display = 'none';
+                                document.getElementById('export-excel-btn').style.display = 'block';
+                                document.getElementById('view-report-btn').style.display = 'block';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error al verificar usuario:', error);
+                            alert('Error al verificar usuario: ' + error.message);
+                        });
+                });
+            })
+            .catch(error => {
+                console.error('Error al buscar usuario:', error);
+                alert('Error al buscar usuario: ' + error.message);
+            });
+    } catch (error) {
+        console.error("Error en verificarUsuario:", error);
+        alert('Error inesperado al verificar usuario. Por favor, revisa la consola.');
+    }
+}
+
+function quitarVerificacionUsuario() {
+    try {
+        const email = document.getElementById('user-verification-email').value.trim();
+        if (!email) {
+            alert('Por favor, ingresa el correo del usuario.');
+            return;
+        }
+
+        if (!isAdminLoggedIn) {
+            alert('Debes ser un administrador para realizar esta acción.');
+            return;
+        }
+
+        db.collection('users').where('email', '==', email).get()
+            .then(snapshot => {
+                if (snapshot.empty) {
+                    alert('No se encontró un usuario con ese correo.');
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    db.collection('users').doc(doc.id).update({
+                        isVerified: false
+                    })
+                        .then(() => {
+                            alert('Verificación retirada correctamente.');
+                            if (currentUser && currentUser.email === email) {
+                                isVerifiedUser = false;
+                                document.getElementById('verified-badge').style.display = 'none';
+                                document.getElementById('adsense-section').style.display = 'block';
+                                document.getElementById('publicidad-section').style.display = 'block';
+                                document.getElementById('donaciones-section').style.display = 'block';
+                                document.getElementById('export-excel-btn').style.display = 'none';
+                                document.getElementById('view-report-btn').style.display = 'none';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error al quitar verificación:', error);
+                            alert('Error al quitar verificación: ' + error.message);
+                        });
+                });
+            })
+            .catch(error => {
+                console.error('Error al buscar usuario:', error);
+                alert('Error al buscar usuario: ' + error.message);
+            });
+    } catch (error) {
+        console.error("Error en quitarVerificacionUsuario:", error);
+        alert('Error inesperado al quitar verificación. Por favor, revisa la consola.');
+    }
+}
     function registrarAdmin() {
         try {
             const nombre = document.getElementById('admin-nombre').value.trim();
