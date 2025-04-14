@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -19,7 +18,7 @@
     <!-- Cookie Consent for AdSense -->
     <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
-<style>
+    <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -333,10 +332,88 @@
         .footer-links a:hover {
             text-decoration: underline;
         }
+        /* Nuevos estilos */
+        #benefits-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+        #benefits-popup .popup-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        #benefits-popup h2 {
+            color: #005566;
+            margin-top: 0;
+        }
+        #benefits-popup ul {
+            text-align: left;
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        #benefits-popup button {
+            background: #28a745;
+        }
+        #benefits-popup button:hover {
+            background: #218838;
+        }
+        #admin-users-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        #admin-users-section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #admin-users-section th, #admin-users-section td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        #admin-users-section th {
+            background: #005566;
+            color: #fff;
+        }
+        #admin-users-section select {
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        #admin-users-section .action-btn {
+            background: #d32f2f;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        #admin-users-section .action-btn:hover {
+            background: #b71c1c;
+        }
+        .delete-calc-btn {
+            background: #d32f2f;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-left: 10px;
+            display: inline-block;
+        }
+        .delete-calc-btn:hover {
+            background: #b71c1c;
+        }
     </style>
 </head>
 <body>
-    <!-- Pop-up -->
+    <!-- Pop-up inicial -->
     <div id="popup" class="popup">
         <div class="popup-content">
             <span class="close-btn" onclick="cerrarPopup()">×</span>
@@ -346,27 +423,37 @@
         </div>
     </div>
 
+    <!-- Pop-up de beneficios para no verificados -->
+    <div id="benefits-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="cerrarBenefitsPopup()">×</span>
+            <h2>¡Conviértete en usuario verificado!</h2>
+            <p>Disfruta de beneficios exclusivos:</p>
+            <ul>
+                <li>📊 Gráfico de desgaste de pezoneras</li>
+                <li>🗑️ Eliminar cálculos guardados</li>
+                <li>🚫 Experiencia sin publicidad</li>
+                <li>📈 Reportes premium y exportación a Excel</li>
+            </ul>
+            <p>Contacta al administrador para verificar tu cuenta.</p>
+            <button onclick="cerrarBenefitsPopup()">Entendido</button>
+        </div>
+    </div>
+
     <div class="container">
-        <!-- Enlace discreto para admin -->
         <a href="#" class="admin-link" onclick="mostrarLoginAdmin()">Admin</a>
-
-        <!-- Contenedor para el logo dinámico -->
         <img id="app-logo" class="logo" style="display: none;" alt="Logo de JCALCULO">
-
         <h1>JCALCULO</h1>
 
-        <!-- Mensaje para usuarios no autenticados -->
         <div id="auth-message" class="auth-message">
             Por favor, regístrate o inicia sesión para usar la calculadora.
         </div>
 
-        <!-- Información de la calculadora -->
         <div id="calculator-info">
             <h3>¡Gestiona tus Pezoneras como Nunca Antes! 🚀</h3>
             <p>Con <strong>JCALCULO</strong>, optimiza el cambio de tus pezoneras de manera fácil y precisa. Nuestra herramienta calcula el número exacto de pezoneras necesarias, estima su durabilidad y te <strong>notifica el próximo cambio</strong> para que nunca pierdas el control. 🔔 Ahorra tiempo, mejora la eficiencia de tu ordeño y lleva tu producción al siguiente nivel. ¡Confía en JCALCULO, la solución que todo ganadero necesita! 🐄</p>
         </div>
 
-        <!-- Formulario de Registro -->
         <div id="registro-section">
             <h3>Regístrate</h3>
             <label for="nombre">Nombre:</label>
@@ -378,12 +465,10 @@
                 <option value="tecnico">Técnico</option>
                 <option value="otro">Otro</option>
             </select>
-            <!-- Campo adicional para ganadero -->
             <div id="empresa-section" style="display: none;">
                 <label for="empresa">Nombre de la Granja o Explotación:</label>
                 <input type="text" id="empresa" placeholder="Nombre de la granja o explotación" required>
             </div>
-            <!-- Campo adicional para otro -->
             <div id="otra-profesion-section" style="display: none;">
                 <label for="otra-profesion">Especifica tu Profesión:</label>
                 <input type="text" id="otra-profesion" placeholder="Escribe tu profesión">
@@ -398,7 +483,6 @@
             <p>¿Ya tienes cuenta? <a href="#" onclick="mostrarLoginUsuario()">Inicia sesión</a></p>
         </div>
 
-        <!-- Formulario de Login de Usuario -->
         <div id="login-section">
             <h3>Iniciar Sesión</h3>
             <label for="login-email">Correo Electrónico:</label>
@@ -410,7 +494,6 @@
             <p>¿No tienes cuenta? <a href="#" onclick="mostrarRegistro()">Regístrate</a></p>
         </div>
 
-        <!-- Sección de usuario logueado -->
         <div id="user-section">
             <h3>Bienvenido, <span id="user-name">Usuario</span><span id="verified-badge" class="verified-badge" style="display: none;">Verificado</span></h3>
             <p>Profesión: <span id="user-profesion">N/A</span></p>
@@ -424,44 +507,33 @@
             <button type="button" onclick="cerrarSesionUsuario()">Cerrar Sesión</button>
         </div>
 
-        <!-- Formulario de la calculadora -->
         <div id="formulario-section">
             <form id="formulario">
                 <label for="ordenosDia">Ordeños por Día:</label>
                 <input type="number" id="ordenosDia" required>
-
                 <label for="puntosOrdeno">Puntos de Ordeño (Inicial):</label>
                 <input type="number" id="puntosOrdeno" required>
-
                 <label for="vacas">Vacas Ordeñadas (Inicial):</label>
                 <input type="number" id="vacas" required>
-
                 <label for="durabilidad">Durabilidad de Pezoneras por Ordeño por Punto:</label>
                 <input type="number" id="durabilidad" value="2500" required>
-
                 <label for="fechaInicio">Fecha de Inicio (opcional):</label>
                 <input type="date" id="fechaInicio" placeholder="YYYY-MM-DD">
-
-                <label for="diasEspecificos">Calcular para Días Específicos (opcional):</label>
+                <label for="diasEspecificos">Calcular para Días Específicos ( opcional):</label>
                 <input type="number" id="diasEspecificos" placeholder="Número de días">
-
                 <label for="realizarModificacion">¿Modificar Vacas o Puntos?</label>
                 <select id="realizarModificacion" onchange="mostrarCamposModificacion()">
                     <option value="no">No</option>
                     <option value="si">Sí</option>
                 </select>
-
                 <div id="modificacion-campos" class="modificacion-campos">
                     <label for="fechaCambio">Fecha de Cambio:</label>
                     <input type="date" id="fechaCambio" placeholder="YYYY-MM-DD">
-
                     <label for="nuevoNumeroVacas">Nuevo Número de Vacas:</label>
                     <input type="number" id="nuevoNumeroVacas" placeholder="Nuevo número de vacas">
-
                     <label for="nuevoPuntosOrdeno">Nuevo Número de Puntos:</label>
                     <input type="number" id="nuevoPuntosOrdeno" placeholder="Nuevo número de puntos">
                 </div>
-
                 <button type="button" onclick="calcular()">Calcular</button>
                 <button type="button" onclick="limpiarPantalla()">Limpiar</button>
             </form>
@@ -474,18 +546,17 @@
                 <ul id="lista-calculos"></ul>
             </div>
             <div id="report-section">
-                <h3>Análisis de Consumo de Pezoneras</h3>
+                <h3>Análisis de Desgaste de Pezoneras</h3>
                 <canvas id="report-canvas"></canvas>
             </div>
         </div>
 
-        <!-- Publicidad con Google AdSense -->
         <div id="adsense-section" style="margin-top: 20px; text-align: center; display: none;">
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163239656988692"></script>
             <ins class="adsbygoogle"
                  style="display:block"
-                 data-ad-client="ca-pub-6163239656988692"  <!-- Replace with your actual data-ad-client -->
-                 data-ad-slot="YOUR_AD_SLOT_ID"           <!-- Replace with your actual data-ad-slot -->
+                 data-ad-client="ca-pub-6163239656988692"
+                 data-ad-slot="YOUR_AD_SLOT_ID"
                  data-ad-format="auto"></ins>
             <script>
                  (adsbygoogle = window.adsbygoogle || []).push({});
@@ -493,10 +564,8 @@
             <div class="adsense-fallback">No se pudo cargar el anuncio. Por favor, revisa tu conexión o desactiva el bloqueador de anuncios.</div>
         </div>
 
-        <!-- Sección de publicidad dinámica -->
         <div id="publicidad-section"></div>
 
-        <!-- Formulario de login para admin -->
         <div id="admin-login" style="display: none; margin-top: 20px;">
             <h3>Iniciar Sesión (Admin)</h3>
             <label for="admin-email">Correo Electrónico:</label>
@@ -507,11 +576,8 @@
             <div id="admin-login-loading" class="admin-loading" style="display: none;">Cargando...</div>
         </div>
 
-        <!-- Formulario para agregar publicidad y gestionar logo -->
         <div id="admin-form" style="display: none;">
             <h3>Administrar Configuración</h3>
-
-            <!-- Gestión del Logo -->
             <h4>Actualizar Logo</h4>
             <label for="logo-source">Fuente del Logo:</label>
             <select id="logo-source" onchange="mostrarCamposLogo()">
@@ -528,7 +594,6 @@
             </div>
             <button type="button" onclick="guardarLogo()">Guardar Logo</button>
 
-            <!-- Publicidad Principal -->
             <h4>Publicidad Principal (Texto o Imagen)</h4>
             <label for="ad-type">Tipo de Publicidad:</label>
             <select id="ad-type" onchange="mostrarCamposPublicidad()">
@@ -556,7 +621,6 @@
             </div>
             <button type="button" onclick="guardarPublicidad()">Guardar Publicidad Principal</button>
 
-            <!-- Publicidad Secundaria -->
             <h4>Publicidad Secundaria (Imagen con Enlace)</h4>
             <label for="ad-secundaria-source">Fuente de la Imagen:</label>
             <select id="ad-secundaria-source" onchange="mostrarCamposImagenSecundaria()">
@@ -575,24 +639,49 @@
             <input type="text" id="ad-secundaria-link" placeholder="Ingresa el enlace (ej. https://ejemplo.com)">
             <button type="button" onclick="guardarPublicidadSecundaria()">Guardar Publicidad Secundaria</button>
 
-            <!-- Mensaje del Pop-up -->
             <h4>Mensaje del Pop-up</h4>
             <label for="popup-message-content">Mensaje del Pop-up:</label>
             <textarea id="popup-message-content" placeholder="Escribe el mensaje del pop-up"></textarea>
             <button type="button" onclick="guardarPopupMessage()">Guardar Mensaje del Pop-up</button>
 
-            <!-- Prueba de Notificación -->
             <h4>Probar Notificación</h4>
             <button type="button" onclick="probarNotificacion()">Enviar Notificación de Prueba</button>
 
-            <!-- Gestión de usuarios verificados -->
             <h4>Gestionar Usuarios Verificados</h4>
             <label for="user-verification-email">Correo del Usuario:</label>
             <input type="email" id="user-verification-email" placeholder="correo@ejemplo.com">
             <button type="button" onclick="verificarUsuario()">Asignar Insignia de Verificado</button>
             <button type="button" onclick="quitarVerificacionUsuario()">Quitar Insignia de Verificado</button>
 
-            <!-- Registro de nuevos administradores -->
+            <div id="admin-users-section">
+                <h4>Lista de Usuarios</h4>
+                <label for="user-filter">Filtrar por:</label>
+                <select id="user-filter" onchange="filtrarUsuarios()">
+                    <option value="all">Todos</option>
+                    <option value="verified">Verificados</option>
+                    <option value="unverified">No Verificados</option>
+                </select>
+                <table id="users-table">
+                    <thead>
+                        <tr>
+                            <th>Correo</th>
+                            <th>Estado</th>
+                            <th>Fecha Verificación</th>
+                            <th>Fecha Caducidad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body"></tbody>
+                </table>
+            </div>
+
+            <h4>Cancelar Modificaciones</h4>
+            <label for="cancel-user-email">Correo del Usuario:</label>
+            <input type="email" id="cancel-user-email" placeholder="correo@ejemplo.com">
+            <label for="cancel-calc-id">ID del Cálculo:</label>
+            <input type="text" id="cancel-calc-id" placeholder="ID del cálculo">
+            <button type="button" onclick="cancelarModificacion()">Cancelar Modificación</button>
+
             <div id="admin-registro">
                 <h4>Registrar Nuevo Administrador</h4>
                 <label for="admin-nombre">Nombre:</label>
@@ -604,7 +693,6 @@
                 <button type="button" onclick="registrarAdmin()">Registrar Administrador</button>
             </div>
 
-            <!-- Historial de cálculos -->
             <div id="admin-calculos">
                 <h4>Historial de Cálculos</h4>
                 <button type="button" onclick="exportarHistorialExcel()">Exportar a Excel</button>
@@ -615,24 +703,20 @@
             <button type="button" onclick="cerrarSesionAdmin()">Cerrar Sesión</button>
         </div>
 
-        <!-- WhatsApp Section -->
         <div id="whatsapp-section">
             <label for="codigoCliente">Código del Cliente:</label>
             <input type="text" id="codigoCliente" placeholder="Ingresa el código del cliente" required>
             <button type="button" onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
         </div>
 
-        <!-- Sección de publicidad secundaria -->
         <div id="donaciones-section" style="text-align: center;"></div>
 
-        <!-- Marketing de Afiliados -->
         <div style="margin-top: 20px; text-align: center;">
             <p>¿Necesitas pezoneras nuevas? <a href="/comprar-pezoneras" target="_blank">Compra aquí</a>.</p>
         </div>
 
         <div class="signature">J.Castle</div>
 
-        <!-- Footer with Privacy Policy Link -->
         <div class="footer-links">
             <a href="/politica-de-privacidad.html" target="_blank">Política de Privacidad</a>
         </div>
@@ -674,11 +758,10 @@
     let isVerifiedUser = false;
     let calculosData = [];
 
-    // UID del administrador principal
     const ADMIN_UID = 'KBb7nqyZFIMDDFHEGdX31stvp1L2';
     const ADMIN_EMAIL = 'alfstiven@gmail.com';
 
-    // Inicializar Cookie Consent para AdSense
+    // Inicializar Cookie Consent
     window.addEventListener("load", function(){
         try {
             window.cookieconsent.initialise({
@@ -708,7 +791,6 @@
         }
     });
 
-    // Solicitar permiso para notificaciones
     function solicitarPermisoNotificaciones() {
         if (!('Notification' in window)) {
             console.log("Este navegador no soporta notificaciones.");
@@ -737,7 +819,6 @@
         });
     }
 
-    // Cargar el logo al iniciar
     function cargarLogo() {
         try {
             db.collection('config').doc('logo').get()
@@ -761,8 +842,6 @@
             console.error("Error en cargarLogo:", error);
         }
     }
-
-    // Mostrar el pop-up y cargar configuraciones al cargar la página
     window.onload = function() {
         try {
             const popup = document.getElementById('popup');
@@ -774,7 +853,6 @@
             cargarPublicidadSecundaria();
             cargarPopupMessage();
 
-            // Verificar si hay un usuario logueado
             auth.onAuthStateChanged(user => {
                 if (user) {
                     if (!user.emailVerified) {
@@ -792,6 +870,11 @@
                     solicitarPermisoNotificaciones();
                     programarNotificacion(user.uid);
                     cargarCalculosGuardados(user.uid);
+                    if (!isVerifiedUser) {
+                        setTimeout(() => {
+                            document.getElementById('benefits-popup').style.display = 'flex';
+                        }, 5000);
+                    }
                 } else {
                     currentUser = null;
                     document.getElementById('registro-section').style.display = 'block';
@@ -818,6 +901,16 @@
         }
     }
 
+    function cerrarBenefitsPopup() {
+        try {
+            const benefitsPopup = document.getElementById('benefits-popup');
+            if (benefitsPopup) {
+                benefitsPopup.style.display = 'none';
+            }
+        } catch (error) {
+            console.error("Error en cerrarBenefitsPopup:", error);
+        }
+    }
     function mostrarCamposModificacion() {
         try {
             const seleccion = document.getElementById('realizarModificacion').value;
@@ -845,36 +938,6 @@
         }
     }
 
-    function mostrarLoginAdmin() {
-        try {
-            const adminLoginSection = document.getElementById('admin-login');
-            const adminFormSection = document.getElementById('admin-form');
-            const adminLoading = document.getElementById('admin-login-loading');
-
-            // Hide other sections
-            document.getElementById('registro-section').style.display = 'none';
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('user-section').style.display = 'none';
-            document.getElementById('formulario-section').style.display = 'none';
-            document.getElementById('auth-message').style.display = 'none';
-
-            // Show admin login section
-            if (adminLoginSection && adminFormSection) {
-                adminLoginSection.style.display = 'block';
-                adminFormSection.style.display = 'none';
-            }
-
-            // Show loading state
-            if (adminLoading) {
-                adminLoading.style.display = 'block';
-                setTimeout(() => {
-                    adminLoading.style.display = 'none';
-                }, 1000);
-            }
-        } catch (error) {
-            console.error("Error en mostrarLoginAdmin:", error);
-        }
-    }
     function calcular() {
         try {
             const ordenosDiaInput = document.getElementById('ordenosDia').value;
@@ -1056,7 +1119,6 @@
             console.error("Error en mostrarResultados:", error);
         }
     }
-
     function enviarWhatsApp() {
         try {
             const codigoCliente = document.getElementById('codigoCliente').value.trim();
@@ -1103,10 +1165,15 @@
             const calculo = {
                 resultado: resultadoTexto,
                 fechaProximoCambio: fechaProximoCambio ? fechaProximoCambio.toISOString() : null,
+                fechaInicio: document.getElementById('fechaInicio').value ? new Date(document.getElementById('fechaInicio').value).toISOString() : new Date().toISOString(),
                 vacas: vacasIniciales,
+                vacasIniciales: vacasIniciales,
                 puntos: puntosOrdenoIniciales,
+                puntosIniciales: puntosOrdenoIniciales,
                 pezoneras: totalPezoneras,
-                timestamp: new Date().toISOString()
+                pezonerasIniciales: totalPezoneras,
+                timestamp: new Date().toISOString(),
+                hasModification: document.getElementById('realizarModificacion').value === 'si'
             };
 
             const userCalcsRef = db.collection('calculos').doc(currentUser.uid).collection('registros');
@@ -1145,18 +1212,23 @@
                 .then(snapshot => {
                     snapshot.forEach(doc => {
                         const calc = doc.data();
+                        const calcId = doc.id;
                         calculosData.push({
+                            id: calcId,
                             fecha: new Date(calc.timestamp).toLocaleString('es-ES'),
                             resultado: calc.resultado,
                             pezoneras: calc.pezoneras,
                             vacas: calc.vacas,
                             puntos: calc.puntos,
-                            fechaCambio: calc.fechaProximoCambio ? new Date(calc.fechaProximoCambio).toLocaleDateString('es-ES') : 'N/A'
+                            fechaCambio: calc.fechaProximoCambio ? new Date(calc.fechaProximoCambio).toISOString() : null,
+                            fechaInicio: calc.fechaInicio ? new Date(calc.fechaInicio).toISOString() : null,
+                            hasModification: calc.hasModification || false
                         });
                         const li = document.createElement('li');
                         li.innerHTML = `
                             <strong>Fecha:</strong> ${new Date(calc.timestamp).toLocaleString('es-ES')}<br>
                             ${calc.resultado.replace(/\n/g, '<br>')}
+                            ${isVerifiedUser ? `<button class="delete-calc-btn" onclick="eliminarCalculo('${calcId}')">Eliminar</button>` : ''}
                         `;
                         listaCalculos.appendChild(li);
                     });
@@ -1168,6 +1240,108 @@
         }
     }
 
+    function eliminarCalculo(calcId) {
+        try {
+            if (!currentUser || !isVerifiedUser) {
+                alert('Debes ser un usuario verificado para eliminar cálculos.');
+                return;
+            }
+            if (confirm('¿Estás seguro de que deseas eliminar este cálculo?')) {
+                db.collection('calculos').doc(currentUser.uid).collection('registros').doc(calcId)
+                    .delete()
+                    .then(() => {
+                        alert('Cálculo eliminado correctamente.');
+                        cargarCalculosGuardados(currentUser.uid);
+                    })
+                    .catch(error => {
+                        console.error('Error al eliminar cálculo:', error);
+                        alert('Error al eliminar cálculo: ' + error.message);
+                    });
+            }
+        } catch (error) {
+            console.error("Error en eliminarCalculo:", error);
+        }
+    }
+    function mostrarReporteGrafico() {
+        try {
+            if (!isVerifiedUser) {
+                alert('Esta función es exclusiva para usuarios verificados.');
+                return;
+            }
+
+            const ctx = document.getElementById('report-canvas').getContext('2d');
+            document.getElementById('report-section').style.display = 'block';
+
+            // Obtener el último cálculo
+            const ultimoCalculo = calculosData.sort((a, b) => new Date(b.fecha) - new Date(a.fecha))[0];
+
+            if (!ultimoCalculo || !ultimoCalculo.fechaInicio || !ultimoCalculo.fechaCambio) {
+                alert('No hay datos suficientes para mostrar el gráfico.');
+                document.getElementById('report-section').style.display = 'none';
+                return;
+            }
+
+            const startDate = new Date(ultimoCalculo.fechaInicio);
+            const endDate = new Date(ultimoCalculo.fechaCambio);
+            const totalPezoneras = ultimoCalculo.pezoneras || 0;
+            const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+            const desgastePorDia = totalPezoneras / days;
+
+            const labels = [];
+            const dataPoints = [];
+
+            for (let i = 0; i <= days; i++) {
+                const currentDate = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
+                labels.push(currentDate.toLocaleDateString('es-ES'));
+                dataPoints.push(totalPezoneras - (desgastePorDia * i));
+            }
+
+            if (window.myChart) {
+                window.myChart.destroy();
+            }
+
+            window.myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Pezoneras Restantes',
+                        data: dataPoints,
+                        borderColor: '#005566',
+                        backgroundColor: 'rgba(0, 85, 102, 0.2)',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Pezoneras Restantes'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Fecha'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Desgaste de Pezoneras (Último Cálculo)'
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error("Error en mostrarReporteGrafico:", error);
+        }
+    }
+
     function exportarCalculosExcel() {
         try {
             const data = calculosData.map(calc => ({
@@ -1175,7 +1349,7 @@
                 'Vacas Iniciales': calc.vacas,
                 'Puntos Iniciales': calc.puntos,
                 'Pezoneras Totales': calc.pezoneras,
-                'Fecha Próximo Cambio': calc.fechaCambio
+                'Fecha Próximo Cambio': calc.fechaCambio ? new Date(calc.fechaCambio).toLocaleDateString('es-ES') : 'N/A'
             }));
 
             const ws = XLSX.utils.json_to_sheet(data);
@@ -1186,61 +1360,6 @@
             console.error("Error en exportarCalculosExcel:", error);
         }
     }
-
-    function mostrarReporteGrafico() {
-        try {
-            const ctx = document.getElementById('report-canvas').getContext('2d');
-            document.getElementById('report-section').style.display = 'block';
-
-            const labels = calculosData.map(calc => calc.fecha);
-            const pezoneras = calculosData.map(calc => calc.pezoneras);
-            const vacas = calculosData.map(calc => calc.vacas);
-
-            if (window.myChart) {
-                window.myChart.destroy();
-            }
-
-            window.myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Pezoneras Totales',
-                            data: pezoneras,
-                            borderColor: '#005566',
-                            backgroundColor: 'rgba(0, 85, 102, 0.2)',
-                            fill: true
-                        },
-                        {
-                            label: 'Vacas Ordeñadas',
-                            data: vacas,
-                            borderColor: '#28a745',
-                            backgroundColor: 'rgba(40, 167, 69, 0.2)',
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Consumo de Pezoneras y Vacas a lo largo del Tiempo'
-                        }
-                    }
-                }
-            });
-        } catch (error) {
-            console.error("Error en mostrarReporteGrafico:", error);
-        }
-    }
-
     function cargarHistorialAdmin() {
         try {
             const listaCalculosAdmin = document.getElementById('lista-calculos-admin');
@@ -1349,7 +1468,75 @@
         }
     }
 
-    function registrarUsuario() {
+    function cancelarModificacion() {
+        try {
+            if (!isAdminLoggedIn) {
+                alert('Debes ser un administrador para realizar esta acción.');
+                return;
+            }
+
+            const email = document.getElementById('cancel-user-email').value.trim();
+            const calcId = document.getElementById('cancel-calc-id').value.trim();
+
+            if (!email || !calcId) {
+                alert('Por favor, ingresa el correo del usuario y el ID del cálculo.');
+                return;
+            }
+
+            db.collection('users').where('email', '==', email).get()
+                .then(snapshot => {
+                    if (snapshot.empty) {
+                        alert('No se encontró un usuario con ese correo.');
+                        return;
+                    }
+                    snapshot.forEach(doc => {
+                        const userId = doc.id;
+                        db.collection('calculos').doc(userId).collection('registros').doc(calcId).get()
+                            .then(calcDoc => {
+                                if (!calcDoc.exists) {
+                                    alert('No se encontró un cálculo con ese ID.');
+                                    return;
+                                }
+                                const calcData = calcDoc.data();
+                                if (!calcData.hasModification) {
+                                    alert('Este cálculo no tiene modificaciones para cancelar.');
+                                    return;
+                                }
+                                const updatedCalc = {
+                                    resultado: calcData.resultado.replace(/Ajuste por Modificación:[\s\S]*/g, ''),
+                                    fechaProximoCambio: calcData.fechaProximoCambioInicial || calcData.fechaProximoCambio,
+                                    fechaInicio: calcData.fechaInicio,
+                                    vacas: calcData.vacasIniciales,
+                                    vacasIniciales: calcData.vacasIniciales,
+                                    puntos: calcData.puntosIniciales,
+                                    puntosIniciales: calcData.puntosIniciales,
+                                    pezoneras: calcData.pezonerasIniciales,
+                                    pezonerasIniciales: calcData.pezonerasIniciales,
+                                    timestamp: calcData.timestamp,
+                                    hasModification: false
+                                };
+                                return db.collection('calculos').doc(userId).collection('registros').doc(calcId).set(updatedCalc);
+                            })
+                            .then(() => {
+                                alert('Modificación cancelada correctamente.');
+                                document.getElementById('cancel-user-email').value = '';
+                                document.getElementById('cancel-calc-id').value = '';
+                            })
+                            .catch(error => {
+                                console.error('Error al cancelar modificación:', error);
+                                alert('Error al cancelar modificación: ' + error.message);
+                            });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al buscar usuario:', error);
+                    alert('Error al buscar usuario: ' + error.message);
+                });
+        } catch (error) {
+            console.error("Error en cancelarModificacion:", error);
+        }
+    }
+       function registrarUsuario() {
         try {
             const nombre = document.getElementById('nombre').value.trim();
             const profesion = document.getElementById('profesion').value;
@@ -1479,10 +1666,17 @@
                         isVerifiedUser = data.isVerified || false;
                         document.getElementById('verified-badge').style.display = isVerifiedUser ? 'inline-block' : 'none';
                         document.getElementById('adsense-section').style.display = isVerifiedUser ? 'none' : 'block';
+                        document.getElementById('publicidad-section').style.display = isVerifiedUser ? 'none' : 'block';
+                        document.getElementById('donaciones-section').style.display = isVerifiedUser ? 'none' : 'block';
                         document.getElementById('export-excel-btn').style.display = isVerifiedUser ? 'block' : 'none';
                         document.getElementById('view-report-btn').style.display = isVerifiedUser ? 'block' : 'none';
                         cargarPublicidad();
                         cargarPublicidadSecundaria();
+                        if (!isVerifiedUser) {
+                            setTimeout(() => {
+                                document.getElementById('benefits-popup').style.display = 'flex';
+                            }, 5000);
+                        }
                     }
                 })
                 .catch(error => {
@@ -1490,6 +1684,32 @@
                 });
         } catch (error) {
             console.error("Error en cargarDatosUsuario:", error);
+        }
+    }
+
+    function cerrarSesionUsuario() {
+        try {
+            auth.signOut()
+                .then(() => {
+                    currentUser = null;
+                    isVerifiedUser = false;
+                    document.getElementById('user-section').style.display = 'none';
+                    document.getElementById('formulario-section').style.display = 'none';
+                    document.getElementById('registro-section').style.display = 'block';
+                    document.getElementById('auth-message').style.display = 'block';
+                    document.getElementById('adsense-section').style.display = 'block';
+                    document.getElementById('publicidad-section').style.display = 'block';
+                    document.getElementById('donaciones-section').style.display = 'block';
+                    document.getElementById('lista-calculos').innerHTML = '';
+                    document.getElementById('export-excel-btn').style.display = 'none';
+                    document.getElementById('view-report-btn').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error al cerrar sesión:', error);
+                    alert('Error al cerrar sesión: ' + error.message);
+                });
+        } catch (error) {
+            console.error("Error en cerrarSesionUsuario:", error);
         }
     }
 
@@ -1506,9 +1726,6 @@
             })
                 .then(() => {
                     alert('Preferencia de notificación guardada correctamente.');
-                    if (preferencia === 'movil') {
-                        solicitarPermisoNotificaciones();
-                    }
                 })
                 .catch(error => {
                     console.error('Error al guardar preferencia de notificación:', error);
@@ -1519,96 +1736,18 @@
         }
     }
 
-    function cerrarSesionUsuario() {
+    function mostrarLoginAdmin() {
         try {
-            auth.signOut()
-                .then(() => {
-                    currentUser = null;
-                    isVerifiedUser = false;
-                    document.getElementById('user-section').style.display = 'none';
-                    document.getElementById('formulario-section').style.display = 'none';
-                    document.getElementById('registro-section').style.display = 'block';
-                    document.getElementById('auth-message').style.display = 'block';
-                    document.getElementById('login-email').value = '';
-                    document.getElementById('login-password').value = '';
-                    document.getElementById('verified-badge').style.display = 'none';
-                    document.getElementById('adsense-section').style.display = 'block';
-                    document.getElementById('publicidad-section').style.display = 'block';
-                    document.getElementById('donaciones-section').style.display = 'block';
-                    document.getElementById('export-excel-btn').style.display = 'none';
-                    document.getElementById('view-report-btn').style.display = 'none';
-                    limpiarPantalla();
-                })
-                .catch(error => {
-                    console.error('Error al cerrar sesión:', error);
-                    alert('Error al cerrar sesión: ' + error.message);
-                });
-        } catch (error) {
-            console.error("Error en cerrarSesionUsuario:", error);
-        }
-    }
-
-    function guardarFechaProximoCambio(uid, fecha) {
-        try {
-            db.collection('users').doc(uid).update({
-                fechaProximoCambio: fecha.toISOString()
-            }).catch(error => {
-                console.error('Error al guardar fecha de próximo cambio:', error);
-            });
-        } catch (error) {
-            console.error("Error en guardarFechaProximoCambio:", error);
-        }
-    }
-
-    function programarNotificacion(uid) {
-        try {
-            db.collection('users').doc(uid).get()
-                .then(doc => {
-                    if (doc.exists && doc.data().fechaProximoCambio) {
-                        const fechaCambio = new Date(doc.data().fechaProximoCambio);
-                        const ahora = new Date();
-                        const diasRestantes = Math.ceil((fechaCambio - ahora) / (1000 * 60 * 60 * 24));
-
-                        if (diasRestantes <= 3 && diasRestantes > 0) {
-                            const preferencia = doc.data().notificacionPreferencia;
-                            if (preferencia === 'email') {
-                                console.log(`Enviando correo a ${doc.data().email} para notificar cambio en ${diasRestantes} días.`);
-                            } else if (preferencia === 'movil' && doc.data().fcmToken) {
-                                if ('Notification' in window && Notification.permission === 'granted') {
-                                    new Notification('JCALCULO - Cambio de Pezoneras', {
-                                        body: `Faltan ${diasRestantes} días para el próximo cambio de pezoneras.`,
-                                        icon: document.getElementById('app-logo').src || '/path/to/default-icon.png'
-                                    });
-                                }
-                            }
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al programar notificación:', error);
-                });
-        } catch (error) {
-            console.error("Error en programarNotificacion:", error);
-        }
-    }
-
-    function mostrarRegistro() {
-        try {
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('registro-section').style.display = 'block';
-        } catch (error) {
-            console.error("Error en mostrarRegistro:", error);
-        }
-    }
-
-    function mostrarLoginUsuario() {
-        try {
+            document.getElementById('admin-login').style.display = 'block';
             document.getElementById('registro-section').style.display = 'none';
-            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('user-section').style.display = 'none';
+            document.getElementById('formulario-section').style.display = 'none';
         } catch (error) {
-            console.error("Error en mostrarLoginUsuario:", error);
+            console.error("Error en mostrarLoginAdmin:", error);
         }
     }
+
     function loginAdmin() {
         try {
             const email = document.getElementById('admin-email').value.trim();
@@ -1632,12 +1771,14 @@
                         document.getElementById('admin-form').style.display = 'block';
                         document.getElementById('admin-registro').style.display = 'block';
                         document.getElementById('admin-calculos').style.display = 'block';
+                        document.getElementById('admin-users-section').style.display = 'block';
                         document.getElementById('registro-section').style.display = 'none';
                         document.getElementById('login-section').style.display = 'none';
                         document.getElementById('user-section').style.display = 'none';
                         document.getElementById('formulario-section').style.display = 'none';
                         document.getElementById('auth-message').style.display = 'none';
                         cargarHistorialAdmin();
+                        cargarUsuariosAdmin();
                     } else {
                         alert('No tienes permisos de administrador.');
                         auth.signOut();
@@ -1662,19 +1803,15 @@
                 .then(() => {
                     isAdminLoggedIn = false;
                     adminUser = null;
-                    document.getElementById('admin-login').style.display = 'none';
                     document.getElementById('admin-form').style.display = 'none';
                     document.getElementById('admin-registro').style.display = 'none';
                     document.getElementById('admin-calculos').style.display = 'none';
+                    document.getElementById('admin-users-section').style.display = 'none';
                     document.getElementById('registro-section').style.display = 'block';
-                    document.getElementById('admin-email').value = '';
-                    document.getElementById('admin-password').value = '';
                     document.getElementById('auth-message').style.display = 'block';
-                    cargarPublicidad();
-                    cargarPublicidadSecundaria();
                 })
                 .catch(error => {
-                    console.error('Error al cerrar sesión de administrador:', error);
+                    console.error('Error al cerrar sesión del administrador:', error);
                     alert('Error al cerrar sesión: ' + error.message);
                 });
         } catch (error) {
@@ -1682,415 +1819,6 @@
         }
     }
 
-    function mostrarCamposLogo() {
-        try {
-            const logoSource = document.getElementById('logo-source').value;
-            document.getElementById('logo-url-section').style.display = logoSource === 'url' ? 'block' : 'none';
-            document.getElementById('logo-upload-section').style.display = logoSource === 'upload' ? 'block' : 'none';
-        } catch (error) {
-            console.error("Error en mostrarCamposLogo:", error);
-        }
-    }
-
-    function guardarLogo() {
-        try {
-            const logoSource = document.getElementById('logo-source').value;
-            let logoUrl = '';
-
-            if (logoSource === 'url') {
-                logoUrl = document.getElementById('logo-url').value.trim();
-                if (!logoUrl) {
-                    alert('Por favor, ingresa una URL válida para el logo.');
-                    return;
-                }
-                db.collection('config').doc('logo').set({ url: logoUrl })
-                    .then(() => {
-                        alert('Logo actualizado correctamente.');
-                        cargarLogo();
-                    })
-                    .catch(error => {
-                        console.error('Error al guardar el logo:', error);
-                        alert('Error al guardar el logo: ' + error.message);
-                    });
-            } else {
-                const fileInput = document.getElementById('logo-upload');
-                const file = fileInput.files[0];
-                if (!file) {
-                    alert('Por favor, selecciona un archivo para el logo.');
-                    return;
-                }
-                const storageRef = storage.ref(`logos/logo-${Date.now()}`);
-                storageRef.put(file)
-                    .then(snapshot => snapshot.ref.getDownloadURL())
-                    .then(downloadURL => {
-                        return db.collection('config').doc('logo').set({ url: downloadURL });
-                    })
-                    .then(() => {
-                        alert('Logo subido y actualizado correctamente.');
-                        cargarLogo();
-                    })
-                    .catch(error => {
-                        console.error('Error al subir el logo:', error);
-                        alert('Error al subir el logo: ' + error.message);
-                    });
-            }
-        } catch (error) {
-            console.error("Error en guardarLogo:", error);
-        }
-    }
-
-    function mostrarCamposPublicidad() {
-        try {
-            const adType = document.getElementById('ad-type').value;
-            document.getElementById('ad-texto').style.display = adType === 'texto' ? 'block' : 'none';
-            document.getElementById('ad-imagen').style.display = adType === 'imagen' ? 'block' : 'none';
-        } catch (error) {
-            console.error("Error en mostrarCamposPublicidad:", error);
-        }
-    }
-
-    function mostrarCamposImagen() {
-        try {
-            const adImagenSource = document.getElementById('ad-imagen-source').value;
-            document.getElementById('ad-imagen-url-section').style.display = adImagenSource === 'url' ? 'block' : 'none';
-            document.getElementById('ad-imagen-upload-section').style.display = adImagenSource === 'upload' ? 'block' : 'none';
-        } catch (error) {
-            console.error("Error en mostrarCamposImagen:", error);
-        }
-    }
-
-    function guardarPublicidad() {
-        try {
-            const adType = document.getElementById('ad-type').value;
-            let adData = {};
-
-            if (adType === 'texto') {
-                const adTexto = document.getElementById('ad-texto-content').value.trim();
-                if (!adTexto) {
-                    alert('Por favor, ingresa el texto de la publicidad.');
-                    return;
-                }
-                adData = { tipo: 'texto', contenido: adTexto };
-            } else {
-                const adImagenSource = document.getElementById('ad-imagen-source').value;
-                if (adImagenSource === 'url') {
-                    const adImagenUrl = document.getElementById('ad-imagen-url').value.trim();
-                    if (!adImagenUrl) {
-                        alert('Por favor, ingresa una URL válida para la imagen.');
-                        return;
-                    }
-                    adData = { tipo: 'imagen', url: adImagenUrl };
-                } else {
-                    const fileInput = document.getElementById('ad-imagen-upload');
-                    const file = fileInput.files[0];
-                    if (!file) {
-                        alert('Por favor, selecciona una imagen para la publicidad.');
-                        return;
-                    }
-                    const storageRef = storage.ref(`publicidad/principal-${Date.now()}`);
-                    return storageRef.put(file)
-                        .then(snapshot => snapshot.ref.getDownloadURL())
-                        .then(downloadURL => {
-                            adData = { tipo: 'imagen', url: downloadURL };
-                            return db.collection('publicidad').doc('principal').set(adData);
-                        })
-                        .then(() => {
-                            alert('Publicidad guardada correctamente.');
-                            cargarPublicidad();
-                        })
-                        .catch(error => {
-                            console.error('Error al guardar publicidad:', error);
-                            alert('Error al guardar publicidad: ' + error.message);
-                        });
-                }
-            }
-
-            db.collection('publicidad').doc('principal').set(adData)
-                .then(() => {
-                    alert('Publicidad guardada correctamente.');
-                    cargarPublicidad();
-                })
-                .catch(error => {
-                    console.error('Error al guardar publicidad:', error);
-                    alert('Error al guardar publicidad: ' + error.message);
-                });
-        } catch (error) {
-            console.error("Error en guardarPublicidad:", error);
-        }
-    }
-
-    function cargarPublicidad() {
-        try {
-            const publicidadSection = document.getElementById('publicidad-section');
-            db.collection('publicidad').doc('principal').get()
-                .then(doc => {
-                    if (doc.exists) {
-                        const data = doc.data();
-                        if (data.tipo === 'texto') {
-                            publicidadSection.innerHTML = `<p>${data.contenido}</p>`;
-                        } else if (data.tipo === 'imagen') {
-                            publicidadSection.innerHTML = `<img src="${data.url}" alt="Publicidad" style="max-width: 100%; height: auto;">`;
-                        }
-                        publicidadSection.style.display = isVerifiedUser ? 'none' : 'block';
-                    } else {
-                        publicidadSection.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al cargar publicidad:', error);
-                    publicidadSection.style.display = 'none';
-                });
-        } catch (error) {
-            console.error("Error en cargarPublicidad:", error);
-        }
-    }
-
-    function mostrarCamposImagenSecundaria() {
-        try {
-            const adSecundariaSource = document.getElementById('ad-secundaria-source').value;
-            document.getElementById('ad-secundaria-url-section').style.display = adSecundariaSource === 'url' ? 'block' : 'none';
-            document.getElementById('ad-secundaria-upload-section').style.display = adSecundariaSource === 'upload' ? 'block' : 'none';
-        } catch (error) {
-            console.error("Error en mostrarCamposImagenSecundaria:", error);
-        }
-    }
-
-    function guardarPublicidadSecundaria() {
-        try {
-            const adSecundariaSource = document.getElementById('ad-secundaria-source').value;
-            const adLink = document.getElementById('ad-secundaria-link').value.trim();
-            let adData = {};
-
-            if (!adLink) {
-                alert('Por favor, ingresa un enlace válido para la publicidad secundaria.');
-                return;
-            }
-
-            if (adSecundariaSource === 'url') {
-                const adImagenUrl = document.getElementById('ad-secundaria-imagen-url').value.trim();
-                if (!adImagenUrl) {
-                    alert('Por favor, ingresa una URL válida para la imagen secundaria.');
-                    return;
-                }
-                adData = { url: adImagenUrl, link: adLink };
-            } else {
-                const fileInput = document.getElementById('ad-secundaria-imagen-upload');
-                const file = fileInput.files[0];
-                if (!file) {
-                    alert('Por favor, selecciona una imagen para la publicidad secundaria.');
-                    return;
-                }
-                const storageRef = storage.ref(`publicidad/secundaria-${Date.now()}`);
-                return storageRef.put(file)
-                    .then(snapshot => snapshot.ref.getDownloadURL())
-                    .then(downloadURL => {
-                        adData = { url: downloadURL, link: adLink };
-                        return db.collection('publicidad').doc('secundaria').set(adData);
-                    })
-                    .then(() => {
-                        alert('Publicidad secundaria guardada correctamente.');
-                        cargarPublicidadSecundaria();
-                    })
-                    .catch(error => {
-                        console.error('Error al guardar publicidad secundaria:', error);
-                        alert('Error al guardar publicidad secundaria: ' + error.message);
-                    });
-            }
-
-            db.collection('publicidad').doc('secundaria').set(adData)
-                .then(() => {
-                    alert('Publicidad secundaria guardada correctamente.');
-                    cargarPublicidadSecundaria();
-                })
-                .catch(error => {
-                    console.error('Error al guardar publicidad secundaria:', error);
-                    alert('Error al guardar publicidad secundaria: ' + error.message);
-                });
-        } catch (error) {
-            console.error("Error en guardarPublicidadSecundaria:", error);
-        }
-    }
-
-    function cargarPublicidadSecundaria() {
-        try {
-            const donacionesSection = document.getElementById('donaciones-section');
-            db.collection('publicidad').doc('secundaria').get()
-                .then(doc => {
-                    if (doc.exists) {
-                        const data = doc.data();
-                        donacionesSection.innerHTML = `
-                            <a href="${data.link}" target="_blank">
-                                <img src="${data.url}" alt="Publicidad Secundaria">
-                            </a>
-                        `;
-                        donacionesSection.style.display = isVerifiedUser ? 'none' : 'block';
-                    } else {
-                        donacionesSection.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al cargar publicidad secundaria:', error);
-                    donacionesSection.style.display = 'none';
-                });
-        } catch (error) {
-            console.error("Error en cargarPublicidadSecundaria:", error);
-        }
-    }
-
-    function cargarPopupMessage() {
-        try {
-            const popupMessage = document.getElementById('popup-message');
-            db.collection('config').doc('popup').get()
-                .then(doc => {
-                    if (doc.exists && popupMessage) {
-                        popupMessage.textContent = doc.data().message;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al cargar mensaje del pop-up:', error);
-                });
-        } catch (error) {
-            console.error("Error en cargarPopupMessage:", error);
-        }
-    }
-
-    function guardarPopupMessage() {
-        try {
-            const message = document.getElementById('popup-message-content').value.trim();
-            if (!message) {
-                alert('Por favor, ingresa un mensaje para el pop-up.');
-                return;
-            }
-            db.collection('config').doc('popup').set({ message: message })
-                .then(() => {
-                    alert('Mensaje del pop-up guardado correctamente.');
-                    cargarPopupMessage();
-                })
-                .catch(error => {
-                    console.error('Error al guardar mensaje del pop-up:', error);
-                    alert('Error al guardar mensaje del pop-up: ' + error.message);
-                });
-        } catch (error) {
-            console.error("Error en guardarPopupMessage:", error);
-        }
-    }
-
-    function probarNotificacion() {
-        try {
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification('JCALCULO - Prueba', {
-                    body: 'Esta es una notificación de prueba.',
-                    icon: document.getElementById('app-logo').src || '/path/to/default-icon.png'
-                });
-            } else {
-                alert('Por favor, habilita las notificaciones para probar esta función.');
-            }
-        } catch (error) {
-            console.error("Error en probarNotificacion:", error);
-        }
-    }
-
-    function verificarUsuario() {
-    try {
-        const email = document.getElementById('user-verification-email').value.trim();
-        if (!email) {
-            alert('Por favor, ingresa el correo del usuario.');
-            return;
-        }
-
-        if (!isAdminLoggedIn) {
-            alert('Debes ser un administrador para realizar esta acción.');
-            return;
-        }
-
-        db.collection('users').where('email', '==', email).get()
-            .then(snapshot => {
-                if (snapshot.empty) {
-                    alert('No se encontró un usuario con ese correo.');
-                    return;
-                }
-                snapshot.forEach(doc => {
-                    db.collection('users').doc(doc.id).update({
-                        isVerified: true
-                    })
-                        .then(() => {
-                            alert('Usuario verificado correctamente.');
-                            if (currentUser && currentUser.email === email) {
-                                isVerifiedUser = true;
-                                document.getElementById('verified-badge').style.display = 'inline-block';
-                                document.getElementById('adsense-section').style.display = 'none';
-                                document.getElementById('publicidad-section').style.display = 'none';
-                                document.getElementById('donaciones-section').style.display = 'none';
-                                document.getElementById('export-excel-btn').style.display = 'block';
-                                document.getElementById('view-report-btn').style.display = 'block';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error al verificar usuario:', error);
-                            alert('Error al verificar usuario: ' + error.message);
-                        });
-                });
-            })
-            .catch(error => {
-                console.error('Error al buscar usuario:', error);
-                alert('Error al buscar usuario: ' + error.message);
-            });
-    } catch (error) {
-        console.error("Error en verificarUsuario:", error);
-        alert('Error inesperado al verificar usuario. Por favor, revisa la consola.');
-    }
-}
-
-function quitarVerificacionUsuario() {
-    try {
-        const email = document.getElementById('user-verification-email').value.trim();
-        if (!email) {
-            alert('Por favor, ingresa el correo del usuario.');
-            return;
-        }
-
-        if (!isAdminLoggedIn) {
-            alert('Debes ser un administrador para realizar esta acción.');
-            return;
-        }
-
-        db.collection('users').where('email', '==', email).get()
-            .then(snapshot => {
-                if (snapshot.empty) {
-                    alert('No se encontró un usuario con ese correo.');
-                    return;
-                }
-                snapshot.forEach(doc => {
-                    db.collection('users').doc(doc.id).update({
-                        isVerified: false
-                    })
-                        .then(() => {
-                            alert('Verificación retirada correctamente.');
-                            if (currentUser && currentUser.email === email) {
-                                isVerifiedUser = false;
-                                document.getElementById('verified-badge').style.display = 'none';
-                                document.getElementById('adsense-section').style.display = 'block';
-                                document.getElementById('publicidad-section').style.display = 'block';
-                                document.getElementById('donaciones-section').style.display = 'block';
-                                document.getElementById('export-excel-btn').style.display = 'none';
-                                document.getElementById('view-report-btn').style.display = 'none';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error al quitar verificación:', error);
-                            alert('Error al quitar verificación: ' + error.message);
-                        });
-                });
-            })
-            .catch(error => {
-                console.error('Error al buscar usuario:', error);
-                alert('Error al buscar usuario: ' + error.message);
-            });
-    } catch (error) {
-        console.error("Error en quitarVerificacionUsuario:", error);
-        alert('Error inesperado al quitar verificación. Por favor, revisa la consola.');
-    }
-}
     function registrarAdmin() {
         try {
             const nombre = document.getElementById('admin-nombre').value.trim();
@@ -2102,16 +1830,19 @@ function quitarVerificacionUsuario() {
                 return;
             }
 
+            if (!isAdminLoggedIn) {
+                alert('Debes ser un administrador para registrar otro administrador.');
+                return;
+            }
+
             auth.createUserWithEmailAndPassword(email, password)
                 .then(userCredential => {
                     const user = userCredential.user;
-                    const adminData = {
+                    return db.collection('admins').doc(user.uid).set({
                         nombre: nombre,
                         email: email,
-                        role: 'admin',
                         timestamp: new Date().toISOString()
-                    };
-                    return db.collection('admins').doc(user.uid).set(adminData);
+                    });
                 })
                 .then(() => {
                     alert('Administrador registrado correctamente.');
@@ -2127,7 +1858,185 @@ function quitarVerificacionUsuario() {
             console.error("Error en registrarAdmin:", error);
         }
     }
-</script>
-</body>
-</html>
+
+    function verificarUsuario() {
+        try {
+            const email = document.getElementById('user-verification-email').value.trim();
+            if (!email) {
+                alert('Por favor, ingresa el correo del usuario.');
+                return;
+            }
+
+            if (!isAdminLoggedIn) {
+                alert('Debes ser un administrador para realizar esta acción.');
+                return;
+            }
+
+            const verificationDate = new Date();
+            const expirationDate = new Date();
+            expirationDate.setFullYear(verificationDate.getFullYear() + 1); // Suscripción válida por 1 año
+
+            db.collection('users').where('email', '==', email).get()
+                .then(snapshot => {
+                    if (snapshot.empty) {
+                        alert('No se encontró un usuario con ese correo.');
+                        return;
+                    }
+                    snapshot.forEach(doc => {
+                        db.collection('users').doc(doc.id).update({
+                            isVerified: true,
+                            verificationDate: verificationDate.toISOString(),
+                            verificationExpiration: expirationDate.toISOString()
+                        })
+                            .then(() => {
+                                alert('Usuario verificado correctamente.');
+                                cargarUsuariosAdmin(document.getElementById('user-filter').value);
+                                if (currentUser && currentUser.email === email) {
+                                    isVerifiedUser = true;
+                                    document.getElementById('verified-badge').style.display = 'inline-block';
+                                    document.getElementById('adsense-section').style.display = 'none';
+                                    document.getElementById('publicidad-section').style.display = 'none';
+                                    document.getElementById('donaciones-section').style.display = 'none';
+                                    document.getElementById('export-excel-btn').style.display = 'block';
+                                    document.getElementById('view-report-btn').style.display = 'block';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error al verificar usuario:', error);
+                                alert('Error al verificar usuario: ' + error.message);
+                            });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al buscar usuario:', error);
+                    alert('Error al buscar usuario: ' + error.message);
+                });
+        } catch (error) {
+            console.error("Error en verificarUsuario:", error);
+            alert('Error inesperado al verificar usuario. Por favor, revisa la consola.');
+        }
+    }
+
+    function quitarVerificacionUsuario() {
+        try {
+            const email = document.getElementById('user-verification-email').value.trim();
+            if (!email) {
+                alert('Por favor, ingresa el correo del usuario.');
+                return;
+            }
+
+            if (!isAdminLoggedIn) {
+                alert('Debes ser un administrador para realizar esta acción.');
+                return;
+            }
+
+            db.collection('users').where('email', '==', email).get()
+                .then(snapshot => {
+                    if (snapshot.empty) {
+                        alert('No se encontró un usuario con ese correo.');
+                        return;
+                    }
+                    snapshot.forEach(doc => {
+                        db.collection('users').doc(doc.id).update({
+                            isVerified: false,
+                            verificationDate: null,
+                            verificationExpiration: null
+                        })
+                            .then(() => {
+                                alert('Verificación retirada correctamente.');
+                                cargarUsuariosAdmin(document.getElementById('user-filter').value);
+                                if (currentUser && currentUser.email === email) {
+                                    isVerifiedUser = false;
+                                    document.getElementById('verified-badge').style.display = 'none';
+                                    document.getElementById('adsense-section').style.display = 'block';
+                                    document.getElementById('publicidad-section').style.display = 'block';
+                                    document.getElementById('donaciones-section').style.display = 'block';
+                                    document.getElementById('export-excel-btn').style.display = 'none';
+                                    document.getElementById('view-report-btn').style.display = 'none';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error al quitar verificación:', error);
+                                alert('Error al quitar verificación: ' + error.message);
+                            });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al buscar usuario:', error);
+                    alert('Error al buscar usuario: ' + error.message);
+                });
+        } catch (error) {
+            console.error("Error en quitarVerificacionUsuario:", error);
+            alert('Error inesperado al quitar verificación. Por favor, revisa la consola.');
+        }
+    }
+
+    function cargarUsuariosAdmin(filtro = 'all') {
+        try {
+            const usersTableBody = document.getElementById('users-table-body');
+            usersTableBody.innerHTML = '';
+
+            db.collection('users').get()
+                .then(snapshot => {
+                    snapshot.forEach(doc => {
+                        const user = doc.data();
+                        const userId = doc.id;
+                        const isVerified = user.isVerified || false;
+                        const verificationDate = user.verificationDate ? new Date(user.verificationDate).toLocaleDateString('es-ES') : 'N/A';
+                        const expirationDate = user.verificationExpiration ? new Date(user.verificationExpiration).toLocaleDateString('es-ES') : 'N/A';
+
+                        if (filtro === 'verified' && !isVerified) return;
+                        if (filtro === 'unverified' && isVerified) return;
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${user.email}</td>
+                            <td>${isVerified ? 'Verificado' : 'No Verificado'}</td>
+                            <td>${verificationDate}</td>
+                            <td>${expirationDate}</td>
+                            <td>
+                                ${isVerified ? 
+                                    `<button class="action-btn" onclick="quitarVerificacionUsuarioAdmin('${user.email}')">Quitar Verificación</button>` :
+                                    `<button class="action-btn" onclick="verificarUsuarioAdmin('${user.email}')">Verificar</button>`}
+                            </td>
+                        `;
+                        usersTableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al cargar usuarios:', error);
+                    usersTableBody.innerHTML = '<tr><td colspan="5">Error al cargar usuarios.</td></tr>';
+                });
+        } catch (error) {
+            console.error("Error en cargarUsuariosAdmin:", error);
+        }
+    }
+
+    function filtrarUsuarios() {
+        try {
+            const filtro = document.getElementById('user-filter').value;
+            cargarUsuariosAdmin(filtro);
+        } catch (error) {
+            console.error("Error en filtrarUsuarios:", error);
+        }
+    }
+
+    function verificarUsuarioAdmin(email) {
+        try {
+            document.getElementById('user-verification-email').value = email;
+            verificarUsuario();
+        } catch (error) {
+            console.error("Error en verificarUsuarioAdmin:", error);
+        }
+    }
+
+    function quitarVerificacionUsuarioAdmin(email) {
+        try {
+            document.getElementById('user-verification-email').value = email;
+            quitarVerificacionUsuario();
+        } catch (error) {
+            console.error("Error en quitarVerificacionUsuarioAdmin:", error);
+        }
+    }
+
 
