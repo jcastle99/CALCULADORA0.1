@@ -157,6 +157,8 @@
     .admin-link:hover {
         opacity: 1;
     }
+</style>
+<style>
     #publicidad-section {
         margin-top: 20px;
         padding: 15px;
@@ -212,6 +214,8 @@
         margin-bottom: 20px;
         color: #005566;
     }
+</style>
+<style>
     #calculos-registrados {
         margin-top: 20px;
         padding: 15px;
@@ -248,6 +252,8 @@
         background: #f0f0f0;
         border-radius: 5px;
     }
+</style>
+<style>
     #calculator-info {
         margin-top: 20px;
         padding: 15px;
@@ -315,7 +321,7 @@
         <img id="app-logo" class="logo" style="display: none;" alt="Logo de JCALCULO">
 
         <h1>JCALCULO</h1>
-</div>
+    </div>
 <div class="container">
     <!-- Mensaje para usuarios no autenticados -->
     <div id="auth-message" class="auth-message">
@@ -410,8 +416,8 @@
 
             <label for="diasEspecificos">Calcular para Días Específicos (opcional):</label>
             <input type="number" id="diasEspecificos" placeholder="Número de días">
-</form>
-</div>
+        </form>
+    </div>
 </div>
 <div class="container">
     <div id="formulario-section">
@@ -453,7 +459,7 @@
 <div class="container">
     <!-- Publicidad con Google AdSense -->
     <div id="adsense-section" style="margin-top: 20px; text-align: center; display: none;">
-        <script async src="httpsyour async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163239656988692" crossorigin="anonymous"></script>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163239656988692" crossorigin="anonymous"></script>
         <ins class="adsbygoogle"
              style="display:block"
              data-ad-client="ca-pub-6163239656988692"
@@ -472,11 +478,14 @@
     <!-- Formulario de login para admin -->
     <div id="admin-login" style="display: none; margin-top: 20px;">
         <h3>Iniciar Sesión (Admin)</h3>
-        <label for="admin-email">Correo Electrónico:</label>
-        <input type="email" id="admin-email" placeholder="alfstiven@gmail.com">
-        <label for="admin-password">Contraseña:</label>
-        <input type="password" id="admin-password" placeholder="Contraseña">
-        <button type="button" onclick="loginAdmin()">Iniciar Sesión</button>
+        <form id="admin-login-form" onsubmit="event.preventDefault(); loginAdmin();">
+            <label for="admin-email">Correo Electrónico:</label>
+            <input type="email" id="admin-email" placeholder="alfstiven@gmail.com" required>
+            <label for="admin-password">Contraseña:</label>
+            <input type="password" id="admin-password" placeholder="Contraseña" required>
+            <button type="submit">Iniciar Sesión</button>
+            <button type="button" onclick="volverAlInicio()">Volver al Inicio</button>
+        </form>
     </div>
 </div>
 <div class="container">
@@ -560,7 +569,10 @@
         <!-- Prueba de Notificación -->
         <h4>Probar Notificación</h4>
         <button type="button" onclick="probarNotificacion()">Enviar Notificación de Prueba</button>
-
+    </div>
+</div>
+<div class="container">
+    <div id="admin-form">
         <!-- Gestión de usuarios verificados -->
         <h4>Gestionar Usuarios Verificados</h4>
         <label for="user-verification-email">Correo del Usuario:</label>
@@ -611,7 +623,7 @@
 
     <!-- Privacy Policy Link -->
     <div style="text-align: center; margin-top: 20px;">
-        <a href="/privacy-policy" target="_blank">Política de Privacidad</a>
+        <a href="politica-de-privacidad.html" target="_blank">Política de Privacidad</a>
     </div>
 </div>
 <script>
@@ -752,6 +764,16 @@
         document.getElementById('auth-message').style.display = 'none';
     }
 
+    function volverAlInicio() {
+        document.getElementById('admin-login').style.display = 'none';
+        document.getElementById('registro-section').style.display = 'block';
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('user-section').style.display = 'none';
+        document.getElementById('formulario-section').style.display = 'none';
+        document.getElementById('auth-message').style.display = 'block';
+        document.getElementById('calculator-info').style.display = 'block';
+    }
+
     function mostrarCamposModificacion() {
         const seleccion = document.getElementById('realizarModificacion').value;
         document.getElementById('modificacion-campos').style.display = seleccion === 'si' ? 'block' : 'none';
@@ -844,1029 +866,552 @@
         let fechaProximoCambioAjustada = fechaProximoCambioInicial;
         let desgastePezonerasPorDiaAjustada = desgastePezonerasPorDiaInicial;
         let mensajeAjuste = '';
-</script>
-<script>
-    if (realizarModificacion === 'si' && fechaCambioInput && (nuevoNumeroVacas > 0 || nuevoPuntosOrdeno > 0)) {
-        const fechaCambio = new Date(fechaCambioInput);
-        if (isNaN(fechaCambio.getTime())) {
-            alert("Por favor, selecciona una fecha de cambio válida.");
-            return;
-        }
 
-        const diasTranscurridos = Math.floor((fechaCambio - fechaInicio) / (1000 * 60 * 60 * 24));
-
-        if (diasTranscurridos < 0) {
-            alert("La fecha de cambio no puede ser anterior a la fecha de inicio.");
-            return;
-        }
-
-        const ordeñosPorPuntoHastaCambio = ordeñosPorPuntoPorDia * diasTranscurridos;
-        const durabilidadRestante = durabilidad - ordeñosPorPuntoHastaCambio;
-
-        if (durabilidadRestante <= 0) {
-            mensajeAjuste = `Nota: Las pezoneras ya debieron cambiarse antes de ${fechaCambio.toLocaleDateString('es-ES')}.`;
-        } else {
-            const vacasAjustadas = nuevoNumeroVacas > 0 ? nuevoNumeroVacas : vacas;
-            const puntosOrdenoAjustados = nuevoPuntosOrdeno > 0 ? nuevoPuntosOrdeno : puntosOrdeno;
-            totalPezoneras = puntosOrdenoAjustados * pezonerasPorPunto;
-            const nuevosOrdeñosTotalesPorDia = ordenosDia * vacasAjustadas;
-            const nuevosOrdeñosPorPuntoPorDia = nuevosOrdeñosTotalesPorDia / puntosOrdenoAjustados;
-            const diasDurabilidadRestante = durabilidadRestante / nuevosOrdeñosPorPuntoPorDia;
-
-            fechaProximoCambioAjustada = new Date(fechaCambio);
-            fechaProximoCambioAjustada.setDate(fechaCambio.getDate() + Math.floor(diasDurabilidadRestante));
-
-            durabilidadAjustada = diasTranscurridos + diasDurabilidadRestante;
-            desgastePezonerasPorDiaAjustada = totalPezoneras / durabilidadAjustada;
-
-            mensajeAjuste = `
-                Ajuste por Modificación:
-                Fecha de Cambio: ${fechaCambio.toLocaleDateString('es-ES')}
-                Nuevo Número de Vacas: ${vacasAjustadas}
-                Nuevo Número de Puntos: ${puntosOrdenoAjustados}
-                Durabilidad Ajustada: ${Math.floor(durabilidadAjustada)} días
-                Nueva Fecha de Cambio: ${fechaProximoCambioAjustada.toLocaleDateString('es-ES')}
-                Total Pezoneras: ${totalPezoneras}
-                Desgaste por Día: ${desgastePezonerasPorDiaAjustada.toFixed(2)}
-            `;
-        }
-    }
-
-    fechaProximoCambio = realizarModificacion === 'si' ? fechaProximoCambioAjustada : fechaProximoCambioInicial;
-
-    resultadoTexto = isVerifiedUser ? `
-        <div style="background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); padding: 15px; border-radius: 5px;">
-            <h3 style="color: #005566;">📊 Reporte Premium JCALCULO</h3>
-            <p><strong>Fecha Inicio:</strong> ${fechaInicio.toLocaleDateString('es-ES')}</p>
-            <p><strong>Vacas Iniciales:</strong> ${vacasIniciales}</p>
-            <p><strong>Puntos Iniciales:</strong> ${puntosOrdenoIniciales}</p>
-            <p><strong>Durabilidad Inicial:</strong> ${Math.floor(diasDurabilidadInicial)} días</p>
-            <p><strong>🚨 Próximo Cambio:</strong> ${fechaProximoCambioInicial.toLocaleDateString('es-ES')}</p>
-            <p><strong>Meses Equivalentes:</strong> ${mesesEquivalentes}</p>
-            ${fechaDiasEspecificos ? `<p><strong>Fecha Específica:</strong> ${fechaDiasEspecificos}</p>` : ''}
-            <p><strong>Total Pezoneras:</strong> ${totalPezoneras}</p>
-            <p><strong>Desgaste Diario:</strong> ${desgastePezonerasPorDiaInicial.toFixed(2)}</p>
-            ${mensajeAjuste ? `<p style="color: #d32f2f;"><strong>Ajustes Aplicados:</strong><br>${mensajeAjuste.replace(/\n/g, '<br>')}</p>` : ''}
-            <p style="font-style: italic;">Gracias por ser un usuario verificado. ¡Disfruta de una experiencia sin publicidad y reportes avanzados!</p>
-        </div>
-    ` : `
-        Calculadora JCALCULO Cambio de Pezoneras
-        Fecha Inicio: ${fechaInicio.toLocaleDateString('es-ES')}
-        Vacas Iniciales: ${vacasIniciales}
-        Puntos Iniciales: ${puntosOrdenoIniciales}
-        Durabilidad Inicial: ${Math.floor(diasDurabilidadInicial)} días
-        Próximo Cambio Inicial: ${fechaProximoCambioInicial.toLocaleDateString('es-ES')}
-        Meses Equivalentes: ${mesesEquivalentes}
-        ${fechaDiasEspecificos}
-        Total Pezoneras Inicial: ${totalPezoneras}
-        Desgaste por Día Inicial: ${desgastePezonerasPorDiaInicial.toFixed(2)}
-        ${mensajeAjuste}
-    `;
-    mostrarResultados();
-
-    if (currentUser) {
-        guardarFechaProximoCambio(currentUser.uid, fechaProximoCambio);
-    }
-}
-
-function mostrarResultados() {
-    document.getElementById('resultado').innerHTML = resultadoTexto.replace(/\n/g, '<br>');
-    document.getElementById('whatsapp-section').style.display = 'block';
-    document.getElementById('guardar-resultado').style.display = 'block';
-    if (!isVerifiedUser) {
-        document.getElementById('adsense-section').style.display = 'block';
-    }
-}
-
-function enviarWhatsApp() {
-    const codigoCliente = document.getElementById('codigoCliente').value.trim();
-    if (!codigoCliente) {
-        alert("Ingresa el código del cliente.");
-        return;
-    }
-    const mensajeWhatsApp = `Código del Cliente: ${codigoCliente}\n${resultadoTexto}`;
-    const urlWhatsApp = `https://api.whatsapp.com/send?text=${encodeURIComponent(mensajeWhatsApp)}`;
-    window.open(urlWhatsApp, '_blank');
-}
-
-function limpiarPantalla() {
-    const durabilidad = document.getElementById('durabilidad').value;
-    document.getElementById('formulario').reset();
-    document.getElementById('durabilidad').value = durabilidad;
-    document.getElementById('modificacion-campos').style.display = 'none';
-    document.getElementById('resultado').innerHTML = '';
-    document.getElementById('whatsapp-section').style.display = 'none';
-    document.getElementById('guardar-resultado').style.display = 'none';
-    document.getElementById('codigoCliente').value = '';
-    document.getElementById('report-section').style.display = 'none';
-    resultadoTexto = '';
-    vacasIniciales = 0;
-    puntosOrdenoIniciales = 0;
-    totalPezoneras = 0;
-    fechaProximoCambio = null;
-}
-
-function guardarResultado() {
-    if (!currentUser) {
-        alert('Debes estar autenticado para guardar el resultado.');
-        return;
-    }
-
-    const calculo = {
-        resultado: resultadoTexto,
-        fechaProximoCambio: fechaProximoCambio ? fechaProximoCambio.toISOString() : null,
-        vacas: vacasIniciales,
-        puntos: puntosOrdenoIniciales,
-        pezoneras: totalPezoneras,
-        timestamp: new Date().toISOString()
-    };
-
-    const userCalcsRef = db.collection('calculos').doc(currentUser.uid).collection('registros');
-
-    userCalcsRef.orderBy('timestamp', 'asc').get()
-        .then(snapshot => {
-            const calculos = snapshot.docs;
-            if (calculos.length >= 10) {
-                const oldestCalculo = calculos[0];
-                userCalcsRef.doc(oldestCalculo.id).delete();
+        if (realizarModificacion === 'si' && fechaCambioInput && (nuevoNumeroVacas > 0 || nuevoPuntosOrdeno > 0)) {
+            const fechaCambio = new Date(fechaCambioInput);
+            if (isNaN(fechaCambio.getTime())) {
+                alert("Por favor, selecciona una fecha de cambio válida.");
+                return;
             }
-            return userCalcsRef.add(calculo);
-        })
-        .then(() => {
-            alert('Resultado guardado correctamente.');
-            cargarCalculosGuardados(currentUser.uid);
-        })
-        .catch(error => {
-            console.error('Error al guardar el resultado:', error);
-            alert('Error al guardar el resultado: ' + error.message);
-        });
-}
 
-function cargarCalculosGuardados(uid) {
-    const listaCalculos = document.getElementById('lista-calculos');
-    listaCalculos.innerHTML = '';
-    calculosData = [];
+            const diasTranscurridos = Math.floor((fechaCambio - fechaInicio) / (1000 * 60 * 60 * 24));
 
-    db.collection('calculos').doc(uid).collection('registros')
-        .orderBy('timestamp', 'desc')
-        .get()
-        .then(snapshot => {
-            snapshot.forEach(doc => {
-                const calc = doc.data();
-                calculosData.push({
-                    fecha: new Date(calc.timestamp).toLocaleString('es-ES'),
-                    resultado: calc.resultado,
-                    pezoneras: calc.pezoneras,
-                    vacas: calc.vacas,
-                    puntos: calc.puntos,
-                    fechaCambio: calc.fechaProximoCambio ? new Date(calc.fechaProximoCambio).toLocaleDateString('es-ES') : 'N/A'
-                });
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <strong>Fecha:</strong> ${new Date(calc.timestamp).toLocaleString('es-ES')}<br>
-                    ${calc.resultado.replace(/\n/g, '<br>')}
+            if (diasTranscurridos < 0) {
+                alert("La fecha de cambio no puede ser anterior a la fecha de inicio.");
+                return;
+            }
+
+            const ordeñosPorPuntoHastaCambio = ordeñosPorPuntoPorDia * diasTranscurridos;
+            const durabilidadRestante = durabilidad - ordeñosPorPuntoHastaCambio;
+
+            if (durabilidadRestante <= 0) {
+                mensajeAjuste = `Nota: Las pezoneras ya debieron cambiarse antes de ${fechaCambio.toLocaleDateString('es-ES')}.`;
+            } else {
+                const vacasAjustadas = nuevoNumeroVacas > 0 ? nuevoNumeroVacas : vacas;
+                const puntosOrdenoAjustados = nuevoPuntosOrdeno > 0 ? nuevoPuntosOrdeno : puntosOrdeno;
+                totalPezoneras = puntosOrdenoAjustados * pezonerasPorPunto;
+                const nuevosOrdeñosTotalesPorDia = ordenosDia * vacasAjustadas;
+                const nuevosOrdeñosPorPuntoPorDia = nuevosOrdeñosTotalesPorDia / puntosOrdenoAjustados;
+                const diasDurabilidadRestante = durabilidadRestante / nuevosOrdeñosPorPuntoPorDia;
+
+                fechaProximoCambioAjustada = new Date(fechaCambio);
+                fechaProximoCambioAjustada.setDate(fechaCambio.getDate() + Math.floor(diasDurabilidadRestante));
+
+                durabilidadAjustada = diasTranscurridos + diasDurabilidadRestante;
+                desgastePezonerasPorDiaAjustada = totalPezoneras / durabilidadAjustada;
+
+                mensajeAjuste = `
+                    Ajuste por Modificación:
+                    Fecha de Cambio: ${fechaCambio.toLocaleDateString('es-ES')}
+                    Nuevo Número de Vacas: ${vacasAjustadas}
+                    Nuevo Número de Puntos: ${puntosOrdenoAjustados}
+                    Durabilidad Ajustada: ${Math.floor(durabilidadAjustada)} días
+                    Nueva Fecha de Cambio: ${fechaProximoCambioAjustada.toLocaleDateString('es-ES')}
+                    Total Pezoneras: ${totalPezoneras}
+                    Desgaste por Día: ${desgastePezonerasPorDiaAjustada.toFixed(2)}
                 `;
-                listaCalculos.appendChild(li);
-            });
-        }).catch(error => {
-            console.error('Error al cargar cálculos guardados:', error);
-        });
-}
-
-function exportarCalculosExcel() {
-    const data = calculosData.map(calc => ({
-        Fecha: calc.fecha,
-        'Vacas Iniciales': calc.vacas,
-        'Puntos Iniciales': calc.puntos,
-        'Pezoneras Totales': calc.pezoneras,
-        'Fecha Próximo Cambio': calc.fechaCambio
-    }));
-
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Cálculos');
-    XLSX.writeFile(wb, 'CalculosPezoneras.xlsx');
-}
-
-function mostrarReporteGrafico() {
-    const ctx = document.getElementById('report-canvas').getContext('2d');
-    document.getElementById('report-section').style.display = 'block';
-
-    const labels = calculosData.map(calc => calc.fecha);
-    const pezoneras = calculosData.map(calc => calc.pezoneras);
-    const vacas = calculosData.map(calc => calc.vacas);
-
-    if (window.myChart) {
-        window.myChart.destroy();
-    }
-
-    window.myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'Pezoneras Totales',
-                    data: pezoneras,
-                    borderColor: '#005566',
-                    backgroundColor: 'rgba(0, 85, 102, 0.2)',
-                    fill: true
-                },
-                {
-                    label: 'Vacas Ordeñadas',
-                    data: vacas,
-                    borderColor: '#28a745',
-                    backgroundColor: 'rgba(40, 167, 69, 0.2)',
-                    fill: true
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Consumo de Pezoneras y Vacas a lo largo del Tiempo'
-                }
             }
         }
-    });
-}
 
-function cargarHistorialAdmin() {
-    const listaCalculosAdmin = document.getElementById('lista-calculos-admin');
-    listaCalculosAdmin.innerHTML = '';
+        fechaProximoCambio = realizarModificacion === 'si' ? fechaProximoCambioAjustada : fechaProximoCambioInicial;
 
-    const hoy = new Date();
-    const mesActual = hoy.getMonth();
-    const añoActual = hoy.getFullYear();
+        resultadoTexto = isVerifiedUser ? `
+            <div style="background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); padding: 15px; border-radius: 5px;">
+                <h3 style="color: #005566;">📊 Reporte Premium JCALCULO</h3>
+                <p><strong>Fecha Inicio:</strong> ${fechaInicio.toLocaleDateString('es-ES')}</p>
+                <p><strong>Vacas Iniciales:</strong> ${vacasIniciales}</p>
+                <p><strong>Puntos Iniciales:</strong> ${puntosOrdenoIniciales}</p>
+                <p><strong>Durabilidad Inicial:</strong> ${Math.floor(diasDurabilidadInicial)} días</p>
+                <p><strong>🚨 Próximo Cambio:</strong> ${fechaProximoCambioInicial.toLocaleDateString('es-ES')}</p>
+                <p><strong>Meses Equivalentes:</strong> ${mesesEquivalentes}</p>
+                ${fechaDiasEspecificos ? `<p><strong>Fecha Específica:</strong> ${fechaDiasEspecificos}</p>` : ''}
+                <p><strong>Total Pezoneras:</strong> ${totalPezoneras}</p>
+                <p><strong>Desgaste Diario:</strong> ${desgastePezonerasPorDiaInicial.toFixed(2)}</p>
+                ${mensajeAjuste ? `<p style="color: #d32f2f;"><strong>Ajustes Aplicados:</strong><br>${mensajeAjuste.replace(/\n/g, '<br>')}</p>` : ''}
+                <p style="font-style: italic;">Gracias por ser un usuario verificado. ¡Disfruta de una experiencia sin publicidad y reportes avanzados!</p>
+            </div>
+        ` : `
+            Calculadora JCALCULO Cambio de Pezoneras
+            Fecha Inicio: ${fechaInicio.toLocaleDateString('es-ES')}
+            Vacas Iniciales: ${vacasIniciales}
+            Puntos Iniciales: ${puntosOrdenoIniciales}
+            Durabilidad Inicial: ${Math.floor(diasDurabilidadInicial)} días
+            Próximo Cambio Inicial: ${fechaProximoCambioInicial.toLocaleDateString('es-ES')}
+            Meses Equivalentes: ${mesesEquivalentes}
+            ${fechaDiasEspecificos}
+            Total Pezoneras Inicial: ${totalPezoneras}
+            Desgaste por Día Inicial: ${desgastePezonerasPorDiaInicial.toFixed(2)}
+            ${mensajeAjuste}
+        `;
+        mostrarResultados();
 
-    db.collection('users').get()
-        .then(userSnapshot => {
-            const promesas = [];
-            userSnapshot.forEach(userDoc => {
-                const userId = userDoc.id;
-                const userData = userDoc.data();
-                const email = userData.email;
-
-                const promesa = db.collection('calculos').doc(userId).collection('registros')
-                    .orderBy('timestamp', 'desc')
-                    .get()
-                    .then(snapshot => {
-                        snapshot.forEach(doc => {
-                            const calc = doc.data();
-                            if (calc.fechaProximoCambio) {
-                                const fechaCambio = new Date(calc.fechaProximoCambio);
-                                if (fechaCambio.getMonth() === mesActual && fechaCambio.getFullYear() === añoActual) {
-                                    const li = document.createElement('li');
-                                    li.innerHTML = `
-                                        Correo: ${email} | 
-                                        Fecha de Cambio: ${fechaCambio.toLocaleDateString('es-ES')} | 
-                                        Puntos: ${calc.puntos} | 
-                                        Pezoneras: ${calc.pezoneras}
-                                    `;
-                                    listaCalculosAdmin.appendChild(li);
-                                }
-                            }
-                        });
-                    })
-                    .catch(error => {
-                        console.error(`Error al cargar cálculos de ${email}:`, error);
-                    });
-                promesas.push(promesa);
-            });
-            return Promise.all(promesas);
-        })
-        .catch(error => {
-            console.error('Error al cargar historial de usuarios:', error);
-            listaCalculosAdmin.innerHTML = '<li>Error al cargar el historial.</li>';
-        });
-}
-
-function exportarHistorialExcel() {
-    const hoy = new Date();
-    const mesActual = hoy.getMonth();
-    const añoActual = hoy.getFullYear();
-    const historialData = [];
-
-    db.collection('users').get()
-        .then(userSnapshot => {
-            const promesas = [];
-            userSnapshot.forEach(userDoc => {
-                const userId = userDoc.id;
-                const userData = userDoc.data();
-                const email = userData.email;
-
-                const promesa = db.collection('calculos').doc(userId).collection('registros')
-                    .orderBy('timestamp', 'desc')
-                    .get()
-                    .then(snapshot => {
-                        snapshot.forEach(doc => {
-                            const calc = doc.data();
-                            if (calc.fechaProximoCambio) {
-                                const fechaCambio = new Date(calc.fechaProximoCambio);
-                                if (fechaCambio.getMonth() === mesActual && fechaCambio.getFullYear() === añoActual) {
-                                    historialData.push({
-                                        Email: email,
-                                        'Fecha Cambio': fechaCambio.toLocaleDateString('es-ES'),
-                                        'Vacas': calc.vacas,
-                                        'Puntos': calc.puntos,
-                                        'Pezoneras': calc.pezoneras
-                                    });
-                                }
-                            }
-                        });
-                    });
-                promesas.push(promesa);
-            });
-            return Promise.all(promesas);
-        })
-        .then(() => {
-            const ws = XLSX.utils.json_to_sheet(historialData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Historial');
-            XLSX.writeFile(wb, 'HistorialCalculos.xlsx');
-        })
-        .catch(error => {
-            console.error('Error al exportar historial a Excel:', error);
-            alert('Error al exportar historial: ' + error.message);
-        });
-}
-
-function registrarUsuario() {
-    const nombre = document.getElementById('nombre').value.trim();
-    const profesion = document.getElementById('profesion').value;
-    const empresa = document.getElementById('empresa').value.trim();
-    const otraProfesion = document.getElementById('otra-profesion').value.trim();
-    const telefono = document.getElementById('telefono').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
-
-    if (!nombre || !profesion || !telefono || !email || !password) {
-        alert('Por favor, completa todos los campos obligatorios.');
-        return;
-    }
-
-    if (profesion === 'ganadero' && !empresa) {
-        alert('Por favor, ingresa el nombre de la granja o explotación.');
-        return;
-    }
-
-    if (profesion === 'otro' && !otraProfesion) {
-        alert('Por favor, especifica tu profesión.');
-        return;
-    }
-
-    auth.createUserWithEmailAndPassword(email, password)
-        .then(userCredential => {
-            const user = userCredential.user;
-            const userData = {
-                nombre: nombre,
-                profesion: profesion === 'otro' ? otraProfesion : profesion,
-                empresa: profesion === 'ganadero' ? empresa : null,
-                telefono: telefono,
-                email: email,
-                isVerified: false,
-                notificacionPreferencia: 'email',
-                timestamp: new Date().toISOString()
-            };
-            return Promise.all([
-                db.collection('users').doc(user.uid).set(userData),
-                user.sendEmailVerification()
-            ]);
-        })
-        .then(() => {
-            alert('Usuario registrado correctamente. Por favor, verifica tu correo para continuar.');
-            document.getElementById('registro-section').style.display = 'none';
-            document.getElementById('login-section').style.display = 'block';
-            document.getElementById('nombre').value = '';
-            document.getElementById('profesion').value = '';
-            document.getElementById('empresa').value = '';
-            document.getElementById('otra-profesion').value = '';
-            document.getElementById('telefono').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('password').value = '';
-        })
-        .catch(error => {
-            console.error('Error al registrar usuario:', error);
-            alert('Error al registrar usuario: ' + error.message);
-        });
-}
-
-function loginUsuario() {
-    const email = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value.trim();
-
-    if (!email || !password) {
-        alert('Por favor, completa todos los campos.');
-        return;
-    }
-
-    auth.signInWithEmailAndPassword(email, password)
-        .then(userCredential => {
-            const user = userCredential.user;
-            if (!user.emailVerified) {
-                alert('Por favor, verifica tu correo electrónico para continuar.');
-                auth.signOut();
-                return;
-            }
-            currentUser = user;
-            cargarDatosUsuario(user.uid);
-            document.getElementById('admin-login').style.display = 'none';
-            document.getElementById('admin-form').style.display = 'none';
-            document.getElementById('calculator-info').style.display = 'none';
-        })
-        .catch(error => {
-            console.error('Error al iniciar sesión:', error);
-            alert('Error al iniciar sesión: ' + error.message);
-        });
-}
-
-function recuperarContrasena() {
-    const email = document.getElementById('login-email').value.trim();
-    if (!email) {
-        alert('Por favor, ingresa tu correo electrónico para recuperar la contraseña.');
-        return;
-    }
-
-    auth.sendPasswordResetEmail(email)
-        .then(() => {
-            alert('Se ha enviado un correo para restablecer tu contraseña. Revisa tu bandeja de entrada.');
-        })
-        .catch(error => {
-            console.error('Error al enviar correo de recuperación:', error);
-            alert('Error al enviar correo de recuperación: ' + error.message);
-        });
-}
-
-function cargarDatosUsuario(uid) {
-    db.collection('users').doc(uid).get()
-        .then(doc => {
-            if (doc.exists) {
-                const data = doc.data();
-                document.getElementById('user-name').textContent = data.nombre;
-                document.getElementById('user-profesion').textContent = data.profesion + (data.empresa ? ` (${data.empresa})` : '');
-                document.getElementById('notificacion-preferencia').value = data.notificacionPreferencia || 'email';
-                isVerifiedUser = data.isVerified || false;
-                document.getElementById('verified-badge').style.display = isVerifiedUser ? 'inline-block' : 'none';
-                document.getElementById('adsense-section').style.display = isVerifiedUser ? 'none' : 'block';
-                document.getElementById('export-excel-btn').style.display = isVerifiedUser ? 'block' : 'none';
-                document.getElementById('view-report-btn').style.display = isVerifiedUser ? 'block' : 'none';
-                cargarPublicidad();
-                cargarPublicidadSecundaria();
-            }
-        })
-        .catch(error => {
-            console.error('Error al cargar datos del usuario:', error);
-        });
-}
-
-function guardarPreferenciaNotificacion() {
-    if (!currentUser) {
-        alert('Debes estar autenticado para guardar la preferencia de notificación.');
-        return;
-    }
-
-    const preferencia = document.getElementById('notificacion-preferencia').value;
-    db.collection('users').doc(currentUser.uid).update({
-        notificacionPreferencia: preferencia
-    })
-        .then(() => {
-            alert('Preferencia de notificación guardada correctamente.');
-        })
-        .catch(error => {
-            console.error('Error al guardar preferencia de notificación:', error);
-            alert('Error al guardar preferencia: ' + error.message);
-        });
-}
-
-function cerrarSesionUsuario() {
-    auth.signOut()
-        .then(() => {
-            currentUser = null;
-            isVerifiedUser = false;
-            document.getElementById('user-section').style.display = 'none';
-            document.getElementById('formulario-section').style.display = 'none';
-            document.getElementById('registro-section').style.display = 'block';
-            document.getElementById('auth-message').style.display = 'block';
-            document.getElementById('admin-login').style.display = 'none';
-            document.getElementById('admin-form').style.display = 'none';
-            document.getElementById('login-email').value = '';
-            document.getElementById('login-password').value = '';
-            document.getElementById('verified-badge').style.display = 'none';
-            document.getElementById('adsense-section').style.display = 'block';
-            document.getElementById('publicidad-section').style.display = 'block';
-            document.getElementById('donaciones-section').style.display = 'block';
-            document.getElementById('export-excel-btn').style.display = 'none';
-            document.getElementById('view-report-btn').style.display = 'none';
-            limpiarPantalla();
-        })
-        .catch(error => {
-            console.error('Error al cerrar sesión:', error);
-            alert('Error al cerrar sesión: ' + error.message);
-        });
-}
-
-function loginAdmin() {
-    const email = document.getElementById('admin-email').value.trim();
-    const password = document.getElementById('admin-password').value.trim();
-
-    if (!email || !password) {
-        alert('Por favor, completa todos los campos.');
-        return;
-    }
-
-    auth.signInWithEmailAndPassword(email, password)
-        .then(userCredential => {
-            const user = userCredential.user;
-            if (user.uid === ADMIN_UID && email === ADMIN_EMAIL) {
-                adminUser = user;
-                isAdminLoggedIn = true;
-                document.getElementById('admin-login').style.display = 'none';
-                document.getElementById('admin-form').style.display = 'block';
-                document.getElementById('registro-section').style.display = 'none';
-                document.getElementById('login-section').style.display = 'none';
-                document.getElementById('user-section').style.display = 'none';
-                document.getElementById('formulario-section').style.display = 'none';
-                document.getElementById('auth-message').style.display = 'none';
-                document.getElementById('calculator-info').style.display = 'none';
-                cargarHistorialAdmin();
-            } else {
-                alert('Acceso denegado: No eres un administrador.');
-                auth.signOut();
-            }
-        })
-        .catch(error => {
-            console.error('Error al iniciar sesión como admin:', error);
-            alert('Error al iniciar sesión: ' + error.message);
-        });
-}
-
-function cerrarSesionAdmin() {
-    auth.signOut()
-        .then(() => {
-            adminUser = null;
-            isAdminLoggedIn = false;
-            document.getElementById('admin-login').style.display = 'none';
-            document.getElementById('admin-form').style.display = 'none';
-            document.getElementById('registro-section').style.display = 'block';
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('user-section').style.display = 'none';
-            document.getElementById('formulario-section').style.display = 'none';
-            document.getElementById('auth-message').style.display = 'block';
-            document.getElementById('admin-email').value = '';
-            document.getElementById('admin-password').value = '';
-            document.getElementById('calculator-info').style.display = 'block';
-            document.getElementById('adsense-section').style.display = 'block';
-            document.getElementById('publicidad-section').style.display = 'block';
-            document.getElementById('donaciones-section').style.display = 'block';
-        })
-        .catch(error => {
-            console.error('Error al cerrar sesión de admin:', error);
-            alert('Error al cerrar sesión: ' + error.message);
-        });
-}
-
-function mostrarCamposLogo() {
-    const source = document.getElementById('logo-source').value;
-    document.getElementById('logo-url-section').style.display = source === 'url' ? 'block' : 'none';
-    document.getElementById('logo-upload-section').style.display = source === 'upload' ? 'block' : 'none';
-}
-
-function guardarLogo() {
-    const source = document.getElementById('logo-source').value;
-    let logoUrl = '';
-
-    if (source === 'url') {
-        logoUrl = document.getElementById('logo-url').value.trim();
-        if (!logoUrl) {
-            alert('Por favor, ingresa la URL del logo.');
-            return;
+        if (currentUser) {
+            guardarFechaProximoCambio(currentUser.uid, fechaProximoCambio);
         }
-        db.collection('config').doc('logo').set({ url: logoUrl })
-            .then(() => {
-                alert('Logo actualizado correctamente.');
-                cargarLogo();
-            })
-            .catch(error => {
-                console.error('Error al guardar el logo:', error);
-                alert('Error al guardar el logo: ' + error.message);
-            });
-    } else if (source === 'upload') {
-        const fileInput = document.getElementById('logo-upload');
-        const file = fileInput.files[0];
-        if (!file) {
-            alert('Por favor, selecciona un archivo de imagen.');
-            return;
-        }
-        const storageRef = storage.ref('logos/logo.png');
-        storageRef.put(file)
-            .then(snapshot => snapshot.ref.getDownloadURL())
-            .then(downloadURL => {
-                return db.collection('config').doc('logo').set({ url: downloadURL });
-            })
-            .then(() => {
-                alert('Logo subido y actualizado correctamente.');
-                cargarLogo();
-            })
-            .catch(error => {
-                console.error('Error al subir el logo:', error);
-                alert('Error al subir el logo: ' + error.message);
-            });
-    }
-}
-
-function mostrarCamposPublicidad() {
-    const tipo = document.getElementById('ad-type').value;
-    document.getElementById('ad-texto').style.display = tipo === 'texto' ? 'block' : 'none';
-    document.getElementById('ad-imagen').style.display = tipo === 'imagen' ? 'block' : 'none';
-}
-
-function mostrarCamposImagen() {
-    const source = document.getElementById('ad-imagen-source').value;
-    document.getElementById('ad-imagen-url-section').style.display = source === 'url' ? 'block' : 'none';
-    document.getElementById('ad-imagen-upload-section').style.display = source === 'upload' ? 'block' : 'none';
-}
-
-function guardarPublicidad() {
-    const tipo = document.getElementById('ad-type').value;
-    let adData = {};
-
-    if (tipo === 'texto') {
-        const texto = document.getElementById('ad-texto-content').value.trim();
-        if (!texto) {
-            alert('Por favor, ingresa el texto de la publicidad.');
-            return;
-        }
-        adData = { tipo: 'texto', contenido: texto };
-    } else if (tipo === 'imagen') {
-        const source = document.getElementById('ad-imagen-source').value;
-        if (source === 'url') {
-            const url = document.getElementById('ad-imagen-url').value.trim();
-            if (!url) {
-                alert('Por favor, ingresa la URL de la imagen.');
-                return;
-            }
-            adData = { tipo: 'imagen', url: url };
-        } else if (source === 'upload') {
-            const fileInput = document.getElementById('ad-imagen-upload');
-            const file = fileInput.files[0];
-            if (!file) {
-                alert('Por favor, selecciona un archivo de imagen.');
-                return;
-            }
-            const storageRef = storage.ref('publicidad/principal.png');
-            storageRef.put(file)
-                .then(snapshot => snapshot.ref.getDownloadURL())
-                .then(downloadURL => {
-                    adData = { tipo: 'imagen', url: downloadURL };
-                    return db.collection('publicidad').doc('principal').set(adData);
-                })
-                .then(() => {
-                    alert('Publicidad principal actualizada correctamente.');
-                    cargarPublicidad();
-                })
-                .catch(error => {
-                    console.error('Error al subir la imagen de publicidad:', error);
-                    alert('Error al subir la imagen: ' + error.message);
-                });
-            return;
-        }
-    }
-
-    db.collection('publicidad').doc('principal').set(adData)
-        .then(() => {
-            alert('Publicidad principal actualizada correctamente.');
-            cargarPublicidad();
-        })
-        .catch(error => {
-            console.error('Error al guardar la publicidad:', error);
-            alert('Error al guardar la publicidad: ' + error.message);
-        });
-}
-
-function cargarPublicidad() {
-    const publicidadSection = document.getElementById('publicidad-section');
-    publicidadSection.style.display = 'block';
-    db.collection('publicidad').doc('principal').get()
-        .then(doc => {
-            if (doc.exists) {
-                const data = doc.data();
-                if (data.tipo === 'texto') {
-                    publicidadSection.innerHTML = `<p>${data.contenido}</p>`;
-                } else if (data.tipo === 'imagen') {
-                    publicidadSection.innerHTML = `<img src="${data.url}" alt="Publicidad Principal">`;
-                }
-            } else {
-                publicidadSection.innerHTML = '<p>No hay publicidad configurada.</p>';
-            }
-        })
-        .catch(error => {
-            console.error('Error al cargar publicidad principal:', error);
-            publicidadSection.innerHTML = '<p>Error al cargar publicidad.</p>';
-        });
-}
-
-function mostrarCamposImagenSecundaria() {
-    const source = document.getElementById('ad-secundaria-source').value;
-    document.getElementById('ad-secundaria-url-section').style.display = source === 'url' ? 'block' : 'none';
-    document.getElementById('ad-secundaria-upload-section').style.display = source === 'upload' ? 'block' : 'none';
-}
-
-function guardarPublicidadSecundaria() {
-    const source = document.getElementById('ad-secundaria-source').value;
-    const link = document.getElementById('ad-secundaria-link').value.trim();
-    let adData = {};
-
-    if (!link) {
-        alert('Por favor, ingresa el enlace de la publicidad secundaria.');
-        return;
-    }
-
-    if (source === 'url') {
-        const url = document.getElementById('ad-secundaria-imagen-url').value.trim();
-        if (!url) {
-            alert('Por favor, ingresa la URL de la imagen.');
-            return;
-        }
-        adData = { url: url, link: link };
-    } else if (source === 'upload') {
-        const fileInput = document.getElementById('ad-secundaria-imagen-upload');
-        const file = fileInput.files[0];
-        if (!file) {
-            alert('Por favor, selecciona un archivo de imagen.');
-            return;
-        }
-        const storageRef = storage.ref('publicidad/secundaria.png');
-        storageRef.put(file)
-            .then(snapshot => snapshot.ref.getDownloadURL())
-            .then(downloadURL => {
-                adData = { url: downloadURL, link: link };
-                return db.collection('publicidad').doc('secundaria').set(adData);
-            })
-            .then(() => {
-                alert('Publicidad secundaria actualizada correctamente.');
-                cargarPublicidadSecundaria();
-            })
-            .catch(error => {
-                console.error('Error al subir la imagen de publicidad secundaria:', error);
-                alert('Error al subir la imagen: ' + error.message);
-            });
-        return;
-    }
-
-    db.collection('publicidad').doc('secundaria').set(adData)
-        .then(() => {
-            alert('Publicidad secundaria actualizada correctamente.');
-            cargarPublicidadSecundaria();
-        })
-        .catch(error => {
-            console.error('Error al guardar la publicidad secundaria:', error);
-            alert('Error al guardar la publicidad secundaria: ' + error.message);
-        });
-}
-
-<script>
-    // Continuación de cargarPublicidadSecundaria
-    function cargarPublicidadSecundaria() {
-        const donacionesSection = document.getElementById('donaciones-section');
-        donacionesSection.style.display = 'block';
-        db.collection('publicidad').doc('secundaria').get()
-            .then(doc => {
-                if (doc.exists) {
-                    const data = doc.data();
-                    donacionesSection.innerHTML = `
-                        <a href="${data.link}" target="_blank">
-                            <img src="${data.url}" alt="Publicidad Secundaria">
-                        </a>
-                    `;
-                } else {
-                    donacionesSection.innerHTML = '<p>No hay publicidad secundaria configurada.</p>';
-                }
-            })
-            .catch(error => {
-                console.error('Error al cargar publicidad secundaria:', error);
-                donacionesSection.innerHTML = '<p>Error al cargar publicidad secundaria.</p>';
-            });
-    }
-
-    // Guardar mensaje del pop-up
-    function guardarPopupMessage() {
-        const mensaje = document.getElementById('popup-message-content').value.trim();
-        if (!mensaje) {
-            alert('Por favor, ingresa un mensaje para el pop-up.');
-            return;
-        }
-        db.collection('config').doc('popup').set({ mensaje: mensaje })
-            .then(() => {
-                alert('Mensaje del pop-up actualizado correctamente.');
-                cargarPopupMessage();
-            })
-            .catch(error => {
-                console.error('Error al guardar el mensaje del pop-up:', error);
-                alert('Error al guardar el mensaje: ' + error.message);
-            });
-    }
-
-    // Cargar mensaje del pop-up
-    function cargarPopupMessage() {
-        db.collection('config').doc('popup').get()
-            .then(doc => {
-                if (doc.exists) {
-                    const mensaje = doc.data().mensaje;
-                    document.getElementById('popup-message').textContent = mensaje;
-                }
-            })
-            .catch(error => {
-                console.error('Error al cargar el mensaje del pop-up:', error);
-            });
     }
 </script>
 <script>
-    // Guardar fecha de próximo cambio
-    function guardarFechaProximoCambio(uid, fecha) {
-        db.collection('calculos').doc(uid).set({
-            fechaProximoCambio: fecha.toISOString(),
+    function mostrarResultados() {
+        document.getElementById('resultado').innerHTML = resultadoTexto.replace(/\n/g, '<br>');
+        document.getElementById('whatsapp-section').style.display = 'block';
+        document.getElementById('guardar-resultado').style.display = 'block';
+        if (!isVerifiedUser) {
+            document.getElementById('adsense-section').style.display = 'block';
+        }
+    }
+
+    function enviarWhatsApp() {
+        const codigoCliente = document.getElementById('codigoCliente').value.trim();
+        if (!codigoCliente) {
+            alert("Ingresa el código del cliente.");
+            return;
+        }
+        const mensajeWhatsApp = `Código del Cliente: ${codigoCliente}\n${resultadoTexto}`;
+        const urlWhatsApp = `https://api.whatsapp.com/send?text=${encodeURIComponent(mensajeWhatsApp)}`;
+        window.open(urlWhatsApp, '_blank');
+    }
+
+    function limpiarPantalla() {
+        const durabilidad = document.getElementById('durabilidad').value;
+        document.getElementById('formulario').reset();
+        document.getElementById('durabilidad').value = durabilidad;
+        document.getElementById('modificacion-campos').style.display = 'none';
+        document.getElementById('resultado').innerHTML = '';
+        document.getElementById('whatsapp-section').style.display = 'none';
+        document.getElementById('guardar-resultado').style.display = 'none';
+        document.getElementById('codigoCliente').value = '';
+        document.getElementById('report-section').style.display = 'none';
+        resultadoTexto = '';
+        vacasIniciales = 0;
+        puntosOrdenoIniciales = 0;
+        totalPezoneras = 0;
+        fechaProximoCambio = null;
+    }
+
+    function guardarResultado() {
+        if (!currentUser) {
+            alert('Debes estar autenticado para guardar el resultado.');
+            return;
+        }
+
+        const calculo = {
+            resultado: resultadoTexto,
+            fechaProximoCambio: fechaProximoCambio ? fechaProximoCambio.toISOString() : null,
+            vacas: vacasIniciales,
+            puntos: puntosOrdenoIniciales,
+            pezoneras: totalPezoneras,
             timestamp: new Date().toISOString()
-        }, { merge: true })
+        };
+
+        const userCalcsRef = db.collection('calculos').doc(currentUser.uid).collection('registros');
+
+        userCalcsRef.orderBy('timestamp', 'asc').get()
+            .then(snapshot => {
+                const calculos = snapshot.docs;
+                if (calculos.length >= 10) {
+                    const oldestCalculo = calculos[0];
+                    userCalcsRef.doc(oldestCalculo.id).delete();
+                }
+                return userCalcsRef.add(calculo);
+            })
+            .then(() => {
+                alert('Resultado guardado correctamente.');
+                cargarCalculosGuardados(currentUser.uid);
+            })
             .catch(error => {
-                console.error('Error al guardar la fecha de próximo cambio:', error);
+                console.error('Error al guardar el resultado:', error);
+                alert('Error al guardar el resultado: ' + error.message);
             });
     }
 
-    // Programar notificación
-    function programarNotificacion(uid) {
-        db.collection('calculos').doc(uid).onSnapshot(doc => {
-            if (doc.exists) {
-                const data = doc.data();
-                if (data.fechaProximoCambio) {
-                    const fechaCambio = new Date(data.fechaProximoCambio);
-                    const ahora = new Date();
-                    const diffDias = Math.ceil((fechaCambio - ahora) / (1000 * 60 * 60 * 24));
-                    if (diffDias <= 3 && diffDias >= 0) {
-                        enviarNotificacion(uid, `¡Recordatorio! El cambio de pezoneras está programado para ${fechaCambio.toLocaleDateString('es-ES')}.`);
+    function cargarCalculosGuardados(uid) {
+        const listaCalculos = document.getElementById('lista-calculos');
+        listaCalculos.innerHTML = '';
+        calculosData = [];
+
+        db.collection('calculos').doc(uid).collection('registros')
+            .orderBy('timestamp', 'desc')
+            .get()
+            .then(snapshot => {
+                snapshot.forEach(doc => {
+                    const calc = doc.data();
+                    calculosData.push({
+                        fecha: new Date(calc.timestamp).toLocaleString('es-ES'),
+                        resultado: calc.resultado,
+                        pezoneras: calc.pezoneras,
+                        vacas: calc.vacas,
+                        puntos: calc.puntos,
+                        fechaCambio: calc.fechaProximoCambio ? new Date(calc.fechaProximoCambio).toLocaleDateString('es-ES') : 'N/A'
+                    });
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <strong>Fecha:</strong> ${new Date(calc.timestamp).toLocaleString('es-ES')}<br>
+                        ${calc.resultado.replace(/\n/g, '<br>')}
+                    `;
+                    listaCalculos.appendChild(li);
+                });
+                // Mostrar botones de exportación y reporte si hay cálculos
+                document.getElementById('export-excel-btn').style.display = calculosData.length > 0 ? 'block' : 'none';
+                document.getElementById('view-report-btn').style.display = calculosData.length > 0 ? 'block' : 'none';
+            }).catch(error => {
+                console.error('Error al cargar cálculos guardados:', error);
+            });
+    }
+
+    function exportarCalculosExcel() {
+        const data = calculosData.map(calc => ({
+            Fecha: calc.fecha,
+            'Vacas Iniciales': calc.vacas,
+            'Puntos Iniciales': calc.puntos,
+            'Pezoneras Totales': calc.pezoneras,
+            'Fecha Próximo Cambio': calc.fechaCambio
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Cálculos');
+        XLSX.writeFile(wb, 'CalculosPezoneras.xlsx');
+    }
+
+    function mostrarReporteGrafico() {
+        const ctx = document.getElementById('report-canvas').getContext('2d');
+        document.getElementById('report-section').style.display = 'block';
+
+        const labels = calculosData.map(calc => calc.fecha);
+        const pezoneras = calculosData.map(calc => calc.pezoneras);
+        const vacas = calculosData.map(calc => calc.vacas);
+
+        if (window.myChart) {
+            window.myChart.destroy();
+        }
+
+        window.myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Pezoneras Totales',
+                        data: pezoneras,
+                        borderColor: '#005566',
+                        backgroundColor: 'rgba(0, 85, 102, 0.2)',
+                        fill: true
+                    },
+                    {
+                        label: 'Vacas Ordeñadas',
+                        data: vacas,
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Consumo de Pezoneras y Vacas a lo largo del Tiempo'
                     }
                 }
             }
         });
     }
+</script>
+<script>
+    function cargarHistorialAdmin() {
+        const listaCalculosAdmin = document.getElementById('lista-calculos-admin');
+        listaCalculosAdmin.innerHTML = '';
 
-    // Enviar notificación
-    function enviarNotificacion(uid, mensaje) {
+        const hoy = new Date();
+        const mesActual = hoy.getMonth();
+        const añoActual = hoy.getFullYear();
+
+        db.collection('users').get()
+            .then(userSnapshot => {
+                const promesas = [];
+                userSnapshot.forEach(userDoc => {
+                    const userId = userDoc.id;
+                    const userData = userDoc.data();
+                    const email = userData.email;
+
+                    const promesa = db.collection('calculos').doc(userId).collection('registros')
+                        .orderBy('timestamp', 'desc')
+                        .get()
+                        .then(snapshot => {
+                            snapshot.forEach(doc => {
+                                const calc = doc.data();
+                                if (calc.fechaProximoCambio) {
+                                    const fechaCambio = new Date(calc.fechaProximoCambio);
+                                    if (fechaCambio.getMonth() === mesActual && fechaCambio.getFullYear() === añoActual) {
+                                        const li = document.createElement('li');
+                                        li.innerHTML = `
+                                            Correo: ${email} | 
+                                            Fecha de Cambio: ${fechaCambio.toLocaleDateString('es-ES')} | 
+                                            Puntos: ${calc.puntos} | 
+                                            Pezoneras: ${calc.pezoneras}
+                                        `;
+                                        listaCalculosAdmin.appendChild(li);
+                                    }
+                                }
+                            });
+                        })
+                        .catch(error => {
+                            console.error(`Error al cargar cálculos de ${email}:`, error);
+                        });
+                    promesas.push(promesa);
+                });
+                return Promise.all(promesas);
+            })
+            .catch(error => {
+                console.error('Error al cargar historial de usuarios:', error);
+                listaCalculosAdmin.innerHTML = '<li>Error al cargar el historial.</li>';
+            });
+    }
+
+    function exportarHistorialExcel() {
+        const hoy = new Date();
+        const mesActual = hoy.getMonth();
+        const añoActual = hoy.getFullYear();
+        const historialData = [];
+
+        db.collection('users').get()
+            .then(userSnapshot => {
+                const promesas = [];
+                userSnapshot.forEach(userDoc => {
+                    const userId = userDoc.id;
+                    const userData = userDoc.data();
+                    const email = userData.email;
+
+                    const promesa = db.collection('calculos').doc(userId).collection('registros')
+                        .orderBy('timestamp', 'desc')
+                        .get()
+                        .then(snapshot => {
+                            snapshot.forEach(doc => {
+                                const calc = doc.data();
+                                if (calc.fechaProximoCambio) {
+                                    const fechaCambio = new Date(calc.fechaProximoCambio);
+                                    if (fechaCambio.getMonth() === mesActual && fechaCambio.getFullYear() === añoActual) {
+                                        historialData.push({
+                                            Email: email,
+                                            'Fecha Cambio': fechaCambio.toLocaleDateString('es-ES'),
+                                            'Vacas': calc.vacas,
+                                            'Puntos': calc.puntos,
+                                            'Pezoneras': calc.pezoneras
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    promesas.push(promesa);
+                });
+                return Promise.all(promesas);
+            })
+            .then(() => {
+                const ws = XLSX.utils.json_to_sheet(historialData);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Historial');
+                XLSX.writeFile(wb, 'HistorialCalculos.xlsx');
+            })
+            .catch(error => {
+                console.error('Error al exportar historial a Excel:', error);
+                alert('Error al exportar historial: ' + error.message);
+            });
+    }
+
+    function registrarUsuario() {
+        const nombre = document.getElementById('nombre').value.trim();
+        const profesion = document.getElementById('profesion').value;
+        const empresa = document.getElementById('empresa').value.trim();
+        const otraProfesion = document.getElementById('otra-profesion').value.trim();
+        const telefono = document.getElementById('telefono').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        if (!nombre || !profesion || !telefono || !email || !password) {
+            alert('Por favor, completa todos los campos obligatorios.');
+            return;
+        }
+
+        if (profesion === 'ganadero' && !empresa) {
+            alert('Por favor, ingresa el nombre de la granja o explotación.');
+            return;
+        }
+
+        if (profesion === 'otro' && !otraProfesion) {
+            alert('Por favor, especifica tu profesión.');
+            return;
+        }
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .then(userCredential => {
+                const user = userCredential.user;
+                const userData = {
+                    nombre: nombre,
+                    profesion: profesion === 'otro' ? otraProfesion : profesion,
+                    empresa: profesion === 'ganadero' ? empresa : null,
+                    telefono: telefono,
+                    email: email,
+                    isVerified: false,
+                    notificacionPreferencia: 'email',
+                    timestamp: new Date().toISOString()
+                };
+                return Promise.all([
+                    db.collection('users').doc(user.uid).set(userData),
+                    user.sendEmailVerification()
+                ]);
+            })
+            .then(() => {
+                alert('Usuario registrado correctamente. Por favor, verifica tu correo para continuar.');
+                auth.signOut();
+            })
+            .catch(error => {
+                console.error('Error al registrar usuario:', error);
+                alert('Error al registrar: ' + error.message);
+            });
+    }
+
+    function loginUsuario() {
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value.trim();
+
+        if (!email || !password) {
+            alert('Por favor, completa todos los campos.');
+            return;
+        }
+
+        auth.signInWithEmailAndPassword(email, password)
+            .then(userCredential => {
+                const user = userCredential.user;
+                if (!user.emailVerified) {
+                    alert('Por favor, verifica tu correo electrónico para continuar.');
+                    auth.signOut();
+                    return;
+                }
+                currentUser = user;
+                cargarDatosUsuario(user.uid);
+            })
+            .catch(error => {
+                console.error('Error al iniciar sesión:', error);
+                alert('Error al iniciar sesión: ' + error.message);
+            });
+    }
+
+    function recuperarContrasena() {
+        const email = document.getElementById('login-email').value.trim();
+        if (!email) {
+            alert('Por favor, ingresa tu correo electrónico para recuperar la contraseña.');
+            return;
+        }
+
+        auth.sendPasswordResetEmail(email)
+            .then(() => {
+                alert('Se ha enviado un enlace de recuperación a tu correo electrónico.');
+            })
+            .catch(error => {
+                console.error('Error al enviar correo de recuperación:', error);
+                alert('Error: ' + error.message);
+            });
+    }
+
+    function cargarDatosUsuario(uid) {
         db.collection('users').doc(uid).get()
             .then(doc => {
                 if (doc.exists) {
                     const userData = doc.data();
-                    const preferencia = userData.notificacionPreferencia || 'email';
-                    if (preferencia === 'email') {
-                        fetch('https://us-central1-jcalculador-ac481.cloudfunctions.net/sendNotificationEmail', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                email: userData.email,
-                                subject: 'Recordatorio de Cambio de Pezoneras - JCALCULO',
-                                message: mensaje
-                            })
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log('Notificación por correo enviada:', data);
-                            })
-                            .catch(error => {
-                                console.error('Error al enviar notificación por correo:', error);
-                            });
-                    } else if (preferencia === 'movil' && userData.fcmToken) {
-                        fetch('https://fcm.googleapis.com/fcm/send', {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': 'key=YOUR_SERVER_KEY',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                to: userData.fcmToken,
-                                notification: {
-                                    title: 'Recordatorio de JCALCULO',
-                                    body: mensaje
-                                }
-                            })
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log('Notificación móvil enviada:', data);
-                            })
-                            .catch(error => {
-                                console.error('Error al enviar notificación móvil:', error);
-                            });
+                    document.getElementById('user-name').textContent = userData.nombre;
+                    document.getElementById('user-profesion').textContent = userData.profesion;
+                    document.getElementById('notificacion-preferencia').value = userData.notificacionPreferencia || 'email';
+                    isVerifiedUser = userData.isVerified || false;
+                    if (isVerifiedUser) {
+                        document.getElementById('verified-badge').style.display = 'inline-block';
                     }
                 }
             })
             .catch(error => {
-                console.error('Error al enviar notificación:', error);
+                console.error('Error al cargar datos del usuario:', error);
             });
     }
 
-    // Probar notificación
-    function probarNotificacion() {
-        if (!isAdminLoggedIn) {
-            alert('Debes ser administrador para enviar una notificación de prueba.');
-            return;
-        }
-        enviarNotificacion(ADMIN_UID, 'Esto es una notificación de prueba desde JCALCULO.');
-        alert('Notificación de prueba enviada. Revisa tu correo o dispositivo según tu preferencia.');
-    }
-</script>
-<script>
-    // Verificar usuario
-    function verificarUsuario() {
-        const email = document.getElementById('user-verification-email').value.trim();
-        if (!email) {
-            alert('Por favor, ingresa el correo del usuario.');
-            return;
-        }
-        db.collection('users').where('email', '==', email).get()
-            .then(snapshot => {
-                if (snapshot.empty) {
-                    alert('No se encontró un usuario con ese correo.');
-                    return;
-                }
-                snapshot.forEach(doc => {
-                    db.collection('users').doc(doc.id).update({
-                        isVerified: true
-                    })
-                        .then(() => {
-                            alert(`Usuario con correo ${email} verificado correctamente.`);
-                            if (currentUser && currentUser.email === email) {
-                                isVerifiedUser = true;
-                                document.getElementById('verified-badge').style.display = 'inline-block';
-                                document.getElementById('adsense-section').style.display = 'none';
-                                document.getElementById('export-excel-btn').style.display = 'block';
-                                document.getElementById('view-report-btn').style.display = 'block';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error al verificar usuario:', error);
-                            alert('Error al verificar usuario: ' + error.message);
-                        });
+    function guardarPreferenciaNotificacion() {
+        const preferencia = document.getElementById('notificacion-preferencia').value;
+        if (currentUser) {
+            db.collection('users').doc(currentUser.uid).update({
+                notificacionPreferencia: preferencia
+            })
+                .then(() => {
+                    alert('Preferencia de notificación guardada correctamente.');
+                })
+                .catch(error => {
+                    console.error('Error al guardar preferencia:', error);
+                    alert('Error al guardar preferencia: ' + error.message);
                 });
+        }
+    }
+
+    function cerrarSesionUsuario() {
+        auth.signOut()
+            .then(() => {
+                currentUser = null;
+                isVerifiedUser = false;
+                window.location.reload();
             })
             .catch(error => {
-                console.error('Error al buscar usuario:', error);
-                alert('Error al buscar usuario: ' + error.message);
+                console.error('Error al cerrar sesión:', error);
+                alert('Error al cerrar sesión: ' + error.message);
             });
     }
 
-    // Quitar verificación de usuario
-    function quitarVerificacionUsuario() {
-        const email = document.getElementById('user-verification-email').value.trim();
-        if (!email) {
-            alert('Por favor, ingresa el correo del usuario.');
+    function loginAdmin() {
+        const email = document.getElementById('admin-email').value.trim();
+        const password = document.getElementById('admin-password').value.trim();
+
+        if (!email || !password) {
+            alert('Por favor, completa todos los campos.');
             return;
         }
-        db.collection('users').where('email', '==', email).get()
-            .then(snapshot => {
-                if (snapshot.empty) {
-                    alert('No se encontró un usuario con ese correo.');
-                    return;
+
+        auth.signInWithEmailAndPassword(email, password)
+            .then(userCredential => {
+                const user = userCredential.user;
+                if (user.uid === ADMIN_UID || user.email === ADMIN_EMAIL) {
+                    isAdminLoggedIn = true;
+                    adminUser = user;
+                    document.getElementById('admin-login').style.display = 'none';
+                    document.getElementById('admin-form').style.display = 'block';
+                    document.getElementById('admin-calculos').style.display = 'block';
+                    document.getElementById('admin-registro').style.display = 'block';
+                    cargarHistorialAdmin();
+                } else {
+                    alert('No tienes permisos de administrador.');
+                    auth.signOut();
                 }
-                snapshot.forEach(doc => {
-                    db.collection('users').doc(doc.id).update({
-                        isVerified: false
-                    })
-                        .then(() => {
-                            alert(`Se ha quitado la verificación del usuario con correo ${email}.`);
-                            if (currentUser && currentUser.email === email) {
-                                isVerifiedUser = false;
-                                document.getElementById('verified-badge').style.display = 'none';
-                                document.getElementById('adsense-section').style.display = 'block';
-                                document.getElementById('export-excel-btn').style.display = 'none';
-                                document.getElementById('view-report-btn').style.display = 'none';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error al quitar verificación:', error);
-                            alert('Error al quitar verificación: ' + error.message);
-                        });
-                });
             })
             .catch(error => {
-                console.error('Error al buscar usuario:', error);
-                alert('Error al buscar usuario: ' + error.message);
+                console.error('Error al iniciar sesión como admin:', error);
+                alert('Error al iniciar sesión: ' + error.message);
             });
     }
-</script>
-<script>
-    // Registrar nuevo administrador
+
+    function cerrarSesionAdmin() {
+        auth.signOut()
+            .then(() => {
+                isAdminLoggedIn = false;
+                adminUser = null;
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error al cerrar sesión del admin:', error);
+                alert('Error al cerrar sesión: ' + error.message);
+            });
+    }
+
     function registrarAdmin() {
-        if (!isAdminLoggedIn) {
-            alert('Debes ser administrador para registrar otro administrador.');
-            return;
-        }
-
         const nombre = document.getElementById('admin-nombre').value.trim();
         const email = document.getElementById('admin-registro-email').value.trim();
         const password = document.getElementById('admin-registro-password').value.trim();
@@ -1876,13 +1421,18 @@ function guardarPublicidadSecundaria() {
             return;
         }
 
+        if (!isAdminLoggedIn) {
+            alert('Debes ser administrador para registrar otro admin.');
+            return;
+        }
+
         auth.createUserWithEmailAndPassword(email, password)
             .then(userCredential => {
                 const user = userCredential.user;
                 const adminData = {
                     nombre: nombre,
                     email: email,
-                    role: 'admin',
+                    isAdmin: true,
                     timestamp: new Date().toISOString()
                 };
                 return db.collection('admins').doc(user.uid).set(adminData);
@@ -1898,30 +1448,428 @@ function guardarPublicidadSecundaria() {
                 alert('Error al registrar administrador: ' + error.message);
             });
     }
+
+    function verificarUsuario() {
+        const email = document.getElementById('user-verification-email').value.trim();
+        if (!email) {
+            alert('Por favor, ingresa el correo del usuario.');
+            return;
+        }
+
+        db.collection('users').where('email', '==', email).get()
+            .then(snapshot => {
+                if (snapshot.empty) {
+                    alert('Usuario no encontrado.');
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    db.collection('users').doc(doc.id).update({
+                        isVerified: true
+                    })
+                        .then(() => {
+                            alert('Usuario verificado correctamente.');
+                            if (currentUser && currentUser.email === email) {
+                                isVerifiedUser = true;
+                                document.getElementById('verified-badge').style.display = 'inline-block';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error al verificar usuario:', error);
+                            alert('Error: ' + error.message);
+                        });
+                });
+            })
+            .catch(error => {
+                console.error('Error al buscar usuario:', error);
+                alert('Error: ' + error.message);
+            });
+    }
+
+    function quitarVerificacionUsuario() {
+        const email = document.getElementById('user-verification-email').value.trim();
+        if (!email) {
+            alert('Por favor, ingresa el correo del usuario.');
+            return;
+        }
+
+        db.collection('users').where('email', '==', email).get()
+            .then(snapshot => {
+                if (snapshot.empty) {
+                    alert('Usuario no encontrado.');
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    db.collection('users').doc(doc.id).update({
+                        isVerified: false
+                    })
+                        .then(() => {
+                            alert('Verificación removida correctamente.');
+                            if (currentUser && currentUser.email === email) {
+                                isVerifiedUser = false;
+                                document.getElementById('verified-badge').style.display = 'none';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error al quitar verificación:', error);
+                            alert('Error: ' + error.message);
+                        });
+                });
+            })
+            .catch(error => {
+                console.error('Error al buscar usuario:', error);
+                alert('Error: ' + error.message);
+            });
+    }
+
+    function mostrarCamposLogo() {
+        const source = document.getElementById('logo-source').value;
+        document.getElementById('logo-url-section').style.display = source === 'url' ? 'block' : 'none';
+        document.getElementById('logo-upload-section').style.display = source === 'upload' ? 'block' : 'none';
+    }
+
+<script>
+    function guardarLogo() {
+        const source = document.getElementById('logo-source').value;
+        let logoUrl = '';
+
+        if (source === 'url') {
+            logoUrl = document.getElementById('logo-url').value.trim();
+            if (!logoUrl) {
+                alert('Por favor, ingresa una URL válida para el logo.');
+                return;
+            }
+            db.collection('config').doc('logo').set({ url: logoUrl })
+                .then(() => {
+                    alert('Logo actualizado correctamente.');
+                    cargarLogo();
+                })
+                .catch(error => {
+                    console.error('Error al guardar logo:', error);
+                    alert('Error: ' + error.message);
+                });
+        } else {
+            const fileInput = document.getElementById('logo-upload');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Por favor, selecciona un archivo para el logo.');
+                return;
+            }
+
+            const storageRef = storage.ref(`logos/logo-${Date.now()}`);
+            storageRef.put(file)
+                .then(snapshot => snapshot.ref.getDownloadURL())
+                .then(url => {
+                    return db.collection('config').doc('logo').set({ url: url });
+                })
+                .then(() => {
+                    alert('Logo subido y actualizado correctamente.');
+                    cargarLogo();
+                })
+                .catch(error => {
+                    console.error('Error al subir logo:', error);
+                    alert('Error: ' + error.message);
+                });
+        }
+    }
+
+    function mostrarCamposPublicidad() {
+        const tipo = document.getElementById('ad-type').value;
+        document.getElementById('ad-texto').style.display = tipo === 'texto' ? 'block' : 'none';
+        document.getElementById('ad-imagen').style.display = tipo === 'imagen' ? 'block' : 'none';
+    }
+
+    function mostrarCamposImagen() {
+        const source = document.getElementById('ad-imagen-source').value;
+        document.getElementById('ad-imagen-url-section').style.display = source === 'url' ? 'block' : 'none';
+        document.getElementById('ad-imagen-upload-section').style.display = source === 'upload' ? 'block' : 'none';
+    }
+
+    function guardarPublicidad() {
+        const tipo = document.getElementById('ad-type').value;
+        let adData = {};
+
+        if (tipo === 'texto') {
+            const texto = document.getElementById('ad-texto-content').value.trim();
+            if (!texto) {
+                alert('Por favor, ingresa el texto de la publicidad.');
+                return;
+            }
+            adData = { tipo: 'texto', contenido: texto };
+        } else {
+            const source = document.getElementById('ad-imagen-source').value;
+            if (source === 'url') {
+                const url = document.getElementById('ad-imagen-url').value.trim();
+                if (!url) {
+                    alert('Por favor, ingresa una URL válida para la imagen.');
+                    return;
+                }
+                adData = { tipo: 'imagen', url: url };
+            } else {
+                const fileInput = document.getElementById('ad-imagen-upload');
+                const file = fileInput.files[0];
+                if (!file) {
+                    alert('Por favor, selecciona una imagen para la publicidad.');
+                    return;
+                }
+
+                const storageRef = storage.ref(`publicidad/principal-${Date.now()}`);
+                storageRef.put(file)
+                    .then(snapshot => snapshot.ref.getDownloadURL())
+                    .then(url => {
+                        adData = { tipo: 'imagen', url: url };
+                        return db.collection('config').doc('publicidad').set(adData);
+                    })
+                    .then(() => {
+                        alert('Publicidad principal actualizada correctamente.');
+                        cargarPublicidad();
+                    })
+                    .catch(error => {
+                        console.error('Error al subir imagen de publicidad:', error);
+                        alert('Error: ' + error.message);
+                    });
+                return;
+            }
+        }
+
+        db.collection('config').doc('publicidad').set(adData)
+            .then(() => {
+                alert('Publicidad principal actualizada correctamente.');
+                cargarPublicidad();
+            })
+            .catch(error => {
+                console.error('Error al guardar publicidad:', error);
+                alert('Error: ' + error.message);
+            });
+    }
+
+    function cargarPublicidad() {
+        db.collection('config').doc('publicidad').get()
+            .then(doc => {
+                const section = document.getElementById('publicidad-section');
+                section.innerHTML = '';
+                if (doc.exists) {
+                    const data = doc.data();
+                    section.style.display = 'block';
+                    if (data.tipo === 'texto') {
+                        section.innerHTML = `<p>${data.contenido}</p>`;
+                    } else if (data.tipo === 'imagen') {
+                        section.innerHTML = `<img src="${data.url}" alt="Publicidad Principal">`;
+                    }
+                } else {
+                    section.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar publicidad:', error);
+                document.getElementById('publicidad-section').style.display = 'none';
+            });
+    }
+
+    function mostrarCamposImagenSecundaria() {
+        const source = document.getElementById('ad-secundaria-source').value;
+        document.getElementById('ad-secundaria-url-section').style.display = source === 'url' ? 'block' : 'none';
+        document.getElementById('ad-secundaria-upload-section').style.display = source === 'upload' ? 'block' : 'none';
+    }
+
+    function guardarPublicidadSecundaria() {
+        const source = document.getElementById('ad-secundaria-source').value;
+        const link = document.getElementById('ad-secundaria-link').value.trim();
+        let adData = {};
+
+        if (!link) {
+            alert('Por favor, ingresa un enlace para la publicidad secundaria.');
+            return;
+        }
+
+        if (source === 'url') {
+            const url = document.getElementById('ad-secundaria-imagen-url').value.trim();
+            if (!url) {
+                alert('Por favor, ingresa una URL válida para la imagen.');
+                return;
+            }
+            adData = { url: url, link: link };
+            db.collection('config').doc('publicidad-secundaria').set(adData)
+                .then(() => {
+                    alert('Publicidad secundaria actualizada correctamente.');
+                    cargarPublicidadSecundaria();
+                })
+                .catch(error => {
+                    console.error('Error al guardar publicidad secundaria:', error);
+                    alert('Error: ' + error.message);
+                });
+        } else {
+            const fileInput = document.getElementById('ad-secundaria-imagen-upload');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Por favor, selecciona una imagen para la publicidad secundaria.');
+                return;
+            }
+
+            const storageRef = storage.ref(`publicidad/secundaria-${Date.now()}`);
+            storageRef.put(file)
+                .then(snapshot => snapshot.ref.getDownloadURL())
+                .then(url => {
+                    adData = { url: url, link: link };
+                    return db.collection('config').doc('publicidad-secundaria').set(adData);
+                })
+                .then(() => {
+                    alert('Publicidad secundaria actualizada correctamente.');
+                    cargarPublicidadSecundaria();
+                })
+                .catch(error => {
+                    console.error('Error al subir imagen de publicidad secundaria:', error);
+                    alert('Error: ' + error.message);
+                });
+        }
+    }
+
+    function cargarPublicidadSecundaria() {
+        db.collection('config').doc('publicidad-secundaria').get()
+            .then(doc => {
+                const section = document.getElementById('donaciones-section');
+                section.innerHTML = '';
+                if (doc.exists) {
+                    const data = doc.data();
+                    section.style.display = 'block';
+                    section.innerHTML = `<a href="${data.link}" target="_blank"><img src="${data.url}" alt="Publicidad Secundaria"></a>`;
+                } else {
+                    section.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar publicidad secundaria:', error);
+                document.getElementById('donaciones-section').style.display = 'none';
+            });
+    }
 </script>
 <script>
-    // Mostrar sección de registro
+    function guardarPopupMessage() {
+        const mensaje = document.getElementById('popup-message-content').value.trim();
+        if (!mensaje) {
+            alert('Por favor, ingresa un mensaje para el pop-up.');
+            return;
+        }
+
+        db.collection('config').doc('popup').set({ mensaje: mensaje })
+            .then(() => {
+                alert('Mensaje del pop-up actualizado correctamente.');
+                cargarPopupMessage();
+            })
+            .catch(error => {
+                console.error('Error al guardar mensaje del pop-up:', error);
+                alert('Error: ' + error.message);
+            });
+    }
+
+    function cargarPopupMessage() {
+        db.collection('config').doc('popup').get()
+            .then(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('popup-message').textContent = data.mensaje;
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar mensaje del pop-up:', error);
+            });
+    }
+
+    function guardarFechaProximoCambio(uid, fecha) {
+        if (!uid || !fecha) return;
+
+        db.collection('calculos').doc(uid).set({
+            ultimoCalculo: fecha.toISOString(),
+            timestamp: new Date().toISOString()
+        }, { merge: true })
+            .catch(error => {
+                console.error('Error al guardar fecha de próximo cambio:', error);
+            });
+    }
+
+    function programarNotificacion(uid) {
+        db.collection('calculos').doc(uid).get()
+            .then(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    if (data.ultimoCalculo) {
+                        const fechaCambio = new Date(data.ultimoCalculo);
+                        const ahora = new Date();
+                        const diferenciaDias = Math.floor((fechaCambio - ahora) / (1000 * 60 * 60 * 24));
+
+                        if (diferenciaDias <= 7 && diferenciaDias >= 0) {
+                            db.collection('users').doc(uid).get()
+                                .then(userDoc => {
+                                    if (userDoc.exists) {
+                                        const userData = userDoc.data();
+                                        const preferencia = userData.notificacionPreferencia;
+                                        if (preferencia === 'movil' && userData.fcmToken) {
+                                            enviarNotificacionMovil(userData.fcmToken, diferenciaDias);
+                                        } else if (preferencia === 'email') {
+                                            console.log(`Notificación por email programada para ${userData.email}: Faltan ${diferenciaDias} días.`);
+                                        }
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error al programar notificación:', error);
+                                });
+                        }
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error al programar notificación:', error);
+            });
+    }
+
+    function enviarNotificacionMovil(token, dias) {
+        const message = {
+            notification: {
+                title: 'Recordatorio de JCALCULO',
+                body: `¡Faltan ${dias} días para cambiar tus pezoneras! 🔔`
+            },
+            token: token
+        };
+
+        console.log('Notificación enviada al dispositivo:', message);
+    }
+
+    function probarNotificacion() {
+        if (!currentUser) {
+            alert('Debes estar autenticado para probar notificaciones.');
+            return;
+        }
+
+        db.collection('users').doc(currentUser.uid).get()
+            .then(doc => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    const preferencia = userData.notificacionPreferencia;
+                    if (preferencia === 'movil' && userData.fcmToken) {
+                        enviarNotificacionMovil(userData.fcmToken, 7);
+                        alert('Notificación de prueba enviada al dispositivo.');
+                    } else if (preferencia === 'email') {
+                        alert('Notificación de prueba programada para email.');
+                    } else {
+                        alert('No tienes notificaciones configuradas.');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error al probar notificación:', error);
+                alert('Error: ' + error.message);
+            });
+    }
+
     function mostrarRegistro() {
         document.getElementById('registro-section').style.display = 'block';
         document.getElementById('login-section').style.display = 'none';
-        document.getElementById('admin-login').style.display = 'none';
-        document.getElementById('admin-form').style.display = 'none';
-        document.getElementById('user-section').style.display = 'none';
-        document.getElementById('formulario-section').style.display = 'none';
-        document.getElementById('auth-message').style.display = 'block';
-        document.getElementById('calculator-info').style.display = 'block';
     }
 
-    // Mostrar sección de login
     function mostrarLoginUsuario() {
         document.getElementById('registro-section').style.display = 'none';
         document.getElementById('login-section').style.display = 'block';
-        document.getElementById('admin-login').style.display = 'none';
-        document.getElementById('admin-form').style.display = 'none';
-        document.getElementById('user-section').style.display = 'none';
-        document.getElementById('formulario-section').style.display = 'none';
-        document.getElementById('auth-message').style.display = 'block';
-        document.getElementById('calculator-info').style.display = 'block';
     }
 </script>
 </body>
