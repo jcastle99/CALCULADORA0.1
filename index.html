@@ -51,6 +51,19 @@
         position: relative;
         border: 1px solid #ddd;
     }
+    .admin-link {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 12px;
+        color: #005566;
+        text-decoration: none;
+        opacity: 0.5;
+        transition: opacity 0.3s;
+    }
+    .admin-link:hover {
+        opacity: 1;
+    }
     .logo {
         display: block;
         margin: 0 auto 10px;
@@ -65,56 +78,6 @@
     }
 </style>
 <style>
-    label {
-        display: block;
-        margin: 8px 0 4px;
-        font-weight: bold;
-        color: #005566;
-    }
-    input, select, textarea {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-        font-size: 14px;
-        transition: border-color 0.3s;
-    }
-    input:focus, select:focus, textarea:focus {
-        border-color: #005566;
-        outline: none;
-        box-shadow: 0 0 5px rgba(0, 85, 102, 0.2);
-    }
-    button {
-        width: 100%;
-        padding: 10px;
-        background: #005566;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background 0.3s;
-    }
-    button:hover {
-        background: #003d4a;
-    }
-</style>
-<style>
-    #resultado {
-        margin-top: 15px;
-        padding: 10px;
-        background: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    }
-    .modificacion-campos {
-        display: none;
-        background: #f0f0f0;
-        padding: 10px;
-        border-radius: 5px;
-        margin-top: 8px;
-    }
     .popup {
         display: none;
         position: fixed;
@@ -123,48 +86,139 @@
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
         justify-content: center;
         align-items: center;
+        z-index: 1000;
     }
     .popup-content {
         background: #fff;
-        padding: 15px;
+        padding: 20px;
         border-radius: 10px;
-        max-width: 400px;
         text-align: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+    }
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+    label {
+        display: block;
+        margin: 5px 0 2px;
+        font-weight: bold;
+        color: #005566;
+    }
+    input, select, textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+    button {
+        background: #005566;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        margin: 5px 0;
+        transition: background 0.3s;
+    }
+    button:hover {
+        background: #003d4a;
     }
 </style>
 <style>
-    #publicidad-section {
-        margin-top: 15px;
-        padding: 10px;
-        background: #f0f0f0;
-        border-radius: 5px;
+    .auth-message {
         text-align: center;
-        border: 1px solid #ddd;
+        color: #d32f2f;
+        margin-bottom: 15px;
+        font-weight: bold;
     }
-    #publicidad-section img {
-        max-width: 100%;
-        height: auto;
-    }
-    #adsense-section {
-        margin-top: 15px;
+    .modificacion-campos {
+        display: none;
+        margin-top: 10px;
         padding: 10px;
-        background: #f0f0f0;
+        border: 1px solid #ddd;
         border-radius: 5px;
-        text-align: center;
-        border: 1px solid #ddd;
+        background: #f9f9f9;
     }
-    #calculator-info {
-        margin-top: 15px;
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    li {
+        background: #f1f1f1;
         padding: 10px;
-        background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+        margin-bottom: 5px;
+        border-radius: 5px;
+    }
+    #report-section {
+        margin-top: 20px;
+        display: none;
+    }
+    .signature {
+        text-align: center;
+        margin-top: 20px;
+        font-family: 'Dancing Script', cursive;
+        font-size: 24px;
+        color: #005566;
+    }
+    .verified-badge {
+        background: #28a745;
+        color: #fff;
+        padding: 2px 8px;
         border-radius: 10px;
- Fixed: true;
+        margin-left: 10px;
+        font-size: 12px;
+    }
+</style>
+<style>
+    @media (max-width: 600px) {
+        .container {
+            padding: 15px;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        button {
+            padding: 8px;
+        }
+        input, select, textarea {
+            padding: 6px;
+        }
+        .popup-content {
+            width: 95%;
+            padding: 15px;
+        }
+        .signature {
+            font-size: 20px;
+        }
+    }
+    #resultado {
+        margin-top: 15px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background: #f9f9f9;
+    }
+    #whatsapp-section, #calculos-registrados, #adsense-section, #publicidad-section, #donaciones-section {
+        margin-top: 15px;
         text-align: center;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    #whatsapp-section input {
+        width: 70%;
+        display: inline-block;
+    }
+    #whatsapp-section button {
+        width: 25%;
+        display: inline-block;
     }
 </style>
 <body>
@@ -198,9 +252,10 @@
             <p>Con <strong>JCALCULO</strong>, optimiza el cambio de tus pezoneras de manera fácil y precisa...</p>
         </div>
     </div>
+</body>
 <div class="container">
     <!-- Formulario de Registro -->
-    <div id="registro-section">
+    <div id="registro-section" style="display: block;">
         <h3>Regístrate</h3>
         <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" placeholder="Tu nombre" required>
@@ -233,7 +288,7 @@
 </div>
 <div class="container">
     <!-- Formulario de Login de Usuario -->
-    <div id="login-section">
+    <div id="login-section" style="display: none;">
         <h3>Iniciar Sesión</h3>
         <label for="login-email">Correo Electrónico:</label>
         <input type="email" id="login-email" placeholder="tu@correo.com" required>
@@ -247,7 +302,7 @@
 </div>
 <div class="container">
     <!-- Sección de usuario logueado -->
-    <div id="user-section">
+    <div id="user-section" style="display: none;">
         <h3>Bienvenido, <span id="user-name">Usuario</span><span id="verified-badge" class="verified-badge" style="display: none;">Verificado</span></h3>
         <p>Profesión: <span id="user-profesion">N/A</span></p>
         <label for="notificacion-preferencia">Notificarme sobre el cambio de pezoneras:</label>
@@ -273,12 +328,14 @@
     };
 
     // Inicializar Firebase
+    let app, auth, db, storage, messaging;
     try {
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const storage = firebase.storage();
-        const messaging = firebase.messaging();
+        app = firebase.initializeApp(firebaseConfig);
+        auth = firebase.auth();
+        db = firebase.firestore();
+        storage = firebase.storage();
+        messaging = firebase.messaging();
+        console.log("Firebase initialized successfully");
     } catch (error) {
         console.error('Error al inicializar Firebase:', error);
         alert('Error al conectar con el servidor. Por favor, intenta de nuevo más tarde.');
@@ -299,67 +356,66 @@
     const ADMIN_EMAIL = 'alfstiven@gmail.com';
 </script>
 <script>
-    // Iniciar Sesión de Usuario
-    function loginUsuario() {
-        const email = document.getElementById('login-email').value.trim();
-        const password = document.getElementById('login-password').value.trim();
-        const loginBtn = document.getElementById('login-btn');
-        const errorDiv = document.getElementById('login-error');
+    function registrarUsuario() {
+        const nombre = document.getElementById('nombre').value.trim();
+        const profesion = document.getElementById('profesion').value;
+        const empresa = document.getElementById('empresa').value.trim();
+        const otraProfesion = document.getElementById('otra-profesion').value.trim();
+        const telefono = document.getElementById('telefono').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const registerBtn = document.getElementById('register-btn');
 
-        if (!email || !password) {
-            errorDiv.style.display = 'block';
-            errorDiv.textContent = 'Por favor, completa todos los campos.';
+        if (!nombre || !profesion || !telefono || !email || !password) {
+            alert('Por favor, completa todos los campos obligatorios.');
+            return;
+        }
+        if (profesion === 'ganadero' && !empresa) {
+            alert('Por favor, ingresa el nombre de la granja o explotación.');
+            return;
+        }
+        if (prof g
+
+esion === 'otro' && !otraProfesion) {
+            alert('Por favor, especifica tu profesión.');
             return;
         }
 
-        loginBtn.disabled = true;
-        errorDiv.style.display = 'none';
-
-        auth.signInWithEmailAndPassword(email, password)
+        registerBtn.disabled = true;
+        auth.createUserWithEmailAndPassword(email, password)
             .then(userCredential => {
                 const user = userCredential.user;
-                if (!user.emailVerified) {
-                    auth.signOut();
-                    throw new Error('Por favor, verifica tu correo electrónico para continuar.');
-                }
-                currentUser = user;
-                cargarDatosUsuario(user.uid);
+                const userData = {
+                    nombre: nombre,
+                    profesion: profesion === 'otro' ? otraProfesion : profesion,
+                    empresa: profesion === 'ganadero' ? empresa : null,
+                    telefono: telefono,
+                    email: email,
+                    isVerified: false,
+                    notificacionPreferencia: 'email',
+                    timestamp: new Date().toISOString()
+                };
+                return Promise.all([
+                    db.collection('users').doc(user.uid).set(userData),
+                    user.sendEmailVerification()
+                ]);
+            })
+            .then(() => {
+                alert('Usuario registrado correctamente. Por favor, verifica tu correo para continuar.');
+                auth.signOut();
             })
             .catch(error => {
-                errorDiv.style.display = 'block';
-                errorDiv.textContent = 'Error al iniciar sesión: ' + error.message;
+                console.error('Error al registrar usuario:', error);
+                alert('Error al registrar: ' + error.message);
             })
             .finally(() => {
-                loginBtn.disabled = false;
-            });
-    }
-
-    // Recuperar Contraseña
-    function recuperarContrasena() {
-        const email = document.getElementById('login-email').value.trim();
-        const errorDiv = document.getElementById('login-error');
-
-        if (!email) {
-            errorDiv.style.display = 'block';
-            errorDiv.textContent = 'Por favor, ingresa tu correo electrónico.';
-            return;
-        }
-
-        auth.sendPasswordResetEmail(email)
-            .then(() => {
-                errorDiv.style.display = 'block';
-                errorDiv.style.color = 'green';
-                errorDiv.textContent = 'Se ha enviado un enlace de recuperación a tu correo.';
-            })
-            .catch(error => {
-                errorDiv.style.display = 'block';
-                errorDiv.textContent = 'Error al enviar correo de recuperación: ' + error.message;
+                registerBtn.disabled = false;
             });
     }
 </script>
 <div class="container">
     <!-- Formulario de la calculadora (visible solo para usuarios autenticados) -->
-    <div id="formulario-section">
+    <div id="formulario-section" style="display: none;">
         <form id="formulario">
             <label for="ordenosDia">Ordeños por Día:</label>
             <input type="number" id="ordenosDia" required>
@@ -606,6 +662,7 @@
             } else {
                 currentUser = null;
                 document.getElementById('registro-section').style.display = 'block';
+                document.getElementById('login-section').style.display = 'none';
                 document.getElementById('user-section').style.display = 'none';
                 document.getElementById('formulario-section').style.display = 'none';
                 document.getElementById('auth-message').style.display = 'block';
@@ -616,29 +673,6 @@
             }
         });
     };
-
-    function cerrarPopup() {
-        document.getElementById('popup').style.display = 'none';
-    }
-
-    function mostrarLoginAdmin() {
-        document.getElementById('admin-login').style.display = 'block';
-        document.getElementById('registro-section').style.display = 'none';
-        document.getElementById('login-section').style.display = 'none';
-        document.getElementById('user-section').style.display = 'none';
-        document.getElementById('formulario-section').style.display = 'none';
-        document.getElementById('auth-message').style.display = 'none';
-    }
-
-    function volverAlInicio() {
-        document.getElementById('admin-login').style.display = 'none';
-        document.getElementById('registro-section').style.display = 'block';
-        document.getElementById('login-section').style.display = 'none';
-        document.getElementById('user-section').style.display = 'none';
-        document.getElementById('formulario-section').style.display = 'none';
-        document.getElementById('auth-message').style.display = 'block';
-        document.getElementById('calculator-info').style.display = 'block';
-    }
 </script>
 <script>
     function calcular() {
@@ -672,94 +706,96 @@
         const diasDurabilidadInicial = durabilidad / ordeñosPorPuntoPorDia;
         const fechaProximoCambioInicial = new Date(fechaInicio);
         fechaProximoCambioInicial.setDate(fechaInicio.getDate() + Math.floor(diasDurabilidadInicial));
+    }
+</script>
+<script>
+    let fechaDiasEspecificos = diasEspecificos > 0 ? `Fecha para ${diasEspecificos} Días: ${new Date(fechaInicio.getTime() + diasEspecificos * 86400000).toLocaleDateString('es-ES')}` : '';
+    const diasEnMes = 30.42;
+    const mesesEquivalentes = Math.round(diasDurabilidadInicial / diasEnMes);
+    const pezonerasPorPunto = 4;
+    totalPezoneras = puntosOrdeno * pezonerasPorPunto;
+    let desgastePezonerasPorDiaInicial = totalPezoneras / diasDurabilidadInicial;
 
-        let fechaDiasEspecificos = diasEspecificos > 0 ? `Fecha para ${diasEspecificos} Días: ${new Date(fechaInicio.getTime() + diasEspecificos * 86400000).toLocaleDateString('es-ES')}` : '';
-        const diasEnMes = 30.42;
-        const mesesEquivalentes = Math.round(diasDurabilidadInicial / diasEnMes);
-        const pezonerasPorPunto = 4;
-        totalPezoneras = puntosOrdeno * pezonerasPorPunto;
-        let desgastePezonerasPorDiaInicial = totalPezoneras / diasDurabilidadInicial;
+    let durabilidadAjustada = diasDurabilidadInicial;
+    let fechaProximoCambioAjustada = fechaProximoCambioInicial;
+    let desgastePezonerasPorDiaAjustada = desgastePezonerasPorDiaInicial;
+    let mensajeAjuste = '';
 
-        let durabilidadAjustada = diasDurabilidadInicial;
-        let fechaProximoCambioAjustada = fechaProximoCambioInicial;
-        let desgastePezonerasPorDiaAjustada = desgastePezonerasPorDiaInicial;
-        let mensajeAjuste = '';
-
-        if (realizarModificacion === 'si' && fechaCambioInput && (nuevoNumeroVacas > 0 || nuevoPuntosOrdeno > 0)) {
-            const fechaCambio = new Date(fechaCambioInput);
-            if (isNaN(fechaCambio.getTime())) {
-                alert("Por favor, selecciona una fecha de cambio válida.");
-                return;
-            }
-            const diasTranscurridos = Math.floor((fechaCambio - fechaInicio) / (1000 * 60 * 60 * 24));
-            if (diasTranscurridos < 0) {
-                alert("La fecha de cambio no puede ser anterior a la fecha de inicio.");
-                return;
-            }
-            const ordeñosPorPuntoHastaCambio = ordeñosPorPuntoPorDia * diasTranscurridos;
-            const durabilidadRestante = durabilidad - ordeñosPorPuntoHastaCambio;
-            if (durabilidadRestante <= 0) {
-                mensajeAjuste = `Nota: Las pezoneras ya debieron cambiarse antes de ${fechaCambio.toLocaleDateString('es-ES')}.`;
-            } else {
-                const vacasAjustadas = nuevoNumeroVacas > 0 ? nuevoNumeroVacas : vacas;
-                const puntosOrdenoAjustados = nuevoPuntosOrdeno > 0 ? nuevoPuntosOrdeno : puntosOrdeno;
-                totalPezoneras = puntosOrdenoAjustados * pezonerasPorPunto;
-                const nuevosOrdeñosTotalesPorDia = ordenosDia * vacasAjustadas;
-                const nuevosOrdeñosPorPuntoPorDia = nuevosOrdeñosTotalesPorDia / puntosOrdenoAjustados;
-                const diasDurabilidadRestante = durabilidadRestante / nuevosOrdeñosPorPuntoPorDia;
-                fechaProximoCambioAjustada = new Date(fechaCambio);
-                fechaProximoCambioAjustada.setDate(fechaCambio.getDate() + Math.floor(diasDurabilidadRestante));
-                durabilidadAjustada = diasTranscurridos + diasDurabilidadRestante;
-                desgastePezonerasPorDiaAjustada = totalPezoneras / durabilidadAjustada;
-                mensajeAjuste = `
-                    Ajuste por Modificación:
-                    Fecha de Cambio: ${fechaCambio.toLocaleDateString('es-ES')}
-                    Nuevo Número de Vacas: ${vacasAjustadas}
-                    Nuevo Número de Puntos: ${puntosOrdenoAjustados}
-                    Durabilidad Ajustada: ${Math.floor(durabilidadAjustada)} días
-                    Nueva Fecha de Cambio: ${fechaProximoCambioAjustada.toLocaleDateString('es-ES')}
-                    Total Pezoneras: ${totalPezoneras}
-                    Desgaste por Día: ${desgastePezonerasPorDiaAjustada.toFixed(2)}
-                `;
-            }
+    if (realizarModificacion === 'si' && fechaCambioInput && (nuevoNumeroVacas > 0 || nuevoPuntosOrdeno > 0)) {
+        const fechaCambio = new Date(fechaCambioInput);
+        if (isNaN(fechaCambio.getTime())) {
+            alert("Por favor, selecciona una fecha de cambio válida.");
+            return;
         }
-
-        fechaProximoCambio = realizarModificacion === 'si' ? fechaProximoCambioAjustada : fechaProximoCambioInicial;
-
-        resultadoTexto = isVerifiedUser ? `
-            <div style="background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); padding: 15px; border-radius: 5px;">
-                <h3 style="color: #005566;">📊 Reporte Premium JCALCULO</h3>
-                <p><strong>Fecha Inicio:</strong> ${fechaInicio.toLocaleDateString('es-ES')}</p>
-                <p><strong>Vacas Iniciales:</strong> ${vacasIniciales}</p>
-                <p><strong>Puntos Iniciales:</strong> ${puntosOrdenoIniciales}</p>
-                <p><strong>Durabilidad Inicial:</strong> ${Math.floor(diasDurabilidadInicial)} días</p>
-                <p><strong>🚨 Próximo Cambio:</strong> ${fechaProximoCambioInicial.toLocaleDateString('es-ES')}</p>
-                <p><strong>Meses Equivalentes:</strong> ${mesesEquivalentes}</p>
-                ${fechaDiasEspecificos ? `<p><strong>Fecha Específica:</strong> ${fechaDiasEspecificos}</p>` : ''}
-                <p><strong>Total Pezoneras:</strong> ${totalPezoneras}</p>
-                <p><strong>Desgaste Diario:</strong> ${desgastePezonerasPorDiaInicial.toFixed(2)}</p>
-                ${mensajeAjuste ? `<p style="color: #d32f2f;"><strong>Ajustes Aplicados:</strong><br>${mensajeAjuste.replace(/\n/g, '<br>')}</p>` : ''}
-                <p style="font-style: italic;">Gracias por ser un usuario verificado. ¡Disfruta de una experiencia sin publicidad y reportes avanzados!</p>
-            </div>
-        ` : `
-            Calculadora JCALCULO Cambio de Pezoneras
-            Fecha Inicio: ${fechaInicio.toLocaleDateString('es-ES')}
-            Vacas Iniciales: ${vacasIniciales}
-            Puntos Iniciales: ${puntosOrdenoIniciales}
-            Durabilidad Inicial: ${Math.floor(diasDurabilidadInicial)} días
-            Próximo Cambio Inicial: ${fechaProximoCambioInicial.toLocaleDateString('es-ES')}
-            Meses Equivalentes: ${mesesEquivalentes}
-            ${fechaDiasEspecificos}
-            Total Pezoneras Inicial: ${totalPezoneras}
-            Desgaste por Día Inicial: ${desgastePezonerasPorDiaInicial.toFixed(2)}
-            ${mensajeAjuste}
-        `;
-        mostrarResultados();
-
-        if (currentUser) {
-            guardarFechaProximoCambio(currentUser.uid, fechaProximoCambio);
+        const diasTranscurridos = Math.floor((fechaCambio - fechaInicio) / (1000 * 60 * 60 * 24));
+        if (diasTranscurridos < 0) {
+            alert("La fecha de cambio no puede ser anterior a la fecha de inicio.");
+            return;
+        }
+        const ordeñosPorPuntoHastaCambio = ordeñosPorPuntoPorDia * diasTranscurridos;
+        const durabilidadRestante = durabilidad - ordeñosPorPuntoHastaCambio;
+        if (durabilidadRestante <= 0) {
+            mensajeAjuste = `Nota: Las pezoneras ya debieron cambiarse antes de ${fechaCambio.toLocaleDateString('es-ES')}.`;
+        } else {
+            const vacasAjustadas = nuevoNumeroVacas > 0 ? nuevoNumeroVacas : vacas;
+            const puntosOrdenoAjustados = nuevoPuntosOrdeno > 0 ? nuevoPuntosOrdeno : puntosOrdeno;
+            totalPezoneras = puntosOrdenoAjustados * pezonerasPorPunto;
+            const nuevosOrdeñosTotalesPorDia = ordenosDia * vacasAjustadas;
+            const nuevosOrdeñosPorPuntoPorDia = nuevosOrdeñosTotalesPorDia / puntosOrdenoAjustados;
+            const diasDurabilidadRestante = durabilidadRestante / nuevosOrdeñosPorPuntoPorDia;
+            fechaProximoCambioAjustada = new Date(fechaCambio);
+            fechaProximoCambioAjustada.setDate(fechaCambio.getDate() + Math.floor(diasDurabilidadRestante));
+            durabilidadAjustada = diasTranscurridos + diasDurabilidadRestante;
+            desgastePezonerasPorDiaAjustada = totalPezoneras / durabilidadAjustada;
+            mensajeAjuste = `
+                Ajuste por Modificación:
+                Fecha de Cambio: ${fechaCambio.toLocaleDateString('es-ES')}
+                Nuevo Número de Vacas: ${vacasAjustadas}
+                Nuevo Número de Puntos: ${puntosOrdenoAjustados}
+                Durabilidad Ajustada: ${Math.floor(durabilidadAjustada)} días
+                Nueva Fecha de Cambio: ${fechaProximoCambioAjustada.toLocaleDateString('es-ES')}
+                Total Pezoneras: ${totalPezoneras}
+                Desgaste por Día: ${desgastePezonerasPorDiaAjustada.toFixed(2)}
+            `;
         }
     }
+
+    fechaProximoCambio = realizarModificacion === 'si' ? fechaProximoCambioAjustada : fechaProximoCambioInicial;
+
+    resultadoTexto = isVerifiedUser ? `
+        <div style="background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); padding: 15px; border-radius: 5px;">
+            <h3 style="color: #005566;">📊 Reporte Premium JCALCULO</h3>
+            <p><strong>Fecha Inicio:</strong> ${fechaInicio.toLocaleDateString('es-ES')}</p>
+            <p><strong>Vacas Iniciales:</strong> ${vacasIniciales}</p>
+            <p><strong>Puntos Iniciales:</strong> ${puntosOrdenoIniciales}</p>
+            <p><strong>Durabilidad Inicial:</strong> ${Math.floor(diasDurabilidadInicial)} días</p>
+            <p><strong>🚨 Próximo Cambio:</strong> ${fechaProximoCambioInicial.toLocaleDateString('es-ES')}</p>
+            <p><strong>Meses Equivalentes:</strong> ${mesesEquivalentes}</p>
+            ${fechaDiasEspecificos ? `<p><strong>Fecha Específica:</strong> ${fechaDiasEspecificos}</p>` : ''}
+            <p><strong>Total Pezoneras:</strong> ${totalPezoneras}</p>
+            <p><strong>Desgaste Diario:</strong> ${desgastePezonerasPorDiaInicial.toFixed(2)}</p>
+            ${mensajeAjuste ? `<p style="color: #d32f2f;"><strong>Ajustes Aplicados:</strong><br>${mensajeAjuste.replace(/\n/g, '<br>')}</p>` : ''}
+            <p style="font-style: italic;">Gracias por ser un usuario verificado. ¡Disfruta de una experiencia sin publicidad y reportes avanzados!</p>
+        </div>
+    ` : `
+        Calculadora JCALCULO Cambio de Pezoneras
+        Fecha Inicio: ${fechaInicio.toLocaleDateString('es-ES')}
+        Vacas Iniciales: ${vacasIniciales}
+        Puntos Iniciales: ${puntosOrdenoIniciales}
+        Durabilidad Inicial: ${Math.floor(diasDurabilidadInicial)} días
+        Próximo Cambio Inicial: ${fechaProximoCambioInicial.toLocaleDateString('es-ES')}
+        Meses Equivalentes: ${mesesEquivalentes}
+        ${fechaDiasEspecificos}
+        Total Pezoneras Inicial: ${totalPezoneras}
+        Desgaste por Día Inicial: ${desgastePezonerasPorDiaInicial.toFixed(2)}
+        ${mensajeAjuste}
+    `;
+    mostrarResultados();
+
+    if (currentUser) {
+        guardarFechaProximoCambio(currentUser.uid, fechaProximoCambio);
+    }
+}
 </script>
 <script>
     function mostrarResultados() {
@@ -832,7 +868,8 @@
                 alert('Error al guardar el resultado: ' + error.message);
             });
     }
-
+</script>
+<script>
     function cargarCalculosGuardados(uid) {
         const listaCalculos = document.getElementById('lista-calculos');
         listaCalculos.innerHTML = '';
@@ -879,7 +916,8 @@
         XLSX.utils.book_append_sheet(wb, ws, 'Cálculos');
         XLSX.writeFile(wb, 'CalculosPezoneras.xlsx');
     }
-
+</script>
+<script>
     function mostrarReporteGrafico() {
         const ctx = document.getElementById('report-canvas').getContext('2d');
         document.getElementById('report-section').style.display = 'block';
@@ -974,7 +1012,8 @@
                 listaCalculosAdmin.innerHTML = '<li>Error al cargar el historial.</li>';
             });
     }
-
+</script>
+<script>
     function exportarHistorialExcel() {
         const hoy = new Date();
         const mesActual = hoy.getMonth();
@@ -1024,61 +1063,41 @@
     }
 </script>
 <script>
-    function registrarUsuario() {
-        const nombre = document.getElementById('nombre').value.trim();
-        const profesion = document.getElementById('profesion').value;
-        const empresa = document.getElementById('empresa').value.trim();
-        const otraProfesion = document.getElementById('otra-profesion').value.trim();
-        const telefono = document.getElementById('telefono').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
-        const registerBtn = document.getElementById('register-btn');
+    function loginUsuario() {
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value.trim();
+        const loginBtn = document.getElementById('login-btn');
+        const errorDiv = document.getElementById('login-error');
 
-        if (!nombre || !profesion || !telefono || !email || !password) {
-            alert('Por favor, completa todos los campos obligatorios.');
-            return;
-        }
-        if (profesion === 'ganadero' && !empresa) {
-            alert('Por favor, ingresa el nombre de la granja o explotación.');
-            return;
-        }
-        if (profesion === 'otro' && !otraProfesion) {
-            alert('Por favor, especifica tu profesión.');
+        if (!email || !password) {
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = 'Por favor, completa todos los campos.';
             return;
         }
 
-        registerBtn.disabled = true;
-        auth.createUserWithEmailAndPassword(email, password)
+        loginBtn.disabled = true;
+        errorDiv.style.display = 'none';
+
+        auth.signInWithEmailAndPassword(email, password)
             .then(userCredential => {
                 const user = userCredential.user;
-                const userData = {
-                    nombre: nombre,
-                    profesion: profesion === 'otro' ? otraProfesion : profesion,
-                    empresa: profesion === 'ganadero' ? empresa : null,
-            telefono: telefono,
-                    email: email,
-                    isVerified: false,
-                    notificacionPreferencia: 'email',
-                    timestamp: new Date().toISOString()
-                };
-                return Promise.all([
-                    db.collection('users').doc(user.uid).set(userData),
-                    user.sendEmailVerification()
-                ]);
-            })
-            .then(() => {
-                alert('Usuario registrado correctamente. Por favor, verifica tu correo para continuar.');
-                auth.signOut();
+                if (!user.emailVerified) {
+                    auth.signOut();
+                    throw new Error('Por favor, verifica tu correo electrónico para continuar.');
+                }
+                currentUser = user;
+                cargarDatosUsuario(user.uid);
             })
             .catch(error => {
-                console.error('Error al registrar usuario:', error);
-                alert('Error al registrar: ' + error.message);
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = 'Error al iniciar sesión: ' + error.message;
             })
             .finally(() => {
-                registerBtn.disabled = false;
+                loginBtn.disabled = false;
             });
     }
-
+</script>
+<script>
     function loginAdmin() {
         const email = document.getElementById('admin-email').value.trim();
         const password = document.getElementById('admin-password').value.trim();
@@ -1120,6 +1139,26 @@
     }
 </script>
 <script>
+    function recuperarContrasena() {
+        const email = document.getElementById('login-email').value.trim();
+        const errorDiv = document.getElementById('login-error');
+
+        if (!email) {
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = 'Por favor, ingresa tu correo electrónico.';
+            return;
+        }
+
+        auth.sendPasswordResetEmail(email)
+            .then(() => {
+                alert('Se ha enviado un correo para restablecer tu contraseña. Revisa tu bandeja de entrada.');
+            })
+            .catch(error => {
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = 'Error: ' + error.message;
+            });
+    }
+
     function cargarDatosUsuario(uid) {
         db.collection('users').doc(uid).get()
             .then(doc => {
@@ -1138,7 +1177,8 @@
                 console.error('Error al cargar datos del usuario:', error);
             });
     }
-
+</script>
+<script>
     function guardarPreferenciaNotificacion() {
         const preferencia = document.getElementById('notificacion-preferencia').value;
         if (currentUser) {
@@ -1188,30 +1228,22 @@
         const password = document.getElementById('admin-registro-password').value.trim();
 
         if (!nombre || !email || !password) {
-            alert('Por favor, completa todos los campos.');
-            return;
-        }
-        if (!isAdminLoggedIn) {
-            alert('Debes ser administrador para registrar otro admin.');
+            alert('Por favor, completa todos los campos para registrar un administrador.');
             return;
         }
 
         auth.createUserWithEmailAndPassword(email, password)
             .then(userCredential => {
                 const user = userCredential.user;
-                const adminData = {
+                return db.collection('users').doc(user.uid).set({
                     nombre: nombre,
                     email: email,
                     isAdmin: true,
                     timestamp: new Date().toISOString()
-                };
-                return db.collection('admins').doc(user.uid).set(adminData);
+                });
             })
             .then(() => {
                 alert('Administrador registrado correctamente.');
-                document.getElementById('admin-nombre').value = '';
-                document.getElementById('admin-registro-email').value = '';
-                document.getElementById('admin-registro-password').value = '';
             })
             .catch(error => {
                 console.error('Error al registrar administrador:', error);
@@ -1225,10 +1257,11 @@
             alert('Por favor, ingresa el correo del usuario.');
             return;
         }
+
         db.collection('users').where('email', '==', email).get()
             .then(snapshot => {
                 if (snapshot.empty) {
-                    alert('Usuario no encontrado.');
+                    alert('No se encontró un usuario con ese correo.');
                     return;
                 }
                 snapshot.forEach(doc => {
@@ -1237,10 +1270,6 @@
                     })
                         .then(() => {
                             alert('Usuario verificado correctamente.');
-                            if (currentUser && currentUser.email === email) {
-                                isVerifiedUser = true;
-                                document.getElementById('verified-badge').style.display = 'inline-block';
-                            }
                         })
                         .catch(error => {
                             console.error('Error al verificar usuario:', error);
@@ -1261,10 +1290,11 @@
             alert('Por favor, ingresa el correo del usuario.');
             return;
         }
+
         db.collection('users').where('email', '==', email).get()
             .then(snapshot => {
                 if (snapshot.empty) {
-                    alert('Usuario no encontrado.');
+                    alert('No se encontró un usuario con ese correo.');
                     return;
                 }
                 snapshot.forEach(doc => {
@@ -1272,11 +1302,7 @@
                         isVerified: false
                     })
                         .then(() => {
-                            alert('Verificación removida correctamente.');
-                            if (currentUser && currentUser.email === email) {
-                                isVerifiedUser = false;
-                                document.getElementById('verified-badge').style.display = 'none';
-                            }
+                            alert('Insignia de verificado quitada correctamente.');
                         })
                         .catch(error => {
                             console.error('Error al quitar verificación:', error);
@@ -1291,21 +1317,23 @@
     }
 
     function mostrarCamposLogo() {
-        const source = document.getElementById('logo-source').value;
-        document.getElementById('logo-url-section').style.display = source === 'url' ? 'block' : 'none';
-        document.getElementById('logo-upload-section').style.display = source === 'upload' ? 'block' : 'none';
+        const logoSource = document.getElementById('logo-source').value;
+        document.getElementById('logo-url-section').style.display = logoSource === 'url' ? 'block' : 'none';
+        document.getElementById('logo-upload-section').style.display = logoSource === 'upload' ? 'block' : 'none';
     }
-
+</script>
+<script>
     function guardarLogo() {
-        const source = document.getElementById('logo-source').value;
-        let logoUrl = '';
-        if (source === 'url') {
-            logoUrl = document.getElementById('logo-url').value.trim();
+        const logoSource = document.getElementById('logo-source').value;
+        if (logoSource === 'url') {
+            const logoUrl = document.getElementById('logo-url').value.trim();
             if (!logoUrl) {
                 alert('Por favor, ingresa una URL válida para el logo.');
                 return;
             }
-            db.collection('config').doc('logo').set({ url: logoUrl })
+            db.collection('config').doc('appSettings').set({
+                logoUrl: logoUrl
+            }, { merge: true })
                 .then(() => {
                     alert('Logo actualizado correctamente.');
                     cargarLogo();
@@ -1318,14 +1346,16 @@
             const fileInput = document.getElementById('logo-upload');
             const file = fileInput.files[0];
             if (!file) {
-                alert('Por favor, selecciona un archivo para el logo.');
+                alert('Por favor, selecciona una imagen para el logo.');
                 return;
             }
             const storageRef = storage.ref(`logos/logo-${Date.now()}`);
             storageRef.put(file)
                 .then(snapshot => snapshot.ref.getDownloadURL())
-                .then(url => {
-                    return db.collection('config').doc('logo').set({ url: url });
+                .then(downloadURL => {
+                    return db.collection('config').doc('appSettings').set({
+                        logoUrl: downloadURL
+                    }, { merge: true });
                 })
                 .then(() => {
                     alert('Logo subido y actualizado correctamente.');
@@ -1339,37 +1369,73 @@
     }
 </script>
 <script>
+    function cargarLogo() {
+        db.collection('config').doc('appSettings').get()
+            .then(doc => {
+                if (doc.exists && doc.data().logoUrl) {
+                    const logo = document.getElementById('app-logo');
+                    logo.src = doc.data().logoUrl;
+                    logo.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar el logo:', error);
+            });
+    }
+
     function mostrarCamposPublicidad() {
-        const tipo = document.getElementById('ad-type').value;
-        document.getElementById('ad-texto').style.display = tipo === 'texto' ? 'block' : 'none';
-        document.getElementById('ad-imagen').style.display = tipo === 'imagen' ? 'block' : 'none';
+        const adType = document.getElementById('ad-type').value;
+        document.getElementById('ad-texto').style.display = adType === 'texto' ? 'block' : 'none';
+        document.getElementById('ad-imagen').style.display = adType === 'imagen' ? 'block' : 'none';
     }
 
     function mostrarCamposImagen() {
-        const source = document.getElementById('ad-imagen-source').value;
-        document.getElementById('ad-imagen-url-section').style.display = source === 'url' ? 'block' : 'none';
-        document.getElementById('ad-imagen-upload-section').style.display = source === 'upload' ? 'block' : 'none';
+        const adImagenSource = document.getElementById('ad-imagen-source').value;
+        document.getElementById('ad-imagen-url-section').style.display = adImagenSource === 'url' ? 'block' : 'none';
+        document.getElementById('ad-imagen-upload-section').style.display = adImagenSource === 'upload' ? 'block' : 'none';
     }
-
+</script>
+<script>
     function guardarPublicidad() {
-        const tipo = document.getElementById('ad-type').value;
-        let adData = {};
-        if (tipo === 'texto') {
-            const texto = document.getElementById('ad-texto-content').value.trim();
-            if (!texto) {
+        const adType = document.getElementById('ad-type').value;
+        if (adType === 'texto') {
+            const adTexto = document.getElementById('ad-texto-content').value.trim();
+            if (!adTexto) {
                 alert('Por favor, ingresa el texto de la publicidad.');
                 return;
             }
-            adData = { tipo: 'texto', contenido: texto };
+            db.collection('config').doc('ads').set({
+                adType: 'texto',
+                adContent: adTexto
+            }, { merge: true })
+                .then(() => {
+                    alert('Publicidad guardada correctamente.');
+                    cargarPublicidad();
+                })
+                .catch(error => {
+                    console.error('Error al guardar publicidad:', error);
+                    alert('Error: ' + error.message);
+                });
         } else {
-            const source = document.getElementById('ad-imagen-source').value;
-            if (source === 'url') {
-                const url = document.getElementById('ad-imagen-url').value.trim();
-                if (!url) {
+            const adImagenSource = document.getElementById('ad-imagen-source').value;
+            if (adImagenSource === 'url') {
+                const adImagenUrl = document.getElementById('ad-imagen-url').value.trim();
+                if (!adImagenUrl) {
                     alert('Por favor, ingresa una URL válida para la imagen.');
                     return;
                 }
-                adData = { tipo: 'imagen', url: url };
+                db.collection('config').doc('ads').set({
+                    adType: 'imagen',
+                    adContent: adImagenUrl
+                }, { merge: true })
+                    .then(() => {
+                        alert('Publicidad guardada correctamente.');
+                        cargarPublicidad();
+                    })
+                    .catch(error => {
+                        console.error('Error al guardar publicidad:', error);
+                        alert('Error: ' + error.message);
+                    });
             } else {
                 const fileInput = document.getElementById('ad-imagen-upload');
                 const file = fileInput.files[0];
@@ -1377,83 +1443,74 @@
                     alert('Por favor, selecciona una imagen para la publicidad.');
                     return;
                 }
-                const storageRef = storage.ref(`publicidad/principal-${Date.now()}`);
+                const storageRef = storage.ref(`ads/ad-${Date.now()}`);
                 storageRef.put(file)
                     .then(snapshot => snapshot.ref.getDownloadURL())
-                    .then(url => {
-                        adData = { tipo: 'imagen', url: url };
-                        return db.collection('config').doc('publicidad').set(adData);
+                    .then(downloadURL => {
+                        return db.collection('config').doc('ads').set({
+                            adType: 'imagen',
+                            adContent: downloadURL
+                        }, { merge: true });
                     })
                     .then(() => {
-                        alert('Publicidad principal actualizada correctamente.');
+                        alert('Publicidad guardada correctamente.');
                         cargarPublicidad();
                     })
                     .catch(error => {
-                        console.error('Error al subir imagen de publicidad:', error);
+                        console.error('Error al subir publicidad:', error);
                         alert('Error: ' + error.message);
                     });
-                return;
             }
         }
-        db.collection('config').doc('publicidad').set(adData)
-            .then(() => {
-                alert('Publicidad principal actualizada correctamente.');
-                cargarPublicidad();
-            })
-            .catch(error => {
-                console.error('Error al guardar publicidad:', error);
-                alert('Error: ' + error.message);
-            });
     }
 </script>
 <script>
     function cargarPublicidad() {
-        db.collection('config').doc('publicidad').get()
+        db.collection('config').doc('ads').get()
             .then(doc => {
-                const section = document.getElementById('publicidad-section');
-                section.innerHTML = '';
+                const publicidadSection = document.getElementById('publicidad-section');
                 if (doc.exists) {
                     const data = doc.data();
-                    section.style.display = 'block';
-                    if (data.tipo === 'texto') {
-                        section.innerHTML = `<p>${data.contenido}</p>`;
-                    } else if (data.tipo === 'imagen') {
-                        section.innerHTML = `<img src="${data.url}" alt="Publicidad Principal">`;
+                    if (data.adType === 'texto') {
+                        publicidadSection.innerHTML = `<p>${data.adContent}</p>`;
+                    } else if (data.adType === 'imagen') {
+                        publicidadSection.innerHTML = `<img src="${data.adContent}" alt="Publicidad" style="max-width: 100%; border-radius: 5px;">`;
                     }
                 } else {
-                    section.style.display = 'none';
+                    publicidadSection.innerHTML = '';
                 }
             })
             .catch(error => {
                 console.error('Error al cargar publicidad:', error);
-                document.getElementById('publicidad-section').style.display = 'none';
             });
     }
-
+</script>
+<script>
     function mostrarCamposImagenSecundaria() {
-        const source = document.getElementById('ad-secundaria-source').value;
-        document.getElementById('ad-secundaria-url-section').style.display = source === 'url' ? 'block' : 'none';
-        document.getElementById('ad-secundaria-upload-section').style.display = source === 'upload' ? 'block' : 'none';
+        const adSecundariaSource = document.getElementById('ad-secundaria-source').value;
+        document.getElementById('ad-secundaria-url-section').style.display = adSecundariaSource === 'url' ? 'block' : 'none';
+        document.getElementById('ad-secundaria-upload-section').style.display = adSecundariaSource === 'upload' ? 'block' : 'none';
     }
 
     function guardarPublicidadSecundaria() {
-        const source = document.getElementById('ad-secundaria-source').value;
-        const link = document.getElementById('ad-secundaria-link').value.trim();
-        let adData = {};
-        if (!link) {
+        const adSecundariaSource = document.getElementById('ad-secundaria-source').value;
+        const adLink = document.getElementById('ad-secundaria-link').value.trim();
+        if (!adLink) {
             alert('Por favor, ingresa un enlace para la publicidad secundaria.');
             return;
         }
-        if (source === 'url') {
-            const url = document.getElementById('ad-secundaria-imagen-url').value.trim();
-            if (!url) {
+        if (adSecundariaSource === 'url') {
+            const adImagenUrl = document.getElementById('ad-secundaria-imagen-url').value.trim();
+            if (!adImagenUrl) {
                 alert('Por favor, ingresa una URL válida para la imagen.');
                 return;
             }
-            adData = { url: url, link: link };
-            db.collection('config').doc('publicidad-secundaria').set(adData)
+            db.collection('config').doc('adsSecundaria').set({
+                adContent: adImagenUrl,
+                adLink: adLink
+            }, { merge: true })
                 .then(() => {
-                    alert('Publicidad secundaria actualizada correctamente.');
+                    alert('Publicidad secundaria guardada correctamente.');
                     cargarPublicidadSecundaria();
                 })
                 .catch(error => {
@@ -1467,19 +1524,21 @@
                 alert('Por favor, selecciona una imagen para la publicidad secundaria.');
                 return;
             }
-            const storageRef = storage.ref(`publicidad/secundaria-${Date.now()}`);
+            const storageRef = storage.ref(`adsSecundaria/ad-${Date.now()}`);
             storageRef.put(file)
                 .then(snapshot => snapshot.ref.getDownloadURL())
-                .then(url => {
-                    adData = { url: url, link: link };
-                    return db.collection('config').doc('publicidad-secundaria').set(adData);
+                .then(downloadURL => {
+                    return db.collection('config').doc('adsSecundaria').set({
+                        adContent: downloadURL,
+                        adLink: adLink
+                    }, { merge: true });
                 })
                 .then(() => {
-                    alert('Publicidad secundaria actualizada correctamente.');
+                    alert('Publicidad secundaria guardada correctamente.');
                     cargarPublicidadSecundaria();
                 })
                 .catch(error => {
-                    console.error('Error al subir imagen de publicidad secundaria:', error);
+                    console.error('Error al subir publicidad secundaria:', error);
                     alert('Error: ' + error.message);
                 });
         }
@@ -1487,33 +1546,37 @@
 </script>
 <script>
     function cargarPublicidadSecundaria() {
-        db.collection('config').doc('publicidad-secundaria').get()
+        db.collection('config').doc('adsSecundaria').get()
             .then(doc => {
-                const section = document.getElementById('donaciones-section');
-                section.innerHTML = '';
+                const donacionesSection = document.getElementById('donaciones-section');
                 if (doc.exists) {
                     const data = doc.data();
-                    section.style.display = 'block';
-                    section.innerHTML = `<a href="${data.link}" target="_blank"><img src="${data.url}" alt="Publicidad Secundaria"></a>`;
+                    donacionesSection.innerHTML = `
+                        <a href="${data.adLink}" target="_blank">
+                            <img src="${data.adContent}" alt="Publicidad Secundaria" style="max-width: 100%; border-radius: 5px;">
+                        </a>
+                    `;
                 } else {
-                    section.style.display = 'none';
+                    donacionesSection.innerHTML = '';
                 }
             })
             .catch(error => {
                 console.error('Error al cargar publicidad secundaria:', error);
-                document.getElementById('donaciones-section').style.display = 'none';
             });
     }
-
+</script>
+<script>
     function guardarPopupMessage() {
-        const mensaje = document.getElementById('popup-message-content').value.trim();
-        if (!mensaje) {
+        const popupMessage = document.getElementById('popup-message-content').value.trim();
+        if (!popupMessage) {
             alert('Por favor, ingresa un mensaje para el pop-up.');
             return;
         }
-        db.collection('config').doc('popup').set({ mensaje: mensaje })
+        db.collection('config').doc('popup').set({
+            message: popupMessage
+        }, { merge: true })
             .then(() => {
-                alert('Mensaje del pop-up actualizado correctamente.');
+                alert('Mensaje del pop-up guardado correctamente.');
                 cargarPopupMessage();
             })
             .catch(error => {
@@ -1526,8 +1589,7 @@
         db.collection('config').doc('popup').get()
             .then(doc => {
                 if (doc.exists) {
-                    const data = doc.data();
-                    document.getElementById('popup-message').textContent = data.mensaje;
+                    document.getElementById('popup-message').textContent = doc.data().message;
                 }
             })
             .catch(error => {
@@ -1536,42 +1598,73 @@
     }
 </script>
 <script>
+    function solicitarPermisoNotificaciones() {
+        if (!("Notification" in window)) {
+            console.log("Este navegador no soporta notificaciones.");
+            return;
+        }
+
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                console.log("Permiso para notificaciones concedido.");
+                messaging.getToken({ vapidKey: 'BJJ6z5xX8tW8aL5y5nZ1eX9qM2vJ4kP7rT9uW3yA1bN5mQ8xL2zH6jK9pR4tY7uI0oS3dF5gH8jL1qW2eR4tY' })
+                    .then(token => {
+                        if (currentUser) {
+                            db.collection('users').doc(currentUser.uid).update({
+                                fcmToken: token
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener token de FCM:', error);
+                    });
+            }
+        });
+    }
+
     function guardarFechaProximoCambio(uid, fecha) {
-        if (!uid || !fecha) return;
         db.collection('calculos').doc(uid).set({
-            ultimoCalculo: fecha.toISOString(),
-            timestamp: new Date().toISOString()
+            fechaProximoCambio: fecha
         }, { merge: true })
             .catch(error => {
                 console.error('Error al guardar fecha de próximo cambio:', error);
             });
     }
-
+</script>
+<script>
     function programarNotificacion(uid) {
-        db.collection('calculos').doc(uid).get()
+        db.collection('users').doc(uid).get()
             .then(doc => {
                 if (doc.exists) {
-                    const data = doc.data();
-                    if (data.ultimoCalculo) {
-                        const fechaCambio = new Date(data.ultimoCalculo);
-                        const ahora = new Date();
-                        const diferenciaDias = Math.floor((fechaCambio - ahora) / (1000 * 60 * 60 * 24));
-                        if (diferenciaDias <= 7 && diferenciaDias >= 0) {
-                            db.collection('users').doc(uid).get()
-                                .then(userDoc => {
-                                    if (userDoc.exists) {
-                                        const userData = userDoc.data();
-                                        const preferencia = userData.notificacionPreferencia;
-                                        if (preferencia === 'movil' && userData.fcmToken) {
-                                            enviarNotificacionMovil(userData.fcmToken, diferenciaDias);
-                                        } else if (preferencia === 'email') {
-                                            console.log(`Notificación por email programada para ${userData.email}: Faltan ${diferenciaDias} días.`);
+                    const userData = doc.data();
+                    if (userData.notificacionPreferencia === 'movil' && userData.fcmToken) {
+                        const fechaCambio = fechaProximoCambio;
+                        if (fechaCambio) {
+                            const now = new Date();
+                            const diasRestantes = Math.floor((fechaCambio - now) / (1000 * 60 * 60 * 24));
+                            if (diasRestantes <= 3 && diasRestantes >= 0) {
+                                fetch('https://fcm.googleapis.com/fcm/send', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': 'key=YOUR_SERVER_KEY'
+                                    },
+                                    body: JSON.stringify({
+                                        to: userData.fcmToken,
+                                        notification: {
+                                            title: 'Recordatorio de Cambio de Pezoneras',
+                                            body: `Faltan ${diasRestantes} días para el próximo cambio de pezoneras.`
                                         }
-                                    }
+                                    })
                                 })
-                                .catch(error => {
-                                    console.error('Error al programar notificación:', error);
-                                });
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        console.log('Notificación enviada:', data);
+                                    })
+                                    .catch(error => {
+                                        console.error('Error al enviar notificación:', error);
+                                    });
+                            }
                         }
                     }
                 }
@@ -1580,18 +1673,8 @@
                 console.error('Error al programar notificación:', error);
             });
     }
-
-    function enviarNotificacionMovil(token, dias) {
-        const message = {
-            notification: {
-                title: 'Recordatorio de JCALCULO',
-                body: `¡Faltan ${dias} días para cambiar tus pezoneras! 🔔`
-            },
-            token: token
-        };
-        console.log('Notificación enviada al dispositivo:', message);
-    }
-
+</script>
+<script>
     function probarNotificacion() {
         if (!currentUser) {
             alert('Debes estar autenticado para probar notificaciones.');
@@ -1599,23 +1682,63 @@
         }
         db.collection('users').doc(currentUser.uid).get()
             .then(doc => {
-                if (doc.exists) {
-                    const userData = doc.data();
-                    const preferencia = userData.notificacionPreferencia;
-                    if (preferencia === 'movil' && userData.fcmToken) {
-                        enviarNotificacionMovil(userData.fcmToken, 7);
-                        alert('Notificación de prueba enviada al dispositivo.');
-                    } else if (preferencia === 'email') {
-                        alert('Notificación de prueba programada para email.');
-                    } else {
-                        alert('No tienes notificaciones configuradas.');
-                    }
+                if (doc.exists && doc.data().fcmToken) {
+                    fetch('https://fcm.googleapis.com/fcm/send', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'key=YOUR_SERVER_KEY'
+                        },
+                        body: JSON.stringify({
+                            to: doc.data().fcmToken,
+                            notification: {
+                                title: 'Notificación de Prueba',
+                                body: 'Esta es una notificación de prueba desde JCALCULO.'
+                            }
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            alert('Notificación de prueba enviada. Revisa tu dispositivo.');
+                            console.log('Notificación de prueba:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error al enviar notificación de prueba:', error);
+                            alert('Error: ' + error.message);
+                        });
+                } else {
+                    alert('No tienes un token de notificación. Asegúrate de haber dado permisos.');
                 }
             })
             .catch(error => {
                 console.error('Error al probar notificación:', error);
                 alert('Error: ' + error.message);
             });
+    }
+</script>
+<script>
+    function cerrarPopup() {
+        document.getElementById('popup').style.display = 'none';
+    }
+
+    function mostrarLoginAdmin() {
+        document.getElementById('admin-login').style.display = 'block';
+        document.getElementById('registro-section').style.display = 'none';
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('user-section').style.display = 'none';
+        document.getElementById('formulario-section').style.display = 'none';
+        document.getElementById('auth-message').style.display = 'none';
+        document.getElementById('calculator-info').style.display = 'none';
+    }
+
+    function volverAlInicio() {
+        document.getElementById('admin-login').style.display = 'none';
+        document.getElementById('registro-section').style.display = 'block';
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('user-section').style.display = 'none';
+        document.getElementById('formulario-section').style.display = 'none';
+        document.getElementById('auth-message').style.display = 'block';
+        document.getElementById('calculator-info').style.display = 'block';
     }
 
     function mostrarRegistro() {
@@ -1626,5 +1749,16 @@
     function mostrarLoginUsuario() {
         document.getElementById('registro-section').style.display = 'none';
         document.getElementById('login-section').style.display = 'block';
+    }
+
+    function mostrarCamposProfesion() {
+        const profesion = document.getElementById('profesion').value;
+        document.getElementById('empresa-section').style.display = profesion === 'ganadero' ? 'block' : 'none';
+        document.getElementById('otra-profesion-section').style.display = profesion === 'otro' ? 'block' : 'none';
+    }
+
+    function mostrarCamposModificacion() {
+        const realizarModificacion = document.getElementById('realizarModificacion').value;
+        document.getElementById('modificacion-campos').style.display = realizarModificacion === 'si' ? 'block' : 'none';
     }
 </script>
